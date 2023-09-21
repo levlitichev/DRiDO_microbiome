@@ -1,11 +1,13 @@
-# DRiDO Microbiome
+# DRiDO Microbiome Study
 
-Last updated: September 21, 2023  
-Author: Lev Litichevskiy, University of Pennsylvania  
+_Maintainer_: Lev Litichevskiy  
+_Last updated_: September 21, 2023  
 
-This repository contains code used in the manuscript describing the microbiome aspect of the Dietary Restriction in Diversity Outbred mice (DRiDO) study.
+This repository contains code and data related to the DRiDO microbiome manuscript.
 
-Table of contents:
+bioRxiv: XXX
+
+## Table of contents
 
 data/
     DO_metaphlan.txt
