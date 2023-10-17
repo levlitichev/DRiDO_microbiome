@@ -1,0 +1,218 @@
+Input: genus relabs (n=252)
+Output: genus CLR (n=100) plus 7 community features: Chao1, Shannon, Simpson, uniqueness, PCoA1-3
+
+# Load libraries
+
+```{r, message=F, warning=F}
+library(tidyverse)
+library(phyloseq)
+library(speedyseq) # faster tax_glom
+library(foreach)
+library(compositions) # clr
+library(vegan) # diversity
+```
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+# Import Kraken data
+
+```{r}
+agg.kraken.df <- read.table(
+  "../data/kraken_matrix_agg_by_stool_ID_n1303x2997.txt", 
+  sep="\t", header=T, row.names=1)
+dim(agg.kraken.df)
+```
+
+# Import Kraken taxonomy
+
+```{r}
+kraken.tax.df <- read.table("../data/kraken_taxonomy_n1303.txt", sep="\t", header=T, quote="") %>%
+  column_to_rownames("taxon.ID")
+dim(kraken.tax.df)
+```
+
+# Create phyloseq object
+
+```{r}
+kraken.sample.meta.df <- stool.meta.annot.df %>% column_to_rownames("stool.ID")
+
+agg.physeq <- phyloseq(
+  agg.kraken.df %>% as.matrix %>% otu_table(taxa_are_rows=T),
+  kraken.sample.meta.df %>% sample_data,
+  kraken.tax.df %>% as.matrix %>% tax_table
+)
+nsamples(agg.physeq)
+```
+
+* 2997 samples
+
+# Aggregate to genera
+
+```{r}
+agg.physeq.genus <- agg.physeq %>% tax_glom(taxrank="genus")
+```
+
+# Identify top 100 genera
+
+```{r}
+N.GENERA <- 100
+TOP.N.GENERA.IDs <- names(sort(taxa_sums(agg.physeq.genus), decreasing=T))[1:N.GENERA]
+TOP.N.GENERA <- data.frame(tax_table(agg.physeq.genus))[TOP.N.GENERA.IDs, "genus"]
+TOP.N.GENERA.no.special <- str_replace_all(TOP.N.GENERA, "[[:punct:]]", "")
+
+# if genus starts with a number, prefix with X
+# this helps avoid problems down the line, like providing the genus name within a lm formula
+TOP.N.GENERA.CLEAN <- as.character(sapply(
+  TOP.N.GENERA.no.special, function(x) {
+    ifelse(str_detect(x, "^[:digit:]"), paste0("X", x), x)}))
+```
+
+```{r}
+top.n.genera.df <- data.frame(
+  genus = TOP.N.GENERA,
+  ID = TOP.N.GENERA.IDs,
+  clean = TOP.N.GENERA.CLEAN)
+```
+
+# Convert to CLR
+
+```{r}
+# convert to CLR
+genus.clr.df <- agg.physeq.genus %>% 
+  otu_table() %>% t() %>% 
+  compositions::clr() %>% 
+  t() %>% data.frame()
+
+# subset to top genera
+genus.clr.filt.df <- genus.clr.df[TOP.N.GENERA.IDs, ]
+
+# replace IDs with names
+rownames(genus.clr.filt.df) <- TOP.N.GENERA.CLEAN
+
+# pivot longer
+genus.clr.long.df <- genus.clr.filt.df %>% 
+  rownames_to_column("taxon") %>% 
+  pivot_longer(-taxon, names_to="stool.ID")
+```
+
+# Calculate alpha diversity
+
+```{r}
+alpha.div.df.genus <- estimate_richness(
+  agg.physeq.genus, 
+  measures=c("Observed", "Chao1", "Shannon", "Simpson")) %>% 
+  rownames_to_column("stool.ID")
+
+alpha.div.long.df.genus <- alpha.div.df.genus %>% 
+  pivot_longer(c(Observed, Chao1, Shannon, Simpson), names_to="metric")
+```
+
+# Calculate uniqueness
+
+Bray-Curtis on genus-level relative abundances.
+
+```{r}
+agg.genus.bc.dist <- agg.physeq.genus %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+```
+
+```{r}
+agg.genus.bc.dist.mat <- agg.genus.bc.dist %>% as.matrix
+diag(agg.genus.bc.dist.mat) <- NA
+agg.genus.uniq.bc.df <- data.frame(
+  uniqueness=apply(agg.genus.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)}),
+  stool.ID=sample_names(agg.physeq.genus))
+```
+
+# PCoA
+
+```{r}
+agg.pcoa.genus.bc <- agg.genus.bc.dist %>% 
+  cmdscale(eig=T, k=3)
+
+agg.pcoa.genus.bc.df <- data.frame(agg.pcoa.genus.bc$points) %>% 
+  setNames(c("PCoA1", "PCoA2", "PCoA3")) %>% 
+  rownames_to_column("stool.ID")
+```
+
+# Combine
+
+```{r}
+full.genus.clr.long.df <- rbind(
+  
+  # CLR
+  genus.clr.long.df %>% 
+    dplyr::rename(feature="taxon"),
+  
+  # alpha diversity
+  alpha.div.long.df.genus %>% 
+    dplyr::filter(metric %in% c("Chao1", "Simpson", "Shannon")) %>% 
+    dplyr::rename(feature="metric") %>% 
+    dplyr::select(stool.ID, feature, value),
+  
+  # PCoA
+  agg.pcoa.genus.bc.df %>% 
+    dplyr::select(stool.ID, PCoA1, PCoA2, PCoA3) %>% 
+    pivot_longer(-stool.ID, names_to="feature"),
+  
+  # uniqueness
+  agg.genus.uniq.bc.df %>% 
+    dplyr::select(stool.ID, uniqueness) %>% 
+    dplyr::rename(value="uniqueness") %>% 
+    mutate(feature="uniq")
+  
+)
+```
+
+```{r}
+dim(full.genus.clr.long.df)
+n_distinct(full.genus.clr.long.df$feature)
+n_distinct(full.genus.clr.long.df$stool.ID)
+```
+
+* 320k values
+* 107 features
+* 2997 stool IDs
+
+# Export
+
+## Features in rows
+
+```{r}
+genus.clr.df.feats.in.rows <- full.genus.clr.long.df %>% 
+  pivot_wider(id_cols=feature, names_from="stool.ID")
+dim(genus.clr.df.feats.in.rows)
+```
+
+```{r}
+# genus.clr.df.feats.in.rows %>%
+#   write.table(
+#     sprintf("../results/kraken_genus_clr_filt_w_comm_n%ix%i_231017.txt", nrow(.), ncol(.)-1),
+#     sep="\t", quote=F, row.names=F)
+```
+
+## Stool ID in rows
+
+```{r}
+genus.clr.df.stool.ID.in.rows <- full.genus.clr.long.df %>% 
+  pivot_wider(id_cols=stool.ID, names_from="feature")
+dim(genus.clr.df.stool.ID.in.rows)
+```
+
+```{r}
+# genus.clr.df.stool.ID.in.rows %>%
+#   write.table(
+#     sprintf("../results/kraken_genus_clr_filt_w_comm_n%ix%i_231017.txt", nrow(.), ncol(.)-1),
+#     sep="\t", quote=F, row.names=F)
+```
