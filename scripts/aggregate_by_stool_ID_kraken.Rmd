@@ -1,0 +1,89 @@
+Aggregate Kraken taxonomic results by `stool.ID`. Exclude the control samples.
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(phyloseq)
+```
+
+# Import metadata
+
+```{r}
+seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", sep="\t", header=T)
+lib.meta.df <- read.table("../data/metadata/library_metadata_after_QC_n3213_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_230620.txt", sep="\t", header=T)
+```
+
+```{r}
+seq.meta.annot.df <- seq.meta.df %>%
+  merge(lib.meta.df, by="lib.ID") %>%
+  merge(stool.meta.df, by="stool.ID")
+
+dim(seq.meta.df)
+dim(seq.meta.annot.df)
+```
+
+```{r}
+n_distinct(seq.meta.annot.df$stool.ID)
+
+seq.meta.annot.df %>% 
+  dplyr::filter(sample.type == "DO") %>% 
+  pull(stool.ID) %>% n_distinct()
+```
+
+* 3124 unique stool IDs, 2997 unique DO stool IDs
+
+# Import Kraken data
+
+```{r}
+kraken.df <- read.table("../data/kraken_matrix_after_QC_n1303x3473_230620.txt", sep="\t", header=T, row.names=1)
+dim(kraken.df)
+```
+
+# Import Kraken taxonomy
+
+```{r}
+kraken.tax.df <- read.table("../data/kraken_taxonomy_n1303.txt", sep="\t", header=T, quote="", row.names=1)
+dim(kraken.tax.df)
+```
+
+# Create phyloseq object
+
+```{r}
+tmp.sample.meta.df <- seq.meta.annot.df %>% column_to_rownames("seq.ID")
+kraken.sample.meta.df <- tmp.sample.meta.df[colnames(kraken.df), ]
+
+physeq <- phyloseq(
+  kraken.df %>% as.matrix %>% otu_table(taxa_are_rows=T),
+  kraken.sample.meta.df %>% sample_data,
+  kraken.tax.df %>% as.matrix %>% tax_table
+)
+```
+
+# Aggregate by `stool.ID`
+
+Aggregate with sum.
+
+```{r, warning=F}
+agg.physeq <- physeq %>% 
+  subset_samples(sample.type=="DO") %>% 
+  merge_samples("stool.ID", sum)
+
+nsamples(agg.physeq)
+```
+
+* We end up with 2997 `stool.ID`s, which is the number we expect
+
+# Export
+
+```{r}
+# agg.physeq %>%
+#   otu_table() %>% t() %>% data.frame() %>%
+#   rownames_to_column("taxon.ID") %>%
+#   write.table(
+#     sprintf("final_data/kraken_matrix_agg_by_stool_ID_n%ix%i_230620.txt",
+#             ntaxa(agg.physeq), nsamples(agg.physeq)),
+#     sep="\t", quote=F, row.names=F)
+```
+
