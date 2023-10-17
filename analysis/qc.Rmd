@@ -1,0 +1,560 @@
+---
+title: "Sample quality-control AFTER mbmix"
+---
+
+Sample filtration done in this script:
+
+0. Discards based on mbmix (this happens implicitly when we do a left join on `seq.meta.annot.df`, which has already discarded sample mix-ups)
+1. Date of collection (DOC) must be before the date of expiration (DOE)
+2. Too few clusters: DO samples must have >750k, positive controls must have >100k
+3. Too high proportion of host reads: must be <= 50% (not relevant for controls)
+4. Too dissimilar from any other microbiome sample: manually selected several samples
+
+# Set filtration thresholds
+
+```{r}
+MIN.NUM.CLUSTERS <- 750000
+MIN.NUM.CLUSTERS.POS <- 100000
+MIN.FRAC.NONHOST <- 0.5
+```
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(readxl)
+```
+
+# Load metadata
+
+```{r}
+seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_mbmix_n3577_230620.txt", sep="\t", header=T)
+lib.meta.df <- read.table("../data/metadata/library_metadata_after_mbmix_n3294_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_mbmix_n3200_230620.txt", sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+```
+
+```{r}
+seq.meta.annot.df <- seq.meta.df %>%
+  merge(lib.meta.df, by="lib.ID") %>%
+  merge(stool.meta.df, by="stool.ID") %>% 
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID", all.x=T)
+
+dim(seq.meta.df)
+dim(seq.meta.annot.df)
+```
+
+# Import sample mix-ups
+
+```{r}
+mixups.df <- read_excel("../data/sample_mixups.xlsx")
+dim(mixups.df)
+```
+
+# Import additional samples to discard
+
+This file contains a list of samples to exclude for DOC > DOE, but I instead find these samples explicitly in step 1 below.
+
+Identifying the "outlier" samples is a little more complicated, so I just use the list of samples from this file (in step 4). See "Appendix" for how I identified these outlier samples.
+
+```{r}
+discard.df <- read_excel("../data/samples_to_discard.xlsx")
+dim(discard.df)
+```
+
+# Import QC information
+
+## Number of input and non-host reads
+
+```{r}
+qc.df <- read.table("../data/preprocess_summary_n4352_230606.txt", sep="\t", header=T)
+qc.df <- qc.df %>% mutate(frac.nonhost=nonhost/(host+nonhost))
+dim(qc.df)
+```
+
+## Percent unclassified by Kraken
+
+```{r}
+perc.unclass.df <- read.table("../data/percent_kraken_unclassified_n4352_221102.txt", sep="\t", header=T)
+dim(perc.unclass.df)
+```
+
+# Import Kraken matrix
+
+N.B. Uses `orig.seq.ID`.
+
+```{r}
+kraken.data.df <- read.table("../data/kraken_matrix_before_QC_n1303x4352_221011.txt", sep="\t", header=T, row.names=1)
+dim(kraken.data.df)
+```
+
+# Combine QC info with sample metadata
+
+```{r}
+seq.meta.annot.df.w.qc <- seq.meta.annot.df %>% 
+  merge(perc.unclass.df, by="seq.ID", all.x=T) %>% 
+  merge(qc.df, by="seq.ID", all.x=T)
+
+seq.meta.annot.df.DO.w.qc <- seq.meta.annot.df.w.qc %>% 
+  dplyr::filter(sample.type == "DO")
+
+seq.meta.annot.df.ctls.w.qc <- seq.meta.annot.df.w.qc %>% 
+  dplyr::filter(sample.type != "DO")
+```
+
+# 1) Date of collection is after date of death
+
+```{r}
+seq.meta.annot.df.DO.w.qc <- seq.meta.annot.df.DO.w.qc %>% 
+  
+  # convert age at time of collection to days
+  mutate(age.days = age.wks * 7) %>% 
+  
+  # subtract lifespan from age at time of collection in days
+  mutate(DOE.minus.DOC = SurvDays - age.days)
+
+seq.meta.annot.df.DO.w.qc %>% 
+  slice_min(DOE.minus.DOC, n=10) %>% 
+  arrange(DOE.minus.DOC) %>% 
+  relocate(DOE.minus.DOC, SurvDays, age.days)
+```
+
+```{r}
+DOC.after.DOE.seq.IDs <- seq.meta.annot.df.DO.w.qc %>% 
+  
+  # keep just samples that don't meet threshold
+  dplyr::filter(DOE.minus.DOC < 0) %>%
+  
+  pull(seq.ID)
+
+# remove these samples
+df.post.step1 <- seq.meta.annot.df.DO.w.qc %>% 
+  dplyr::filter(!(seq.ID %in% DOC.after.DOE.seq.IDs))
+
+length(DOC.after.DOE.seq.IDs)
+nrow(df.post.step1)
+```
+
+* n=6 samples with DOC > DOE, leaving us with 3438 DO samples
+
+# 2) Too few input clusters
+
+```{r}
+df.post.step1 %>% 
+  dplyr::filter(input < 5e6) %>% 
+  ggplot(aes(input)) +
+  geom_histogram(bins=100) +
+  geom_vline(xintercept=MIN.NUM.CLUSTERS, lty=2, color="red")
+```
+
+```{r}
+too.few.clusters.seq.IDs <- df.post.step1 %>% 
+  dplyr::filter(input < MIN.NUM.CLUSTERS) %>% 
+  pull(seq.ID)
+
+# remove these samples
+df.post.step2 <- df.post.step1 %>% 
+  dplyr::filter(!(seq.ID %in% too.few.clusters.seq.IDs))
+
+length(too.few.clusters.seq.IDs)
+nrow(df.post.step2)
+```
+
+* n=29 samples with too few input clusters
+
+## Controls
+
+Remove negative controls with zero reads. Remove positive controls with too few reads.
+
+```{r}
+seq.meta.annot.df.w.qc %>% 
+  group_by(sample.type) %>% 
+  summarise(mean = mean(input),
+            median = median(input),
+            n=n())
+```
+
+* # clusters / read pairs per sample:
+* Mean: DO 14.1M, NEG 84k, POS 15.9M
+* Median: DO 13.1M, NEG 3760, POS 15.0M
+
+```{r}
+(read.pairs.per.sample.type.boxplots <- seq.meta.annot.df.w.qc %>% 
+   mutate(sample.type = factor(sample.type, levels=c("DO", "POS", "NEG"))) %>% 
+   ggplot(aes(x=sample.type, y=input)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   labs(x="Sample type", y="# read pairs per sample") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/num_read_pairs_per_sample_boxplots.pdf", width=2, height=2)
+# read.pairs.per.sample.type.boxplots
+# dev.off()
+```
+
+```{r}
+# remove positive controls with too few clusters
+too.few.clusters.pos.ctls.seq.IDs <- seq.meta.annot.df.ctls.w.qc %>% 
+  
+  dplyr::filter(sample.type == "POS") %>% 
+  dplyr::filter(input < MIN.NUM.CLUSTERS.POS) %>% 
+  pull(seq.ID)
+
+# remove these samples
+qc.df.post.step2 <- seq.meta.annot.df.ctls.w.qc %>% 
+  dplyr::filter(!(seq.ID %in% too.few.clusters.pos.ctls.seq.IDs))
+
+length(too.few.clusters.pos.ctls.seq.IDs)
+nrow(qc.df.post.step2)
+```
+
+* We remove 3 positive controls, and we're left with 130 control samples
+
+# 3) Too high proportion host reads
+
+```{r}
+df.post.step2 %>% 
+  ggplot(aes(frac.nonhost)) +
+  geom_histogram(bins=100) +
+  geom_vline(xintercept=MIN.FRAC.NONHOST, lty=2, color="red")
+```
+
+```{r}
+too.low.frac.nonhost.seq.IDs <- df.post.step2 %>%
+  dplyr::filter(frac.nonhost < MIN.FRAC.NONHOST) %>% 
+  pull(seq.ID)
+
+# remove these samples
+df.post.step3 <- df.post.step2 %>% 
+  dplyr::filter(!(seq.ID %in% too.low.frac.nonhost.seq.IDs))
+
+length(too.low.frac.nonhost.seq.IDs)
+nrow(df.post.step3)
+```
+
+* n=53 samples with too high proportion of host reads
+
+```{r}
+df.post.step2 %>% 
+  dplyr::filter(sample.type == "DO") %>% 
+  summarise(mean.frac.nonhost = mean(frac.nonhost), 
+            mean.nonhost = mean(nonhost),
+            mean.host = mean(host))
+```
+
+* Just DO samples: mean host is 9.1%, 1.1 M reads
+
+# 4) Outliers
+
+```{r}
+outlier.orig.seq.IDs <- discard.df %>% 
+  dplyr::filter(reason == "outlier") %>% 
+  pull(orig.seq.ID)
+
+outlier.seq.IDs <- seq.meta.annot.df %>% 
+  dplyr::filter(orig.seq.ID %in% outlier.orig.seq.IDs) %>% 
+  pull(seq.ID)
+
+df.post.step4 <- df.post.step3 %>% 
+  dplyr::filter(!(orig.seq.ID %in% outlier.orig.seq.IDs))
+
+length(outlier.orig.seq.IDs)
+dim(df.post.step4)
+```
+
+* n=13 outliers
+
+# Combine DO and control samples to keep
+
+```{r}
+seq.IDs.to.keep <- c(df.post.step4$seq.ID, qc.df.post.step2$seq.ID)
+length(seq.IDs.to.keep)
+
+seq.meta.annot.filt.df <- seq.meta.annot.df %>% 
+  dplyr::filter(seq.ID %in% seq.IDs.to.keep) %>% 
+  arrange(seq.ID)
+
+# keep sorted version of these IDs to avoid confusion later
+sorted.orig.seq.IDs.to.keep <- seq.meta.annot.filt.df$orig.seq.ID
+sorted.seq.IDs.to.keep <- seq.meta.annot.filt.df$seq.ID
+
+length(sorted.orig.seq.IDs.to.keep)
+length(sorted.seq.IDs.to.keep)
+```
+
+* 3473 samples
+
+# Filter and export
+
+## Sequencing metadata
+
+```{r}
+seq.meta.df.post.qc <- seq.meta.df %>% 
+  
+  # subset
+  dplyr::filter(seq.ID %in% sorted.seq.IDs.to.keep) %>% 
+  
+  # remove orig.seq.ID
+  dplyr::select(-orig.seq.ID) %>% 
+  
+  # sort by seq.ID (to be tidy)
+  arrange(seq.ID)
+
+dim(seq.meta.df.post.qc)
+```
+
+```{r}
+# seq.meta.df.post.qc %>%
+#   write.table(
+#     sprintf("../data/metadata/sequencing_metadata_after_QC_n%i_230620.txt", nrow(.)),
+#     sep="\t", quote=F, row.names=F)
+```
+
+## Library metadata
+
+```{r}
+lib.IDs.to.keep <- seq.meta.annot.df %>% 
+  
+  # subset
+  dplyr::filter(seq.ID %in% sorted.seq.IDs.to.keep) %>% 
+  
+  # get corresponding library IDs
+  pull(lib.ID) %>% 
+  unique()
+
+length(lib.IDs.to.keep)
+```
+
+```{r}
+lib.meta.df.post.qc <- lib.meta.df %>% 
+  
+  # subset
+  dplyr::filter(lib.ID %in% lib.IDs.to.keep) %>% 
+  
+  # sort by lib.ID (to be tidy)
+  arrange(lib.ID)
+
+# check dimensions
+nrow(lib.meta.df.post.qc) == length(lib.IDs.to.keep)
+
+dim(lib.meta.df.post.qc)
+```
+
+```{r}
+# lib.meta.df.post.qc %>%
+#   write.table(
+#     sprintf("../data/metadata/library_metadata_after_QC_n%i_230620.txt", nrow(.)),
+#     sep="\t", quote=F, row.names=F)
+```
+
+## Stool metadata
+
+```{r}
+# including controls
+stool.IDs.to.keep <- seq.meta.annot.df %>% 
+  
+  # subset
+  dplyr::filter(seq.ID %in% sorted.seq.IDs.to.keep) %>% 
+  
+  # get corresponding stool IDs
+  pull(stool.ID) %>% 
+  unique()
+
+# no controls
+DO.stool.IDs.to.keep <- seq.meta.annot.df %>% 
+  
+  # only DO
+  dplyr::filter(sample.type == "DO") %>% 
+  
+  # subset
+  dplyr::filter(seq.ID %in% sorted.seq.IDs.to.keep) %>% 
+  
+  # get corresponding stool IDs
+  pull(stool.ID) %>% 
+  unique()
+
+length(stool.IDs.to.keep)
+length(DO.stool.IDs.to.keep)
+```
+
+* 3124 stool IDs, 2997 DO stool IDs
+
+```{r}
+stool.meta.df.post.qc <- stool.meta.df %>% 
+  
+  # subset
+  dplyr::filter(stool.ID %in% stool.IDs.to.keep) %>% 
+  
+  # sort by stool.ID (to be tidy)
+  arrange(stool.ID)
+
+# check dimensions
+nrow(stool.meta.df.post.qc) == length(stool.IDs.to.keep)
+dim(stool.meta.df.post.qc)
+```
+
+```{r}
+# stool.meta.df.post.qc %>%
+#   write.table(
+#     sprintf("../data/metadata/stool_metadata_after_QC_n%i_230620.txt", nrow(.)),
+#     sep="\t", quote=F, row.names=F)
+```
+
+```{r}
+DO.stool.meta.df.post.qc <- stool.meta.df %>% 
+  
+  # subset
+  dplyr::filter(stool.ID %in% DO.stool.IDs.to.keep) %>% 
+  
+  # sort by stool.ID (to be tidy)
+  arrange(stool.ID)
+
+# check dimensions
+nrow(DO.stool.meta.df.post.qc) == length(DO.stool.IDs.to.keep)
+dim(DO.stool.meta.df.post.qc)
+```
+
+```{r}
+# DO.stool.meta.df.post.qc %>%
+#   write.table(
+#     sprintf("../data/metadata/stool_metadata_after_QC_no_controls_n%i_230620.txt", nrow(.)),
+#     sep="\t", quote=F, row.names=F)
+```
+
+## Kraken
+
+Switch column names from `orig.seq.ID` to `seq.ID`.
+
+```{r}
+# subset
+kraken.post.qc.data.df <- kraken.data.df[, sorted.orig.seq.IDs.to.keep]
+
+# switch from orig.seq.ID to seq.ID
+colnames(kraken.post.qc.data.df) <- sorted.seq.IDs.to.keep
+
+dim(kraken.post.qc.data.df)
+# kraken.post.qc.data.df[1:3, 1:3]
+```
+
+```{r}
+# kraken.post.qc.data.df %>%
+#   rownames_to_column("taxon.ID") %>%
+#   write.table(
+#     sprintf("../data/kraken_matrix_after_QC_n%ix%i_230620.txt", nrow(.), ncol(.)-1),
+#     sep="\t", row.names=F, quote=F)
+```
+
+# Appendix: All pairwise microbiome distances
+
+N.B. Many of the following code chunks are very slow.
+
+## Compute pairwise Bray-Curtis distances
+
+Consider just the samples that have passed all QC so far.
+
+```{r}
+kraken.df.post.step3 <- kraken.data.df[, df.post.step3$orig.seq.ID]
+
+dim(kraken.data.df)
+dim(kraken.df.post.step3)
+```
+
+Convert to relative abundances and compute distances (slow).
+
+```{r}
+library(vegan)
+kraken.relab.df <- decostand(kraken.df.post.step3, method="total", MARGIN=2)
+bc.dist <- vegdist(t(kraken.relab.df))
+```
+
+Pivot longer and add annotations (adding annotations is super slow, like > 30 min).
+
+N.B. Need `stool.ID` annotation to exclude pairwise comparisons among samples from the same stool.ID.
+
+```{r}
+bc.dist.long.df <- data.frame(as.matrix(bc.dist)) %>% 
+
+  # pivot longer
+  rownames_to_column("x") %>% 
+  pivot_longer(-x, names_to="y", values_to="dist") %>% 
+  
+  # remove distance to self
+  dplyr::filter(x != y) %>% 
+  
+  # add annotations
+  merge(seq.meta.annot.df, by.x="x", by.y="orig.seq.ID") %>% 
+  merge(seq.meta.annot.df, by.x="y", by.y="orig.seq.ID", suffixes=c(".x", ".y")) %>% 
+  
+  # remove distances among samples from the same stool.ID
+  dplyr::filter(stool.ID.x != stool.ID.y)
+```
+
+## Highlight outliers
+
+```{r}
+(pairwise.sample.dists.w.outliers.hist <- bc.dist.long.df %>% 
+   # slice_sample(n=100000) %>% 
+   
+   mutate(involves.outlier = (seq.ID.x %in% outlier.seq.IDs) | (seq.ID.y %in% outlier.seq.IDs)) %>% 
+   ggplot(aes(dist, fill=involves.outlier)) +
+   geom_histogram(bins=100) +
+   labs(x="Distance between two samples", y="# pairs",
+        title="All pairwise sample distances",
+        fill="Involves outlier?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none") +
+   scale_fill_manual(values=c(`TRUE`="firebrick", `FALSE`="gray80")))
+```
+
+```{r}
+# pdf("../plots/pairwise_sample_distances_with_outliers.pdf", height=2, width=2)
+# pairwise.sample.dists.w.outliers.hist
+# dev.off()
+```
+
+## Examine pairs with large distances
+
+```{r}
+(potential.outliers.df <- bc.dist.long.df %>% 
+   dplyr::filter(dist > 0.9) %>% 
+   dplyr::filter(stool.ID.x != stool.ID.y) %>%
+   dplyr::count(seq.ID.x) %>% 
+   arrange(desc(n)) %>% 
+   mutate(frac = n/sum(n)) %>% 
+   mutate(cum.sum = cumsum(frac)) %>% 
+   slice_max(n, n=20))
+```
+
+The very large distances are enriched for a handful (11 to 18) of samples. Somewhat arbitrarily, we'll consider the first 13 samples to be outliers.
+
+```{r}
+bc.dist.long.df %>%
+  dplyr::filter(dist > 0.9) %>%
+  nrow()
+
+bc.dist.long.df %>% 
+  dplyr::filter(dist > 0.9) %>% 
+  dplyr::count(seq.ID.x) %>% 
+  nrow()
+
+potential.outliers.df %>% 
+  slice_max(n, n=13) %>%
+  slice_min(n, n=1) %>% 
+  pull(cum.sum)
+```
+
+The 46,358 pairwise distances greater than 0.9 involve 3349 samples. Of these 3349 samples, 13 samples account for 47.8% of distances.
+
+```{r}
+potential.outliers.df %>% 
+  slice_max(n, n=13) %>% 
+  pull(seq.ID.x) %>% sort()
+```
+
+These are the 13 samples in `samples_to_discard.xlsx`.
+
+```{r}
+sort(outlier.seq.IDs)
+```
+

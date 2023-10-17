@@ -1,0 +1,1437 @@
+MouseID,Generation,Cohort,JobGroup,BWDay,HID,LHID,Diet,EN,Coat,Status,DOB,DOE,COE,SurvDays,Died,AnimalComments,CAST
+DO-40-2162,G28,G28W1,G28W1D1,Tuesday,6473,9053,40,R,white,Dead,9/19/17,2/16/22,Found Dead (FD),1611,TRUE,NA,FALSE
+DO-40-2179,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,L,other,Dead,10/10/17,1/14/22,Found Dead (FD),1557,TRUE,106-B8-2020-Right Eye Damage-5/5/20-12/17/20(H),TRUE
+DO-40-2181,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,2R,other,Dead,10/10/17,12/21/21,Requested Euthanasia (RE),1533,TRUE,NA,FALSE
+DO-40-2187,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,L,other,Dead,10/10/17,12/8/21,Euthanized Sick (ES),1520,TRUE,NA,FALSE
+DO-40-2099,G26,G26W1,G26W1D1,Thursday,5840,5840,40,L,other,Dead,3/21/17,9/14/21,Euthanized Sick (ES),1638,TRUE,RE by GAV. Agnes. Moribund.,FALSE
+DO-40-2167,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,3R,other,Dead,9/19/17,7/26/21,Found Dead (FD),1406,TRUE,122-B8-2020-Bite Wounds to Tail-5/26/20-12/17/20(H). Death Date not written on card but case 19779-B8-21 says FD by staff 7/26/2021.,FALSE
+DO-40-2146,G27,G27W2,G27W2D1,Monday,6305,6305,40,R,other,Dead,7/18/17,7/20/21,Found Dead (FD),1463,TRUE,NA,FALSE
+DO-40-2126,G26,G26W2,G26W2D2,Thursday,5883,5883,40,2L,other,Dead,4/11/17,6/30/21,Found Dead (FD),1541,TRUE,2L. cloudy right eye 9/24/20,FALSE
+DO-40-2117,G26,G26W2,G26W2D1,Thursday,5882,5882,40,2R,other,Dead,4/11/17,6/22/21,Found Dead (FD),1533,TRUE,2R,FALSE
+DO-20-1136,G27,G27W1,G27W1D1,Monday,6184,6184,20,3L,black,Dead,6/27/17,6/11/21,Euthanized Sick (ES),1445,TRUE,"very jumpy, jumps out of cup 6/11/21 could no longer right it's self, cold, labored breathing",TRUE
+DO-40-2141,G27,G27W1,G27W1D2,Monday,6187,6187,40,2R,other,Dead,6/27/17,6/11/21,Euthanized Sick (ES),1445,TRUE,"ruffled fur, squinted eyes, piloerection across body and head, slight head tilt 4/19/21 could no longed right it self, cold, labored breathing
+",FALSE
+DO-40-2153,G27,G27W2,G27W2D2,Monday,6306,6306,40,N,white,Dead,7/18/17,5/24/21,Found Dead (FD),1406,TRUE,right eye damage 6/29/18. 125-B8-2018(observation)-Right Eye Damage-8/24/18-3/9/20(H),TRUE
+DO-40-2107,G26,G26W1,G26W1D2,Thursday,5841,5841,40,L,other,Dead,3/21/17,5/3/21,Found Dead (FD),1504,TRUE,"L. Looks like B EN 6/5/20. derm on ears.254-B8-2020-Eye Damage to Right eye-11/18/20- Clam administered 0.5% ketrolac once daily for eye damage treatment 11/19/20-  Mouse given hydorgel, slightly dehydrated 12/23/20",FALSE
+DO-40-2118,G26,G26W2,G26W2D1,Thursday,5882,5882,40,2L,other,Dead,4/11/17,4/27/21,Requested Euthanasia (RE),1477,TRUE,2L.,TRUE
+DO-40-2115,G26,G26W2,G26W2D1,Thursday,5882,5882,40,L,white,Dead,4/11/17,4/15/21,Found Dead (FD),1465,TRUE,L,TRUE
+DO-40-2164,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,B,white,Dead,9/19/17,4/12/21,Found Dead (FD),1301,TRUE,NA,FALSE
+DO-40-2192,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,3L,black,Dead,10/10/17,4/12/21,Found Dead (FD),1280,TRUE,16355-B8-21-Ulcerated Tumor hip of right leg-4/7/21-4/12/21 (DIT),FALSE
+DO-20-1152,G27,G27W2,G27W2D1,Monday,6303,6303,20,2R1L,other,Dead,7/18/17,4/2/21,Found Dead (FD),1354,TRUE,EN was originally 3L but closed up - EN changed to 2R1L. derm on ears 7/6/20. 285-B8-2020-Derm to dorsal neck and left shoulder-12/14/20-,FALSE
+DO-20-1151,G27,G27W2,G27W2D1,Monday,6303,6303,20,3R,other,Dead,7/18/17,3/31/21,Found Dead (FD),1352,TRUE,176-B8-2020-Mild Derm to Upper Back-7/29/20-8/27/20(H) 226-B8-2020-Derm on Ears-10/7/20-10/26/20(H) 285-B8-2020-Derm to dorsal neck-12/14/20-12/23/20(H),FALSE
+DO-20-1186,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,R,other,Dead,10/10/17,3/29/21,Found Dead (FD),1266,TRUE,REN,FALSE
+DO-40-2184,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,3L,black,Dead,10/10/17,3/29/21,Found Dead (FD),1266,TRUE,NA,FALSE
+DO-40-2159,G27,G27W2,G27W2D2,Monday,6306,6306,40,3R,other,Dead,7/18/17,3/23/21,Found Dead (FD),1344,TRUE,NA,TRUE
+DO-40-2183,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,3R,other,Dead,10/10/17,3/3/21,Found Dead (FD),1240,TRUE,13046-B8-2021-Tumor On Left Shoulder-1/12/21-2/11/21(H),FALSE
+DO-2D-4171,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,L,other,Dead,9/19/17,3/1/21,Found Dead (FD),1259,TRUE,"Case 13A-B8-2019-  Slight white discharge, Blepharospasm, Conjuctivitis-1/25/19-2/10/20(no change in condition- case closed). Distended abdomen 5/12/20",FALSE
+DO-20-1188,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,B,other,Dead,10/10/17,2/15/21,Found Dead (FD),1224,TRUE,NA,FALSE
+DO-40-2168,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,3L,other,Dead,9/19/17,1/29/21,Found Dead (FD),1228,TRUE,NA,FALSE
+DO-40-2156,G27,G27W2,G27W2D2,Monday,6306,6306,40,B,other,Dead,7/18/17,1/18/21,Requested Euthanasia (RE),1280,TRUE,"has tears in one ear that make it look like 3R1L 10/1/18 very scuffy looking. exposed tissue corner of right eye 4/20/20. 134-B8-2020-Eye Damage to Right Eye-6/21/20-1/18/21(DIT) Euthanized per CLAM for unresolved eye damage treatment causing possible pain and distress( large tumor like mass behind right eye, mouse is hunched, scruffy and sickly.) This mouse was incorrectly marked dead on 11/29/20",FALSE
+DO-20-1156,G27,G27W2,G27W2D1,Monday,6304,6304,20,B,other,Dead,7/18/17,1/11/21,Found Dead (FD),1273,TRUE,"slow movements, tremor, hunched posture, breathing looks slightly labored. Added daily feeding to pen floor 12/16/20. hydrogel added to pen floor on 12/26/20
+",FALSE
+DO-2D-4167,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,3R,other,Dead,9/19/17,12/31/20,Found Dead (FD),1199,TRUE,NA,FALSE
+DO-2D-4172,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,B,other,Dead,9/19/17,12/26/20,Found Dead (FD),1194,TRUE,NA,FALSE
+DO-20-1170,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,R,white,Dead,9/19/17,12/14/20,Euthanized Sick (ES),1182,TRUE,"256-B8-2020-Other-Increase in Respiratory Rate-11/19/20-12/14/20(DIT) Mouse put on weekly observation by clam on 11/18/20(shock staff will check on Mondays and clam staff on Fridays). Given hydrogel on 12/11/20. Euthanized on 12/14/20- severely dehydrated(gel cup has not been touched) and has only consumed a small amount of food given from weekend feeding, eyes are held closed, hunched posture, tremor, limited movements, cold to touch",FALSE
+DO-20-1157,G27,G27W2,G27W2D1,Monday,6304,6304,20,2R,other,Dead,7/18/17,12/11/20,Found Dead (FD),1242,TRUE,"pilorection across body and head, slow and labored movements 12/9/20",FALSE
+DO-40-2070,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,2L,other,Dead,9/20/16,12/8/20,Euthanized Sick (ES),1540,TRUE,"2LEN. cloudy left eye. 219-B8-2020-Trauma to Tail Tip/Bloody and Raw-9/27/20-11/2/20(H) 253-B8-2020-Trauma to Tail-11/15/20-12/8/20(DIT) Mouse given hydrogel 11/17/20 per clam. Found on 12/8/20 unable to stand or move and stuck in gel cup, cold to touch Euthanized MLL",TRUE
+DO-2D-4186,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,R,white,Dead,10/10/17,12/4/20,Requested Euthanasia (RE),1151,TRUE,"254A-B8-2020-Derm on Ears-11/15/20-12/4/20(DIT) labored breathing, ruffled fur, tremor 11/30/20. 12/3/20-Left rear foot is swollen and raw along with tail lesions(possible self-trauma). Mouse given Buprenorphine SR at 0.5mg/kg SC on 12/3/20. Requested Euthanasia from CLAM for being unresponsive to treatment and in apparent pain and distress. Mouse has open wounds on heels with possible bone exposure, fresh ulcer on lateral side, dehydrated, lethargic, and starting to feel cold to touch. Euthanized on 12/4/20 by MLL",TRUE
+DO-40-2186,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,R,other,Dead,10/10/17,12/2/20,Found Dead (FD),1149,TRUE,"piloerection across body and head, hunched posture, BCS 1 11/23/20",FALSE
+DO-40-2158,G27,G27W2,G27W2D2,Monday,6306,6306,40,2L,other,Dead,7/18/17,11/29/20,Found Dead (FD),1230,TRUE,"check coat color? 125-B8-2018(observation)-Eye Damage-8/24/18-3/9/20(H)
+",FALSE
+DO-40-2182,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,2L,other,Dead,10/10/17,11/23/20,Found Dead (FD),1140,TRUE,R eye damage 3/9/20. 106-B8-2020-Right Eye Damage-5/5/20-11/23/20(DIT). Found dead while taking mice out of metabolic cages,FALSE
+DO-20-1178,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,R,white,Dead,10/10/17,11/20/20,Found Dead (FD),1137,TRUE,"purple ""bruise"" on tail 5/12/20. Found dead while in metabolic testing",FALSE
+DO-40-2152,G27,G27W2,G27W2D1,Monday,6305,6305,40,3L1R,black,Dead,7/18/17,11/19/20,Found Dead (FD),1220,TRUE,"changed EN to 3L1R(used EN sample for genotyping) 4/12/18
+24-B8-2018-3/13/2018-Missing Right Eye",FALSE
+DO-40-2172,G28,G28W1,G28W1D2,Tuesday,6474,8603,40,B,other,Dead,9/19/17,11/18/20,Euthanized Sick (ES),1156,TRUE,195-B8-2020-Derm at Base of Tail-8/23/20-11/18/20(DIT),FALSE
+DO-40-2145,G27,G27W2,G27W2D1,Monday,6305,6305,40,N,other,Dead,7/18/17,11/9/20,Found Dead (FD),1210,TRUE,NA,FALSE
+DO-40-2111,G26,G26W1,G26W1D2,Thursday,5841,5841,40,3R,other,Dead,3/21/17,11/3/20,Missing (MSG),1323,TRUE,"SCO-15-2017(observation)-Eye Damage to right eye-11/30/17-2/7/20
+(no change to condition- case closed)",FALSE
+DO-20-1179,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,L,other,Dead,10/10/17,10/28/20,Euthanized Sick (ES),1114,TRUE,"small right ear 5/12/20. large tumor like mass on dorsal neck 9/15/20. Tumor has become ulcerated 10/6./20 224-B8-2020-Ulcerated Tumor on Dorsal Neck-10/4/20-10/28/20(DIT) Euthanized, unable to right itself",FALSE
+DO-20-1190,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,2L,other,Dead,10/10/17,10/28/20,Euthanized Sick (ES),1114,TRUE,NA,FALSE
+DO-40-2178,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,R,other,Dead,10/10/17,10/27/20,Found Dead (FD),1113,TRUE,hairloss around ears and top of head. Watch for derm 4/14/20.106-B8-2020-Derm on Ears-5/5/20-10/27/20(DIT),FALSE
+DO-2D-4149,G27,G27W2,G27W2D2,Monday,6299,6299,2D,2R,other,Dead,7/18/17,10/25/20,Found Dead (FD),1195,TRUE,NA,FALSE
+DO-AL-0118,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,2L,other,Dead,4/11/17,10/25/20,Found Dead (FD),1293,TRUE,"2L, biter.",FALSE
+DO-2D-4165,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,2R,other,Dead,9/19/17,10/14/20,Found Dead (FD),1121,TRUE,right eye damage 8.28.18. Mouse found dead while in metabolic testing,TRUE
+DO-1D-3188,G28,G28W2,G28W2D2,Tuesday,6538,6538,1D,B,other,Dead,10/10/17,10/13/20,Found Dead (FD),1099,TRUE,NA,FALSE
+DO-40-2176,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,3L,black,Dead,9/19/17,10/13/20,Found Dead (FD),1120,TRUE,Found dead during metabolic testing,FALSE
+DO-20-1168,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,3L,other,Dead,9/19/17,10/11/20,Found Dead (FD),1118,TRUE,distended abdomen 10/6/20,FALSE
+DO-AL-0180,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,B,other,Dead,10/10/17,9/29/20,Found Dead (FD),1085,TRUE,"ruffled fur, distended abdomen, start of hunched posture 9/15/20",FALSE
+DO-2D-4180,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,B,other,Dead,10/10/17,9/27/20,Found Dead (FD),1083,TRUE,275-B8-2019-Mild Bite Wounds to Tail-11/27/19-2/10/20(H) distended abdomen 3/3/20,FALSE
+DO-20-1101,G26,G26W1,G26W1D1,Thursday,5836,5836,20,2R,other,Dead,3/21/17,9/25/20,Found Dead (FD),1284,TRUE,"2R. piloerection across body and head, distended abdomen, hunched posture, eyes are barely open, tremor. Put food on bottom of pen 9/24/20
+SCO-54-11/30/2017-Right Eye damage",FALSE
+DO-20-1109,G26,G26W1,G26W1D1,Thursday,5838,5838,20,2R,other,Dead,3/21/17,9/24/20,Found Dead (FD),1283,TRUE,"2R. Piloerection, ruffled fur 9/13/18",FALSE
+DO-20-1183,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,3R,black,Dead,10/10/17,9/24/20,Euthanized Sick (ES),1080,TRUE,"hind limb paralysis, daily food will be put on floor added hydrogel to pen. thoracic mass 7/14/20. Found cold, unresponsive to touch, heavy breathing and bleeding from back legs euthanized 9/24/20 hjs",FALSE
+DO-40-2116,G26,G26W2,G26W2D1,Thursday,5882,5882,40,B,other,Dead,4/11/17,9/24/20,Found Dead (FD),1262,TRUE,"B. tumor-like mass near back right leg, gait is abnormal due to mass 9/10/20. 213-B8-2020-Non-Ulcerated Tumor on right hip/rump area-9/20/20-9/24/20(DIT)",FALSE
+DO-20-1127,G26,G26W2,G26W2D1,Thursday,5881,5881,20,3R,other,Dead,4/11/17,9/21/20,Euthanized Sick (ES),1259,TRUE,"3R. thin and frail, piloerection starting on head 6/5/20.labored breathing, BCS 1, piloerection across body and head, tremor 6/11/20",FALSE
+DO-1D-3170,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,R,white,Dead,9/19/17,9/20/20,Found Dead (FD),1097,TRUE,"extensive hair thinnin across entire body, fur is ruffled, labored breathing, hunched posture and tremor 9/15/20",FALSE
+DO-2D-4190,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,2L,other,Dead,10/10/17,9/20/20,Found Dead (FD),1076,TRUE,NA,FALSE
+DO-AL-0176,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,3L,other,Dead,9/19/17,9/20/20,Found Dead (FD),1097,TRUE,"piloerection across body and head, tumor-like mass across dorsal neck, face looks swollen 9/1/20. tumor like masses across body, labored breathing, abnormal/uneven gait, put food on pen floor 9/15/20",FALSE
+DO-40-2151,G27,G27W2,G27W2D1,Monday,6305,6305,40,3R,other,Dead,7/18/17,9/18/20,Found Dead (FD),1158,TRUE,159-B8-2020-mild malo-7/12/20-9/1/20(H),FALSE
+DO-1D-3145,G27,G27W2,G27W2D2,Monday,6307,6307,1D,N,white,Dead,7/18/17,9/14/20,Found Dead (FD),1154,TRUE,"191-B8-2019(observation)-Eye Damage-9/13/19-2/10/20(no change to condition- case closed) Distended abdomen-2/10/2020. 93-B8-20-Other(observation) Distended Abdomen/Ascitis-4/6/20-6/15/20(case closed,no change). 203-B8-2020-Distended Abdomen-8/30/20-9/14/20(DIT). Died while in metabolic testing.",FALSE
+DO-AL-0141,G27,G27W1,G27W1D1,Monday,6183,6183,AL,2R,other,Dead,6/27/17,9/13/20,Found Dead (FD),1174,TRUE,distended abdomen 7/6/20,FALSE
+DO-20-1123,G26,G26W2,G26W2D1,Thursday,5881,5881,20,L,other,Dead,4/11/17,9/11/20,Found Dead (FD),1249,TRUE,"L. mass forming on back right leg. gait is uneven and labored. Piloerection across body and head, breathing is heavy and labored.Nails on back feet are abnormally long 9/10/20",FALSE
+DO-2D-4148,G27,G27W2,G27W2D2,Monday,6299,6299,2D,B,other,Dead,7/18/17,9/11/20,Euthanized Sick (ES),1151,TRUE,"found unresponsive to touch, lying on side, unable to right itself and taking slow shallow breaths while in metabolic testing. Euthanized hjs",FALSE
+DO-2D-4184,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,3L,black,Dead,10/10/17,9/11/20,Found Dead (FD),1067,TRUE,tremor 5/29/19. 196-B8-2020-Mild Derm on Ears and Back-8/23/20-9/11/20(DIT),FALSE
+DO-40-2174,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,2L,other,Dead,9/19/17,9/9/20,Found Dead (FD),1086,TRUE,small right eye,FALSE
+DO-40-2157,G27,G27W2,G27W2D2,Monday,6306,6306,40,2R,other,Dead,7/18/17,9/4/20,Found Dead (FD),1144,TRUE,right eye damage 6/29/18,FALSE
+DO-40-2160,G27,G27W2,G27W2D2,Monday,6306,6306,40,3L,black,Dead,7/18/17,9/3/20,Found Dead (FD),1143,TRUE,NA,FALSE
+DO-40-2081,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,N,white,Dead,10/4/16,9/2/20,Found Dead (FD),1429,TRUE,"N
+S7170557-8",FALSE
+DO-40-2149,G27,G27W2,G27W2D1,Monday,6305,6305,40,2R,other,Dead,7/18/17,9/1/20,Found Dead (FD),1141,TRUE,"24-B8-2018-3/13/18-Missing Right Eye ,Very frail,159-B8-2020-Mild Malo, Mild derm to muzzle and tail-7/12/20-9/1/20(DIT)",FALSE
+DO-2D-4168,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,3L,other,Dead,9/19/17,8/31/20,Missing (MSG),1077,TRUE,"ear notches close together, with one hole very low on ear",FALSE
+DO-20-1097,G26,G26W1,G26W1D1,Thursday,5836,5836,20,N,white,Dead,3/21/17,8/24/20,Found Dead (FD),1252,TRUE,N. no eyes,FALSE
+DO-2D-4151,G27,G27W2,G27W2D2,Monday,6299,6299,2D,3R,other,Dead,7/18/17,8/24/20,Missing (MSG),1133,TRUE,smaller than cage mates,FALSE
+DO-40-2150,G27,G27W2,G27W2D1,Monday,6305,6305,40,2L,other,Dead,7/18/17,8/24/20,Euthanized Sick (ES),1133,TRUE,found unresponsive before putting in metabolic testing. Euthanized. 159-B8-2020-Mild Malo/ Derm on tail/Hind limb paralysis-7/12/20-8/24/20(DIT),FALSE
+DO-40-2175,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,3R,other,Dead,9/19/17,8/24/20,Euthanized Sick (ES),1070,TRUE,"ear notches close together. 7/3/18. small right eye 8/28/1820. Mouse found lying on side, unresponsive to touch during CBC. Euthanized HJS
+",FALSE
+DO-1D-3169,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,N,white,Dead,9/19/17,8/20/20,Found Dead (FD),1066,TRUE,5-B8-2020- Moderate Derm to Dorsal Neck-1/9/20-1/21/20(H) 92-B8-2020- Derm to Dorsal Neck(severity not noted)-4/1/20-,FALSE
+DO-1D-3134,G27,G27W1,G27W1D2,Monday,6188,6188,1D,2L,other,Dead,6/27/17,8/17/20,Found Dead (FD),1147,TRUE,"distended abdomen 7/6/20
+",FALSE
+DO-AL-0172,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,B,other,Dead,9/19/17,8/14/20,Found Dead (FD),1060,TRUE,"Case 12-B8-2019 1/25/2019-2/7/20(H) Right eye blepharospasm, no discharge or opacity, swelling. 91-B8-2020-Eye Damage to Right Eye-3/27/20-4/30/20(closed). Back left foot is starting to look swollen. 5/12/20",FALSE
+DO-40-2137,G27,G27W1,G27W1D2,Monday,6187,6187,40,N,white,Dead,6/27/17,8/10/20,Found Dead (FD),1140,TRUE,NA,FALSE
+DO-20-1124,G26,G26W2,G26W2D1,Thursday,5881,5881,20,B,other,Dead,4/11/17,8/9/20,Found Dead (FD),1216,TRUE,B,FALSE
+DO-20-1189,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,2R,other,Dead,10/10/17,8/9/20,Found Dead (FD),1034,TRUE,left eye damage,FALSE
+DO-40-2088,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,3L,black,Dead,10/4/16,8/7/20,Found Dead (FD),1403,TRUE,"3L
+S7170557-8",TRUE
+DO-40-2135,G27,G27W1,G27W1D1,Monday,6186,6186,40,3R,other,Dead,6/27/17,8/4/20,Found Dead (FD),1134,TRUE,NA,FALSE
+DO-2D-4192,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,3L,black,Dead,10/10/17,8/3/20,Found Dead (FD),1028,TRUE,"hunched, piloerection across body and head, bulging eyes 7/6/20",FALSE
+DO-2D-4113,G26,G26W2,G26W2D2,Thursday,5886,5882,2D,N,white,Dead,4/11/17,7/30/20,Found Dead (FD),1206,TRUE,N,FALSE
+DO-1D-3168,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,3L,other,Dead,9/19/17,7/27/20,Found Dead (FD),1042,TRUE,failed to recover after PIXI testing. Found dead in pen before echo data could be collected.,FALSE
+DO-2D-4174,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,2L,other,Dead,9/19/17,7/27/20,Found Dead (FD),1042,TRUE,NA,FALSE
+DO-1D-3163,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,L,other,Dead,9/19/17,7/25/20,Found Dead (FD),1040,TRUE,"distended abdomen 6/23/20. hunched, labored breathing, piloerection across body and head, BCS 1.5 7/7/20",FALSE
+DO-1D-3189,G28,G28W2,G28W2D2,Tuesday,6538,6538,1D,2R,other,Dead,10/10/17,7/25/20,Found Dead (FD),1019,TRUE,large mass over back right leg 6/24/20,FALSE
+DO-20-1158,G27,G27W2,G27W2D1,Monday,6304,6304,20,2L,other,Dead,7/18/17,7/24/20,Found Dead (FD),1102,TRUE,"tremor 3/11/19. abdominal mass 4/27/20.very uneven gait, back end sways side to side while moving. Daily feeding put on pen floor 5/28/20",FALSE
+DO-40-2102,G26,G26W1,G26W1D1,Thursday,5840,5840,40,2L,other,Dead,3/21/17,7/24/20,Found Dead (FD),1221,TRUE,2L. messy notches. no right eye,FALSE
+DO-40-2056,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,3L,black,Dead,6/21/16,7/21/20,Found Dead (FD),1491,TRUE,3LEN. 104-B8-2020-Rectal Prolapse-4/28/20-,TRUE
+DO-2D-4162,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,R,other,Dead,9/19/17,7/17/20,Found Dead (FD),1032,TRUE,"hunched piloerection across body and start of head, BCS2 5/12/20.",FALSE
+DO-40-2125,G26,G26W2,G26W2D2,Thursday,5883,5883,40,2R,other,Dead,4/11/17,7/13/20,Found Dead (FD),1189,TRUE,236-B8-2019-Eye Damage(ruptured globe)-12/3/19-7/13/20(DIT),FALSE
+DO-20-1129,G27,G27W1,G27W1D1,Monday,6184,6184,20,N,other,Dead,6/27/17,7/10/20,Found Dead (FD),1109,TRUE,subdermal lipoma on dorsal neck 7/15/19,FALSE
+DO-2D-4143,G27,G27W1,G27W1D2,Monday,6191,6191,2D,3R,other,Dead,6/27/17,7/9/20,Found Dead (FD),1108,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17-2/10/20( no change to condition case closed). piloerection across body and head, thoracic mass that streatches to left ear 7/6/20
+",FALSE
+DO-40-2050,G23,G23W2,G23W2D1,Tuesday,4338,8754,40,R,other,Dead,6/21/16,7/8/20,Found Dead (FD),1478,TRUE,"REN22,23,24,26,27,28,29,30. 104-B8-2020-Rectal Prolapse-4/28/20-7/8/20(DIT)
+",FALSE
+DO-20-1164,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,B,other,Dead,9/19/17,7/6/20,Euthanized Sick (ES),1021,TRUE,"unresponsive to touch, eyes held closed, cold to touch, piloerection across body and head- euthanized by GAV",TRUE
+DO-40-2087,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,3R,black,Dead,10/4/16,7/5/20,Euthanized Sick (ES),1370,TRUE,"tremor 12/5/19. 288-B8-2019-Rectal Prolapse(severity not noted)-12/15/19-5/22/20(H). tremor 4/29/29 Losing mobility on the right side-6/10/20. Euthanized on 7/5/20 for being unresponsive to touch, eyes held closed, unable to right itself",FALSE
+DO-40-2133,G27,G27W1,G27W1D1,Monday,6186,6186,40,2R,other,Dead,6/27/17,6/29/20,Found Dead (FD),1098,TRUE,SCO-56(observation)-2017- Eye Damage-12/5/17-2/12/20- no change in condition- case closed,FALSE
+DO-20-1135,G27,G27W1,G27W1D1,Monday,6184,6184,20,3R,black,Dead,6/27/17,6/24/20,Found Dead (FD),1093,TRUE,NA,FALSE
+DO-20-1122,G26,G26W2,G26W2D1,Thursday,5881,5881,20,R,other,Dead,4/11/17,6/22/20,Found Dead (FD),1168,TRUE,"R. BCS1.5, distended abdomen, frail 6/5/20.",FALSE
+DO-20-1146,G27,G27W2,G27W2D1,Monday,6303,6303,20,R,other,Dead,7/18/17,6/22/20,Found Dead (FD),1070,TRUE,right eye damage,FALSE
+DO-20-1069,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,2R,other,Dead,9/13/16,6/18/20,Found Dead (FD),1374,TRUE,2REN. protrusion(tumor?) on left eye on lower lid 11/13/19,TRUE
+DO-20-1173,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,2R,other,Dead,9/19/17,6/15/20,Found Dead (FD),1000,TRUE,NA,FALSE
+DO-2D-4122,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,R,other,Dead,4/11/17,6/14/20,Found Dead (FD),1160,TRUE,R(low notch). 11/18/2017-Damage Right eye,FALSE
+DO-20-1066,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,L,other,Dead,9/20/16,6/13/20,Euthanized Sick (ES),1362,TRUE,"LEN, Ear-notched wrong side did L instead of R. found on side and could not right itself, unresponive to touch, eyes held closed, labored breathing. Euthanized hjs
+",FALSE
+DO-1D-3135,G27,G27W1,G27W1D2,Monday,6188,6188,1D,3R,other,Dead,6/27/17,6/12/20,Found Dead (FD),1081,TRUE,subdermal lipoma on dorsal neck 1/21/19,TRUE
+DO-40-2124,G26,G26W2,G26W2D2,Thursday,5883,8329,40,B,other,Dead,4/11/17,6/9/20,Found Dead (FD),1155,TRUE,"40(previously case 236)-B8-2019(observation)-Mild Derm, Eyes(ruptured globe)-10/15/19-6/9/20(DIT). Separated per clam on 1/29/20 for extensive barbering to face. Now in pen 8329. New clam case is",FALSE
+DO-AL-0188,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,B,other,Dead,10/10/17,6/9/20,Euthanized Sick (ES),973,TRUE,cloudy right eye 9/20/18. Euthanized per vet request for a wound to the right shoulder 6/9/20,FALSE
+DO-1D-3175,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,3R,black,Dead,9/19/17,6/4/20,Found Dead (FD),989,TRUE,92-B8-2020-Other(observation) Distended Abdomen/Ascitis-3/30/20-6/4/20(DIT) tumor-like mass forming on front left leg 5/12/20,TRUE
+DO-1D-3178,G28,G28W2,G28W2D2,Tuesday,6537,8334,1D,R,white,Dead,10/10/17,6/4/20,Found Dead (FD),968,TRUE,moved to pen 8334 for fighting 2/12/2020. 45-B8-2020-Bite Wounds to Tail-2/12/20-2/26/20(H)- abdomen looks slightly distended 3/3/20,FALSE
+DO-2D-4164,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,B,other,Dead,9/19/17,6/4/20,Found Dead (FD),989,TRUE,small right eye? check on this one 8/28/18. Tumor-like mass forming on back right leg 5/12/20,FALSE
+DO-AL-0162,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,R,white,Dead,9/19/17,6/4/20,Missing (MSG),989,TRUE,"tumor-like mass on back left leg. watch for ulceration 5/12/20.Death date not recorded on card. Terminal weight loss evident, used last test date as death date.hjs",FALSE
+DO-2D-4145,G27,G27W2,G27W2D2,Monday,6299,6299,2D,N,other,Dead,7/18/17,6/3/20,Found Dead (FD),1051,TRUE,right ear torn,FALSE
+DO-AL-0157,G27,G27W2,G27W2D1,Monday,6302,6302,AL,2R,other,Dead,7/18/17,6/3/20,Found Dead (FD),1051,TRUE,13-B8-2018-1/25/2018-Right Eye damage,FALSE
+DO-2D-4114,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,R,other,Dead,4/11/17,5/31/20,Found Dead (FD),1146,TRUE,"R, Found dead in promethion 5/31/20",FALSE
+DO-1D-3161,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,N,white,Dead,9/19/17,5/26/20,Found Dead (FD),980,TRUE,"distended abdomen, labored breathing, piloerection across body and head, eyes not fully open 5/12/20",FALSE
+DO-20-1165,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,2R,other,Dead,9/19/17,5/26/20,Found Dead (FD),980,TRUE,NA,FALSE
+DO-2D-4158,G27,G27W2,G27W2D2,Monday,6300,6300,2D,2L,other,Dead,7/18/17,5/26/20,Found Dead (FD),1043,TRUE,toe tattooed. Found dead during PIXI testing 5/26/20,FALSE
+DO-40-2061,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,2R,other,Dead,6/21/16,5/23/20,Found Dead (FD),1432,TRUE,"SCO-11(observation)-Right Eye Damage(discolored)-11/30/2017-2/10/20(no change in condition- case closed). piloerection across body and head, eyes held almost closed, thin and frail BCS1 4/14/20. start of hind limb paralysis, daily food is being put on bottom of pen not in hopper 5/12/20",TRUE
+DO-AL-0125,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,2R,other,Dead,4/11/17,5/23/20,Euthanized Sick (ES),1138,TRUE,2R. euthanized sick while in promethion,FALSE
+DO-1D-3139,G27,G27W1,G27W1D2,Monday,6189,6189,1D,L,white,Dead,6/27/17,5/22/20,Found Dead (FD),1060,TRUE,96-B8-2020-Tumor(Severity not Noted)-4/19/20-5/22/20(DIT),TRUE
+DO-2D-4178,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,R,white,Dead,10/10/17,5/19/20,Found Dead (FD),952,TRUE,"distended abdomen, ruffled fur, labored breathing, tumor-like mass forming on front right leg 5/12/20",FALSE
+DO-1D-3185,G28,G28W2,G28W2D2,Tuesday,6538,6538,1D,N,white,Dead,10/10/17,5/17/20,Found Dead (FD),950,TRUE,NA,TRUE
+DO-40-2123,G26,G26W2,G26W2D2,Thursday,5883,5883,40,L,other,Dead,4/11/17,5/17/20,Found Dead (FD),1132,TRUE,L. right eye damage,FALSE
+DO-40-2189,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,2R,other,Dead,10/10/17,5/12/20,Missing (MSG),945,TRUE,NA,TRUE
+DO-20-1176,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,3L,black,Dead,9/19/17,5/10/20,Found Dead (FD),964,TRUE,NA,FALSE
+DO-40-2073,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,N,white,Dead,9/20/16,5/10/20,Found Dead (FD),1328,TRUE,NEN,FALSE
+DO-2D-4132,G27,G27W1,G27W1D2,Monday,6190,6190,2D,B,other,Dead,6/27/17,5/5/20,Found Dead (FD),1043,TRUE,Failed to recover from anesthesia during PIXI/Echo testing 5/4/20,FALSE
+DO-40-2130,G27,G27W1,G27W1D1,Monday,6186,6186,40,R,white,Dead,6/27/17,5/5/20,Failed to Recover (FTR),1043,TRUE,"Appears sick and frail 3/5/19. Failed to recover from anesthesia during PIXI/Echo testing 5/4/20
+",FALSE
+DO-AL-0158,G27,G27W2,G27W2D1,Monday,6302,6302,AL,2L,other,Dead,7/18/17,5/5/20,Found Dead (FD),1022,TRUE,Changed death date from 5/15/20 to 5/5/20-HJS 9/10/20,FALSE
+DO-2D-4150,G27,G27W2,G27W2D2,Monday,6299,6299,2D,2L,other,Dead,7/18/17,5/3/20,Found Dead (FD),1020,TRUE,right eye damage,FALSE
+DO-AL-0128,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,3L,other,Dead,4/11/17,5/2/20,Found Dead (FD),1117,TRUE,3L. messy earnotches,FALSE
+DO-1D-3114,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,R,white,Dead,4/11/17,5/1/20,Euthanized Sick (ES),1116,TRUE,R.60-B8-2020-Mild Malo-3/20/20-5/1/20(DIT) Started Daily observation on 4/2/20 per clam for labored breathing,FALSE
+DO-40-2028,G22,G22W2,G22W2D2,Monday,3394,8617,40,B,other,Dead,3/1/16,4/30/20,Found Dead (FD),1521,TRUE,"SCO-13-2017(observation)-Left Eye Damage-11/30/17-2/10/20(no change to damage case closed)
+very small, frail, cold to touch 8/14/17, 
+",FALSE
+DO-AL-0175,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,3R,other,Dead,9/19/17,4/30/20,Found Dead (FD),954,TRUE,91-B8-2020-Mild Derm to Dorsal Neck-3/27/20-4/30/20(DIT),FALSE
+DO-AL-0117,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,2R,other,Dead,4/11/17,4/26/20,Found Dead (FD),1111,TRUE,"2R, biter. black fur on dorsal side 8/29/19. crusty ears.  101-B8-2020-Derm between ears and left eye damage-4/21/20-4/26/20(DIT) 
+",FALSE
+DO-1D-3146,G27,G27W2,G27W2D2,Monday,6307,6307,1D,R,other,Dead,7/18/17,4/24/20,Found Dead (FD),1011,TRUE,93-B8-20-Other(observation) Distended Abdomen/Ascitis-4/6/20-4/24/20(DIT),FALSE
+DO-2D-4157,G27,G27W2,G27W2D2,Monday,6300,6300,2D,2R,other,Dead,7/18/17,4/24/20,Found Dead (FD),1011,TRUE,toe tattooed,FALSE
+DO-1D-3155,G27,G27W2,G27W2D2,Monday,6308,6308,1D,L,other,Dead,7/18/17,4/23/20,Euthanized Sick (ES),1010,TRUE,"18-B8-2020-Severe Other(swollen hind foot)-1/22/20-4/23/20(DIT) hind foot markedly swollen to 3x normal size, tissue feels turgid, moderately erythemic. Walks on all 4 limbs, able to bear weat. Small linear erosion of skin around right hock. Treated with carprofen  starting 1/22/20.  Euthanized on 4/23/20 lethargic, unresponsive to touch, eyes barely held open, cold and labored breathing",FALSE
+DO-AL-0143,G27,G27W1,G27W1D1,Monday,6183,6183,AL,3R,other,Dead,6/27/17,4/23/20,Found Dead (FD),1031,TRUE,curled right ear 6/25/18 hjs. 90-B8-2020-Mild Malo-3/25/20-4/23/20(DIT),FALSE
+DO-40-2077,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,3R1L,other,Dead,9/20/16,4/22/20,Euthanized Sick (ES),1310,TRUE,"3R1L EN- EN was originally ""2R"" but was changed to ""3R1L"" - date changed is unk. Euthanized on 4/22/20- tear between rectal and vaginal wall causing pain and distress",FALSE
+DO-20-1074,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,R,other,Dead,9/13/16,4/20/20,Found Dead (FD),1315,TRUE,"REN, 11/28/2017-Right eye damage",FALSE
+DO-40-2059,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,L,other,Dead,6/21/16,4/20/20,Found Dead (FD),1399,TRUE,"LEN. abnormal gait, may be start of hind limb paralysis. Put daily feeding on pen floor 4/14/20",FALSE
+DO-20-1161,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,N,white,Dead,9/19/17,4/19/20,Found Dead (FD),943,TRUE,NA,TRUE
+DO-1D-3111,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,3R,black,Dead,3/21/17,4/17/20,Found Dead (FD),1123,TRUE,3R. Found dead in metabolic cages 4/17/20,TRUE
+DO-1D-3174,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,2L,other,Dead,9/19/17,4/16/20,Found Dead (FD),940,TRUE,abdomen is very distended 2/18/20. 92-B8-2020-Other(observation) Distended Abdomen/Ascitis-3/30/20-4/16/20(DIT),FALSE
+DO-20-1175,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,3R,other,Dead,9/19/17,4/14/20,Found Dead (FD),938,TRUE,"hunched, piloerection, BCS1.5 10/29/19",FALSE
+DO-40-2171,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,L,other,Dead,9/19/17,4/14/20,Found Dead (FD),938,TRUE,bulging eyes,FALSE
+DO-AL-0173,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,2R,other,Dead,9/19/17,4/14/20,Found Dead (FD),938,TRUE,"Has a thorasic mass, walking in circles from it. 3-17-20. 91-B8-2020-Tumor(severity not noted) in thoracic area-3/27/20-4/14/20(DIT)",FALSE
+DO-40-2147,G27,G27W2,G27W2D1,Monday,6305,6305,40,L,other,Dead,7/18/17,4/13/20,Found Dead (FD),1000,TRUE,NA,FALSE
+DO-1D-3143,G27,G27W1,G27W1D2,Monday,6189,6189,1D,3R,other,Dead,6/27/17,4/12/20,Found Dead (FD),1020,TRUE,190-B8-2019-other (severity not noted) minor blood spotting at vaginal opening. Ascities-9/3/2019-9/12/19(H),FALSE
+DO-AL-0136,G27,G27W1,G27W1D1,Monday,6182,6182,AL,3L,other,Dead,6/27/17,4/12/20,Found Dead (FD),1020,TRUE,SCO-53-12/11/2017-Right Eye damage-12/11/17-2/10/20(no change in condition- case closed),FALSE
+DO-AL-0163,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,L,white,Dead,9/19/17,4/12/20,Found Dead (FD),936,TRUE,tumor-like mass forming on right side 2/18/20,FALSE
+DO-20-1040,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,3L,black,Dead,5/31/16,4/8/20,Found Dead (FD),1408,TRUE,"3LEN, Case 17- Mild Bite Wounds to Tail- 2/20/18-4/4/18(H). Right Eye Damage 11/12/18
+",FALSE
+DO-1D-3123,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,L,other,Dead,4/11/17,4/7/20,Found Dead (FD),1092,TRUE,distended ab.. 35-B8-2020-Erosion on dorsal neck(Severity not NOted)-2/5/2020-4/7/20(DIT),FALSE
+DO-2D-4177,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,N,white,Dead,10/10/17,4/7/20,Missing (MSG),910,TRUE,275-B8-2019-Mild Bite Wounds to Tail-11/27/19-2/10/20(H),TRUE
+DO-AL-0119,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,3R,other,Dead,4/11/17,4/7/20,Found Dead (FD),1092,TRUE,3R,FALSE
+DO-20-1171,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,L,other,Dead,9/19/17,4/6/20,Found Dead (FD),930,TRUE,right eye damage,FALSE
+DO-40-2136,G27,G27W1,G27W1D1,Monday,6186,6186,40,3L,other,Dead,6/27/17,4/6/20,Found Dead (FD),1014,TRUE,"appears to have a right notch
+",FALSE
+DO-AL-0147,G27,G27W2,G27W2D1,Monday,6301,6301,AL,L,other,Dead,7/18/17,4/6/20,Found Dead (FD),993,TRUE,"abdomen is very distended 3/11/19. 36-B8-2020-Firm, Eroded Tumor on right side(Severity not Noted)-2/6/2020-4/6/20(DIT) tumor became exposed on 3/9/20",FALSE
+DO-2D-4133,G27,G27W1,G27W1D2,Monday,6190,6190,2D,2R,other,Dead,6/27/17,4/3/20,Found Dead (FD),1011,TRUE,right eye damage 6/6/18. 79A-B8-2018(observation)-Eye Damage-6/22/18-4/3/20(DIT) Moved to 3X per week observation in Feb. of 2020,FALSE
+DO-20-1174,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,2L,other,Dead,9/19/17,3/30/20,Found Dead (FD),923,TRUE,NA,FALSE
+DO-AL-0161,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,N,white,Dead,9/19/17,3/30/20,Found Dead (FD),923,TRUE,NA,FALSE
+DO-2D-4128,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,3L,black,Dead,4/11/17,3/28/20,Found Dead (FD),1082,TRUE,3L,FALSE
+DO-1D-3154,G27,G27W2,G27W2D2,Monday,6308,6308,1D,R,white,Dead,7/18/17,3/27/20,Found Dead (FD),983,TRUE,NA,FALSE
+DO-20-1147,G27,G27W2,G27W2D1,Monday,6303,8444,20,L,other,Dead,7/18/17,3/27/20,Requested Euthanasia (RE),983,TRUE,moved to single housing per clam for barbering 3/23/20. Mouse sent to necropsy per clam for open oozing derm on dorsal neck to rule out parasitic infection. 3/27/20,FALSE
+DO-1D-3116,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,B,other,Dead,4/11/17,3/26/20,Found Dead (FD),1080,TRUE,B. 60-B8-2020-Tumor(Severity not Noted)-3/2/20-3/26/20(DIT),FALSE
+DO-AL-0140,G27,G27W1,G27W1D1,Monday,6183,6183,AL,B,other,Dead,6/27/17,3/25/20,Found Dead (FD),1002,TRUE,NA,TRUE
+DO-AL-0142,G27,G27W1,G27W1D1,Monday,6183,6183,AL,2L,other,Dead,6/27/17,3/25/20,Found Dead (FD),1002,TRUE,Has tear in right ear,FALSE
+DO-40-2114,G26,G26W2,G26W2D1,Thursday,5882,5882,40,R,white,Dead,4/11/17,3/24/20,Found Dead (FD),1078,TRUE,R,FALSE
+DO-AL-0145,G27,G27W2,G27W2D1,Monday,6301,6301,AL,N,white,Dead,7/18/17,3/24/20,Found Dead (FD),980,TRUE,"62-B8-2019  Moderate Bite Wounds/Dermatitis 3/18/19 BCS 2.5 alopecia erosion dorsal neck, including base of ears. 157-B8-19-Derm on dorsal neck-7/24/19(H). 304-B8-2019-Derm(severity not noted) on dorsal neck-12/23/19-1/17/20(H). Death date not recorded on card, went off of last body weight collected",FALSE
+DO-1D-3190,G28,G28W2,G28W2D2,Tuesday,6538,6538,1D,2L,other,Dead,10/10/17,3/23/20,Euthanized Sick (ES),895,TRUE,"large internal mass in uterine area(spans to both sides) 2/18/20. 
+Severe ascitites, open masses on back end, found on back and could not right itself. Euthanized 3/23/20",FALSE
+DO-20-1181,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,2R,other,Dead,10/10/17,3/23/20,Requested Euthanasia (RE),895,TRUE,messy notches. 47-B8-2020-Erosion(Severity not noted) on left shoulder-2/19/20-3/23/20(DIT). Euthanized per CLAM for unresolved derm resulting in pain and distress. 3/23/20,FALSE
+DO-2D-4130,G27,G27W1,G27W1D2,Monday,6190,6190,2D,R,white,Dead,6/27/17,3/23/20,Found Dead (FD),1000,TRUE,NA,FALSE
+DO-1D-3110,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,2L,other,Dead,3/21/17,3/22/20,Found Dead (FD),1097,TRUE,2L,FALSE
+DO-20-1071,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,3R,other,Dead,9/13/16,3/19/20,Euthanized Sick (ES),1283,TRUE,3REN. right eye damage 12/12/19. 53-B8-2020-Malo and Tumor(severity not noted)-2/24/20-3/19/20(DIT).  Difficulty moving throughout pen Euthanized,FALSE
+DO-40-2024,G22,G22W2,G22W2D1,Monday,3393,8617,40,3L,black,Dead,3/1/16,3/19/20,Found Dead (FD),1479,TRUE,3LEN,FALSE
+DO-20-1098,G26,G26W1,G26W1D1,Thursday,5836,5836,20,R,white,Dead,3/21/17,3/16/20,Found Dead (FD),1091,TRUE,"R, vaginal bleeding 6/6/19",FALSE
+DO-40-2113,G26,G26W2,G26W2D1,Thursday,5882,5882,40,N,white,Dead,4/11/17,3/16/20,Missing (MSG),1070,TRUE,"N
+
+",FALSE
+DO-20-1132,G27,G27W1,G27W1D1,Monday,6184,6184,20,B,other,Dead,6/27/17,3/9/20,Found Dead (FD),986,TRUE,NA,FALSE
+DO-20-1191,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,3R,other,Dead,10/10/17,3/9/20,Found Dead (FD),881,TRUE,multiples thoracic masses 2/18/20,FALSE
+DO-40-2140,G27,G27W1,G27W1D2,Monday,6187,6187,40,B,other,Dead,6/27/17,3/9/20,Found Dead (FD),986,TRUE,Right eye has a tumor. 2/10/2020,FALSE
+DO-AL-0184,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,3L,black,Dead,10/10/17,3/9/20,Euthanized Sick (ES),881,TRUE,NA,FALSE
+DO-AL-0179,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,L,other,Dead,10/10/17,3/5/20,Euthanized Sick (ES),877,TRUE,93-B8-2019(observation)- Eye Damage-4/23/19-3/5/20(DIT) tumor-like mass on ventral neck(under daily observation since 10/20),FALSE
+DO-20-1029,G22,G22W2,G22W2D1,Monday,3392,3392,20,2R,other,Dead,3/1/16,3/4/20,Found Dead (FD),1464,TRUE,"2REN, Seizure. hunched, tremor, mouse acting agitated(excessive circling) 11/25/19. Put on Daily Observation on 2/10/2020",FALSE
+DO-20-1138,G27,G27W1,G27W1D1,Monday,6185,6185,20,R,white,Dead,6/27/17,3/2/20,Found Dead (FD),979,TRUE,64-B8-2017(observation)-Eye Damage-11/29/17-3/3/2020(DIT),FALSE
+DO-2D-4084,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,B,other,Dead,10/11/16,3/2/20,Found Dead (FD),1238,TRUE,"Case 166-B8-2018 10/18/18 Moderate Bite Wounds.3-B8-2020- Moderate Derm and Moderate Bite Wounds- 1/3/2020-3/2/2020(DIT)
+S7171503",FALSE
+DO-1D-3177,G28,G28W2,G28W2D2,Tuesday,6537,8333,1D,N,white,Dead,10/10/17,2/28/20,Euthanized Sick (ES),871,TRUE,"derm on ears 11/27/18. moved to pen 8333 per CLAM for fighting 2/12/2020. 46-B8-2020-Erosion to right shoulder(severity not noted)-2/12/20-2/28/20(DIT). Euthanized on 2/28/20 for being cold, unresponsive to touch, and loss of color in tail and ears.",FALSE
+DO-2D-4039,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,3R,other,Dead,5/31/16,2/28/20,Euthanized Sick (ES),1368,TRUE,"3REN-right ear missing due to derm.SCO-57-11/30/2017-Right Eye damage,No R eye 5/16/2017 Case 63- Other(Severity not noted)- 
+eye damage to both eyes 6/21/18. blood present at vaginal opening 10/1/19. 15-B8-2020-Moderate Rectal Prolapse-1/16/20-2/28/20(DIT). Euthanized on 2/28/20 cold, unresponsive to touch, loss of color in paws and ears",FALSE
+DO-1D-3124,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,B,other,Dead,4/11/17,2/27/20,Found Dead (FD),1052,TRUE,274-B8-2019-Moderate Derm on dorsal neck and ears-11/27/19-12/16/19(H),FALSE
+DO-20-1150,G27,G27W2,G27W2D1,Monday,6303,6303,20,2L,other,Dead,7/18/17,2/26/20,Found Dead (FD),953,TRUE,cataracts in both eyes 7/15/19,FALSE
+DO-AL-0185,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,N,other,Dead,10/10/17,2/26/20,Found Dead (FD),869,TRUE,NA,FALSE
+DO-2D-4099,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,L,other,Dead,3/21/17,2/24/20,Found Dead (FD),1070,TRUE,"95-B8-2019(observation)  Suborbital mass w/gland exposure.  Some discharge.  Cornea appears fine, tearing. -4/25/19(case closed)",FALSE
+DO-20-1142,G27,G27W1,G27W1D1,Monday,6185,6185,20,2L,other,Dead,6/27/17,2/22/20,Found Dead (FD),970,TRUE,64-B8-2017-eye(DIT),FALSE
+DO-1D-3072,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,3L,other,Dead,9/20/16,2/18/20,Euthanized Sick (ES),1246,TRUE,3LEN.,FALSE
+DO-1D-3182,G28,G28W2,G28W2D2,Tuesday,6537,6537,1D,2L1R,other,Dead,10/10/17,2/18/20,Requested Euthanasia (RE),861,TRUE,changed from 2L to 2L1R- ear notch not the best 4/13/18 hjs. Euthanized for tail trauma per clam 2/14/2020,FALSE
+DO-1D-3164,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,B,other,Dead,9/19/17,2/17/20,Found Dead (FD),881,TRUE,distended abdomen 12/30/19,FALSE
+DO-1D-3180,G28,G28W2,G28W2D2,Tuesday,6537,6537,1D,B,other,Dead,10/10/17,2/14/20,Requested Euthanasia (RE),857,TRUE,mass forming right below vaginal opening10/29/19. Euthanized for tail trauma per clam 2/14/2020,FALSE
+DO-2D-4139,G27,G27W1,G27W1D2,Monday,6191,6191,2D,L,other,Dead,6/27/17,2/14/20,Found Dead (FD),962,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17- 2/10/20( no change in condition case closed)
+",FALSE
+DO-AL-0105,G26,G26W1,G26W1D1,Thursday,5837,5835,AL,N,white,Dead,3/21/17,2/12/20,Euthanized Sick (ES),1058,TRUE,N.281-B8-2019-Eyes Damage(severity not noted)-12/7/19-2/12/20(DIT). Mouse found unresponsive and lying on side. Euthanized,FALSE
+DO-AL-0181,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,2R,other,Dead,10/10/17,2/12/20,Found Dead (FD),855,TRUE,"lethargic, hunched 12/30/19",FALSE
+DO-20-1100,G26,G26W1,G26W1D1,Thursday,5836,5836,20,B,other,Dead,3/21/17,2/11/20,Found Dead (FD),1057,TRUE,B,FALSE
+DO-20-1128,G26,G26W2,G26W2D1,Thursday,5881,8328,20,3L,black,Dead,4/11/17,2/11/20,Found Dead (FD),1036,TRUE,3L. Separated to pen 8328 per clam for derm 1/28/20,FALSE
+DO-1D-3084,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,B,other,Dead,10/4/16,2/10/20,Found Dead (FD),1224,TRUE,distended abdomen 12/5/19,FALSE
+DO-1D-3092,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,B,other,Dead,10/4/16,2/10/20,Found Dead (FD),1224,TRUE,"B
+S7170561-8",NA
+DO-20-1177,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,N,white,Dead,10/10/17,2/7/20,Euthanized Sick (ES),850,TRUE,"Euthanized in response to a red tag on 2/7/2020, cold, severely hunched, sunken in sides, grimace score of 3 and keeps ears pinned to head, eyes held closed- euthanized",TRUE
+DO-2D-4119,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,3R,other,Dead,4/11/17,2/7/20,Found Dead (FD),1032,TRUE,"3R. 311-B8-2019-Severe Tumor on right shoulder-12/31/192/7/20(DIT)- started on Buprenorphine SR on 1/31/2020,",FALSE
+DO-1D-3142,G27,G27W1,G27W1D2,Monday,6189,6189,1D,2L,other,Dead,6/27/17,2/6/20,Found Dead (FD),954,TRUE,"vaginal bleeding 9/3/19 case 190
+190-B8-2019-other(severity not noted)both have minor spotting at vaginal opening. Ascities-9/3/2019-9/23/
+",FALSE
+DO-20-1054,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,2L,other,Dead,6/21/16,2/6/20,Found Dead (FD),1325,TRUE,2LEN,FALSE
+DO-2D-4142,G27,G27W1,G27W1D2,Monday,6191,6191,2D,2L,other,Dead,6/27/17,2/5/20,Found Dead (FD),953,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17-2/5/20(DIT)
+",FALSE
+DO-20-1180,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,B,other,Dead,10/10/17,2/4/20,Found Dead (FD),847,TRUE,NA,FALSE
+DO-1D-3104,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,2L1R,other,Dead,3/21/17,2/1/20,Failed to Recover (FTR),1047,TRUE,2L1R. Failed to recover during PIXI/Echo testing 1/31/2020,FALSE
+DO-2D-4097,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,N,white,Dead,3/21/17,2/1/20,Failed to Recover (FTR),1047,TRUE,N. Failed to recover during PIXI/Echo testing 1/31/2020,FALSE
+DO-40-2097,G26,G26W1,G26W1D1,Thursday,5840,5840,40,N,white,Dead,3/21/17,2/1/20,Failed to Recover (FTR),1047,TRUE,N. Failed to recover during PIXI/Echo testing 1/31/2020,FALSE
+DO-40-2108,G26,G26W1,G26W1D2,Thursday,5841,5841,40,B,other,Dead,3/21/17,2/1/20,Failed to Recover (FTR),1047,TRUE,B. Failed to recover during PIXI/Echo testing 1/31/2020,FALSE
+DO-AL-0102,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,2L,other,Dead,3/21/17,1/31/20,Found Dead (FD),1046,TRUE,2L. Distended abdomen 8/29/19,FALSE
+DO-20-1116,G26,G26W2,G26W2D1,Thursday,5880,5880,20,B,other,Dead,4/11/17,1/30/20,Euthanized Sick (ES),1024,TRUE,B. Euthanized in response to a red tag. Cold and unresponsive to touch 1/30/20,FALSE
+DO-2D-4083,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,L,other,Dead,10/11/16,1/30/20,Euthanized Sick (ES),1206,TRUE,"126-B8-2018  Moderate Other - Missing Eye, 
+S7171503",FALSE
+DO-20-1126,G26,G26W2,G26W2D1,Thursday,5881,5881,20,2L,other,Dead,4/11/17,1/28/20,Found Dead (FD),1022,TRUE,"2L. Subdermal lipoma on dorsal neck 8/9/18. Piloerection, ruffled fur, tremor 9/13/18",FALSE
+DO-1D-3136,G27,G27W1,G27W1D2,Monday,6188,6188,1D,3L,other,Dead,6/27/17,1/27/20,Found Dead (FD),944,TRUE,head tilt 7/15/19(gave gel cup) 7/11/19,FALSE
+DO-2D-4144,G27,G27W1,G27W1D2,Monday,6191,6191,2D,3L,other,Dead,6/27/17,1/27/20,Found Dead (FD),944,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17-1/27/20(DIT)
+",TRUE
+DO-20-1056,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,3L,other,Dead,6/21/16,1/23/20,Found Dead (FD),1311,TRUE,3LEN,FALSE
+DO-20-1065,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,N,white,Dead,9/20/16,1/21/20,Found Dead (FD),1218,TRUE,"NEN. skin starting to look irritated above right ear. keep an eye out for derm 5/22/19. distended abdomen, mass in rectal area, skin appears blue/black in color 1/9/20",TRUE
+DO-2D-4092,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,B,other,Dead,10/4/16,1/21/20,Found Dead (FD),1204,TRUE,"B. piloerection across body and head, cold to touch 1/9/20
+S7170554-6",FALSE
+DO-1D-3131,G27,G27W1,G27W1D2,Monday,6188,6188,1D,L,other,Dead,6/27/17,1/20/20,Found Dead (FD),937,TRUE,NA,TRUE
+DO-1D-3171,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,L,other,Dead,9/19/17,1/20/20,Euthanized Sick (ES),853,TRUE,"Euthanized during Bld 1. lying on side, unresponsive, cold, BCS1",FALSE
+DO-AL-0149,G27,G27W2,G27W2D1,Monday,6301,6301,AL,2R,other,Dead,7/18/17,1/20/20,Found Dead (FD),916,TRUE,NA,FALSE
+DO-AL-0191,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,3R,black,Dead,10/10/17,1/20/20,Found Dead (FD),832,TRUE,tail bites 11/12/19. 260-B8-2019- Moderate Bite Wounds to Tail-11/11/19-12/27/19(H),FALSE
+DO-1D-3112,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,3L,black,Dead,3/21/17,1/16/20,Found Dead (FD),1031,TRUE,3L,FALSE
+DO-40-2039,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,3R,other,Dead,5/31/16,1/16/20,Found Dead (FD),1325,TRUE,3REN,FALSE
+DO-2D-4124,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,B,other,Dead,4/11/17,1/15/20,Found Dead (FD),1009,TRUE,SCO-07-2017(observation)-Eye Damage(Opacity in Right eye)-11/29/17-,FALSE
+DO-1D-3181,G28,G28W2,G28W2D2,Tuesday,6537,6537,1D,2R,other,Dead,10/10/17,1/10/20,Found Dead (FD),822,TRUE,fluid filled abdomen 10/29/19,FALSE
+DO-2D-4137,G27,G27W1,G27W1D2,Monday,6191,6191,2D,N,white,Dead,6/27/17,1/6/20,Found Dead (FD),923,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17- right eye damage 6/6/18- 1/6/20(DIT)
+",FALSE
+DO-40-2191,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,3R,other,Dead,10/10/17,1/6/20,Found Dead (FD),818,TRUE,NA,FALSE
+DO-AL-0153,G27,G27W2,G27W2D1,Monday,6302,6302,AL,N,white,Dead,7/18/17,1/6/20,Found Dead (FD),902,TRUE,NA,TRUE
+DO-40-2101,G26,G26W1,G26W1D1,Thursday,5840,5840,40,2R,other,Dead,3/21/17,1/3/20,Found Dead (FD),1018,TRUE,2R - Looks like one big slice taken out of ear.,TRUE
+DO-AL-0115,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,L,white,Dead,4/11/17,1/3/20,Found Dead (FD),997,TRUE,"This mouse is Albino, changed on 4/12/2018",TRUE
+DO-1D-3074,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,R,white,Dead,9/20/16,1/2/20,Found Dead (FD),1199,TRUE,REN. ruffled unkept fur 9/18/19,FALSE
+DO-40-2134,G27,G27W1,G27W1D1,Monday,6186,6186,40,2L,other,Dead,6/27/17,1/2/20,Found Dead (FD),919,TRUE,NA,FALSE
+DO-20-1149,G27,G27W2,G27W2D1,Monday,6303,6303,20,2R,other,Dead,7/18/17,12/30/19,Found Dead (FD),895,TRUE,circling 11/25/19,FALSE
+DO-2D-4062,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,2L,other,Dead,6/21/16,12/30/19,Found Dead (FD),1287,TRUE,2L,FALSE
+DO-40-2132,G27,G27W1,G27W1D1,Monday,6186,6186,40,B,other,Dead,6/27/17,12/30/19,Found Dead (FD),916,TRUE,NA,FALSE
+DO-2D-4191,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,3R,black,Dead,10/10/17,12/29/19,Found Dead (FD),810,TRUE,NA,FALSE
+DO-2D-4112,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,3L,other,Dead,3/21/17,12/27/19,Found Dead (FD),1011,TRUE,"3L SCO-49/57-B8-2019(observation)-cloudy eye-9/12/17-12/27/19(DIT)
+
+ Right eye-no tail",FALSE
+DO-20-1172,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,B,other,Dead,9/19/17,12/23/19,Found Dead (FD),825,TRUE,Opacity in R eye. distended abdomen 10/29/19. Tumor-like mass in left quadrant of abdomen 12/2/19,FALSE
+DO-2D-4079,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,3R,other,Dead,9/20/16,12/23/19,Found Dead (FD),1189,TRUE,"192-B8-2019-Mild derm-skin erosion, dry at base of left ear pinna, multifocal dry erosion on dorsal neck, 1cm abdominal mass on left side-9/3/2019.(H) Distended abdomen, ruffled fur, piloerection, blood found all through shavings(source unknown) 11/20/19",FALSE
+DO-2D-4147,G27,G27W2,G27W2D2,Monday,6299,6299,2D,L,other,Dead,7/18/17,12/23/19,Missing (MSG),888,TRUE,NA,FALSE
+DO-40-2143,G27,G27W1,G27W1D2,Monday,6187,6187,40,3R1L,other,Dead,6/27/17,12/23/19,Found Dead (FD),909,TRUE,NA,FALSE
+DO-AL-0112,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,3L,black,Dead,3/21/17,12/23/19,Found Dead (FD),1007,TRUE,"3L. Large, Distended abdomen 8/9/18",FALSE
+DO-AL-0133,G27,G27W1,G27W1D1,Monday,6182,6182,AL,2R,other,Dead,6/27/17,12/23/19,Found Dead (FD),909,TRUE,patchy hairloss all over body 6/25/18,FALSE
+DO-20-1064,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,3L,black,Dead,6/21/16,12/20/19,Found Dead (FD),1277,TRUE,220-B8-2019-Other(Severity not Noted)- Injured right hind foot-9/30/19-10/23/19(H) 272-B8-2019-Mild Rectal Prolapse-11/27/19-12/2/19(H),FALSE
+DO-1D-3118,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,2L,other,Dead,4/11/17,12/19/19,Euthanized Sick (ES),982,TRUE,"287-B8-2019-Derm to Ventral Abdomen-12/12/19-12/18/19(DIT)- derm across entire ventral side of mouse, constricting all limbs, body temp was 21.7, sunken eyes, frail and unresponsive-euthanized",FALSE
+DO-2D-4123,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,L,other,Dead,4/11/17,12/19/19,Euthanized Sick (ES),982,TRUE,"SCO-7-2017(observation)-Eye Damage-11/29/17-. Found during fragility testing on 12/19/19, frail, lethargic, piloerection across body and head, cold to touch, unresponsive- euthanized hjs",FALSE
+DO-1D-3191,G28,G28W2,G28W2D2,Tuesday,6538,8139,1D,3R,other,Dead,10/10/17,12/18/19,Found Dead (FD),799,TRUE,NA,TRUE
+DO-20-1045,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,2R,other,Dead,5/31/16,12/16/19,Found Dead (FD),1294,TRUE,2REN,FALSE
+DO-2D-4136,G27,G27W1,G27W1D2,Monday,6190,6190,2D,3L,other,Dead,6/27/17,12/16/19,Found Dead (FD),902,TRUE,NA,FALSE
+DO-2D-4183,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,3R,black,Dead,10/10/17,12/16/19,Found Dead (FD),797,TRUE,275-B8-2019-Mild Bite Wounds to Tail-11/27/19-2/10/20(H),FALSE
+DO-AL-0150,G27,G27W2,G27W2D1,Monday,6301,6301,AL,2L,other,Dead,7/18/17,12/16/19,Found Dead (FD),881,TRUE,"left ear curling
+",FALSE
+DO-1D-3183,G28,G28W2,G28W2D2,Tuesday,6537,6537,1D,3R,other,Dead,10/10/17,12/13/19,Euthanized Sick (ES),794,TRUE,"25-B8-2018-Moderate Malo-3/16/18-12/13/19(DIT) piloerection, kyphosis, disheveled ruffled fur 8/6/9. found in promethion on 12/13/19 thin, dehydrated, unresponsive, cold to touch, BCS1. clam has been treating for malo and reported that mouse no longer had upper teeth. euthanized 12/13/19",FALSE
+DO-1D-3137,G27,G27W1,G27W1D2,Monday,6189,6189,1D,N,white,Dead,6/27/17,12/11/19,Found Dead (FD),897,TRUE,NA,FALSE
+DO-40-2154,G27,G27W2,G27W2D2,Monday,6306,6306,40,R,other,Dead,7/18/17,12/11/19,Found Dead (FD),876,TRUE,125-B8-2018(observation)-Eye Damage-8/24/18-3/9/20(H),FALSE
+DO-20-1025,G22,G22W2,G22W2D1,Monday,3392,3392,20,N,white,Dead,3/1/16,12/10/19,Euthanized Sick (ES),1379,TRUE,"NEN. mass forming on left back leg. 11/25/19. Found on back during fragility testing, cold to touch, not moving, unresponsive- euthanized GAV 12/10/19. 285-B8-2019-Tumor on left hip-12/9/19-12/10/19(DIT)",FALSE
+DO-20-1067,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,R,other,Dead,9/13/16,12/10/19,Found Dead (FD),1183,TRUE,"REN. start of hind limb paralysis, hunched, piloerection. put grain on bottom of pen so mouse would have easier access to food starting 12/5/19, added note to cage to continue grain on floor. 282-B8-2019-Other,Paralysis-12/7/19-12/10/19(DIT)",FALSE
+DO-AL-0106,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,R,white,Dead,3/21/17,12/10/19,Found Dead (FD),994,TRUE,R. Mass forming on back left leg starting to hinder movement/gait 11/21/19,FALSE
+DO-1D-3141,G27,G27W1,G27W1D2,Monday,6189,6189,1D,2R,other,Dead,6/27/17,12/9/19,Found Dead (FD),895,TRUE,NA,FALSE
+DO-20-1160,G27,G27W2,G27W2D1,Monday,6304,6304,20,3L,black,Dead,7/18/17,12/9/19,Found Dead (FD),874,TRUE,"12-B8-2018-Cloudy Right Eye-1/25/18-12/12/19(DIT).  derm across dorsal neck, hunched, thin, frail, piloerection 12/2/19",FALSE
+DO-2D-4159,G27,G27W2,G27W2D2,Monday,6300,6300,2D,3R,other,Dead,7/18/17,12/9/19,Found Dead (FD),874,TRUE,toe tattoed,FALSE
+DO-20-1131,G27,G27W1,G27W1D1,Monday,6184,6184,20,L,other,Dead,6/27/17,12/5/19,Found Dead (FD),891,TRUE,small tear in right ear,FALSE
+DO-2D-4131,G27,G27W1,G27W1D2,Monday,6190,6190,2D,L,other,Dead,6/27/17,11/27/19,Found Dead (FD),883,TRUE,NA,FALSE
+DO-40-2016,G22,G22W1,G22W1D2,Monday,3303,3303,40,3L,other,Dead,2/9/16,11/27/19,Found Dead (FD),1387,TRUE,"3LEN.215-B8-2019-Moderate tumor, ulcerated tumor in right ear-9/23/2019-11/27/19(DIT)",FALSE
+DO-40-2177,G28,G28W2,G28W2D1,Tuesday,6535,6535,40,N,other,Dead,10/10/17,11/26/19,Found Dead (FD),777,TRUE,NA,FALSE
+DO-20-1119,G26,G26W2,G26W2D1,Thursday,5880,5880,20,3R,other,Dead,4/11/17,11/21/19,Missing (MSG),954,TRUE,"213-B8-2019-Severe tumor, 1.5cm mass on right side. Mass is ulcerated-9/20/2019-11/21/19(DIT)",FALSE
+DO-20-1187,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,L,other,Dead,10/10/17,11/21/19,Found Dead (FD),772,TRUE,"LEN
+smaller than cage mates 11/12/19",FALSE
+DO-40-2144,G27,G27W1,G27W1D2,Monday,6187,6187,40,3L,black,Dead,6/27/17,11/21/19,Found Dead (FD),877,TRUE,large tumor under front right leg 11/4/19,FALSE
+DO-20-1087,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,3R,other,Dead,10/4/16,11/19/19,Found Dead (FD),1141,TRUE,"3R
+S7170560-8",FALSE
+DO-1D-3173,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,2R,other,Dead,9/19/17,11/18/19,Found Dead (FD),790,TRUE,low bottom notch,FALSE
+DO-40-2066,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,R,other,Dead,9/20/16,11/14/19,Found Dead (FD),1150,TRUE,"REN.seizure. hunched, piloerection across body and start of head, frail 11/13/19
+",FALSE
+DO-40-2092,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,B,other,Dead,10/4/16,11/12/19,Found Dead (FD),1134,TRUE,"B
+S7170556-8",FALSE
+DO-40-2094,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,2L,other,Dead,10/4/16,11/12/19,Found Dead (FD),1134,TRUE,"2L
+S7170556-8",TRUE
+DO-40-2103,G26,G26W1,G26W1D1,Thursday,5840,5840,40,3R,other,Dead,3/21/17,11/12/19,Found Dead (FD),966,TRUE,"3R Fiesty-11/27/2017-Eye very frail 7/26/18 damage to right eye
+SCO-55-11/29/2017-Right Eye damage
+Hunched and thin",TRUE
+DO-2D-4108,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,B,other,Dead,3/21/17,11/11/19,Found Dead (FD),965,TRUE,"B
+SCO-49-8/24/2017-9/12/17-Missing Right Eye
+",TRUE
+DO-40-2170,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,R,other,Dead,9/19/17,11/11/19,Found Dead (FD),783,TRUE,right eye damage 8/28/18,FALSE
+DO-AL-0131,G27,G27W1,G27W1D1,Monday,6182,6182,AL,L,other,Dead,6/27/17,11/11/19,Found Dead (FD),867,TRUE,Subdermal Lipoma on neck,FALSE
+DO-20-1102,G26,G26W1,G26W1D1,Thursday,5836,5836,20,2L,other,Dead,3/21/17,11/8/19,Found Dead (FD),962,TRUE,"2L
+Masses on both front shoulders 10/10/19",FALSE
+DO-40-2078,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,2L,other,Dead,9/20/16,11/7/19,Found Dead (FD),1143,TRUE,"2LEN. dehydrated, thin, frail, start of hind limb paralysis 9/18/19",FALSE
+DO-1D-3103,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,3R,other,Dead,3/21/17,11/6/19,Found Dead (FD),960,TRUE,3R.Derm starting on the back of neck-contacted CLAM-10/10/19. 234-B8-2019-Moderate Derm on neck-10/11/19-11/6/19(DIT),FALSE
+DO-AL-0033,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,N,white,Dead,5/31/16,11/6/19,Euthanized Sick (ES),1254,TRUE,223-B8-2019-Tumor(Severity not Noted) to thoracic area-10/4/19-11/6/19(DIT) Tail is bleeding,FALSE
+DO-40-2062,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,2L,other,Dead,6/21/16,11/5/19,Missing (MSG),1232,TRUE,"2LEN
+frail, smaller than cage mates-10/29/19",FALSE
+DO-40-2065,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,N,white,Dead,9/20/16,11/1/19,Found Dead (FD),1137,TRUE,NEN,TRUE
+DO-40-2067,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,L,other,Dead,9/20/16,11/1/19,Euthanized Sick (ES),1137,TRUE,LEN,FALSE
+DO-20-1163,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,L,other,Dead,9/19/17,10/30/19,Found Dead (FD),771,TRUE,"distended abdomen, hips and backbone becoming prominent(BCS2), piloerection across body and starting on head, labored breathing 10/29/19",FALSE
+DO-2D-4043,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,L,other,Dead,5/31/16,10/30/19,Found Dead (FD),1247,TRUE,LEN. 182-B8-2019-Moderate Derm to middle of hips-8/26/19-10/30/19(DIT),FALSE
+DO-AL-0043,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,L,other,Dead,5/31/16,10/29/19,Found Dead (FD),1246,TRUE,LEN,FALSE
+DO-1D-3148,G27,G27W2,G27W2D2,Monday,6307,6307,1D,B,other,Dead,7/18/17,10/28/19,Found Dead (FD),832,TRUE,NA,FALSE
+DO-2D-4072,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,3L,black,Dead,9/20/16,10/28/19,Found Dead (FD),1133,TRUE,"3LEN,Ear-notch could be confused with 4 L/ slight 
+tremor 7/18/17, head tilt 6/5/19
+",TRUE
+DO-2D-4163,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,L,other,Dead,9/19/17,10/25/19,Found Dead (FD),766,TRUE,"tumor forming on back left paw-10/8/19
+",FALSE
+DO-1D-3117,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,2R,other,Dead,4/11/17,10/24/19,Found Dead (FD),926,TRUE,2R,FALSE
+DO-1D-3192,G28,G28W2,G28W2D2,Tuesday,6538,8139,1D,3L,other,Dead,10/10/17,10/24/19,Found Dead (FD),744,TRUE,"ear is curled- hard to read. 141-B8-19- Dermatitis-7/3/19-10/24/19(DIT)
+5mm dark pink area on snout, no whiskers BCS 2.5 separated from home cage",FALSE
+DO-20-1134,G27,G27W1,G27W1D1,Monday,6184,6184,20,2L,black,Dead,6/27/17,10/22/19,Found Dead (FD),847,TRUE,NA,FALSE
+DO-1D-3138,G27,G27W1,G27W1D2,Monday,6189,6189,1D,R,white,Dead,6/27/17,10/21/19,Missing (MSG),846,TRUE,NA,FALSE
+DO-1D-3153,G27,G27W2,G27W2D2,Monday,6308,6308,1D,N,white,Dead,7/18/17,10/21/19,Failed to Recover (FTR),825,TRUE,NA,FALSE
+DO-40-2148,G27,G27W2,G27W2D1,Monday,6305,6305,40,B,other,Dead,7/18/17,10/21/19,Found Dead (FD),825,TRUE,FRAIL,FALSE
+DO-40-2165,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,2R,other,Dead,9/19/17,10/21/19,Found Dead (FD),762,TRUE,NA,FALSE
+DO-40-2169,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,N,white,Dead,9/19/17,10/21/19,Found Dead (FD),762,TRUE,NA,TRUE
+DO-20-1115,G26,G26W2,G26W2D1,Thursday,5880,5880,20,L,other,Dead,4/11/17,10/18/19,Found Dead (FD),920,TRUE,L,FALSE
+DO-20-1112,G26,G26W1,G26W1D1,Thursday,5838,5838,20,3L,other,Dead,3/21/17,10/16/19,Found Dead (FD),939,TRUE,3L,FALSE
+DO-20-1006,G22,G22W1,G22W1D1,Monday,3299,3299,20,2L,other,Dead,2/9/16,10/15/19,Found Dead (FD),1344,TRUE,162-B8-19-Mild Rectal Prolapse-7/29/19(H),FALSE
+DO-AL-0104,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,3L,black,Dead,3/21/17,10/15/19,Found Dead (FD),938,TRUE,3L,FALSE
+DO-AL-0186,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,R,other,Dead,10/10/17,10/15/19,Found Dead (FD),735,TRUE,NA,TRUE
+DO-40-2017,G22,G22W2,G22W2D1,Monday,3393,3393,40,N,white,Dead,3/1/16,10/14/19,Found Dead (FD),1322,TRUE,NEN,FALSE
+DO-AL-0166,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,2L,other,Dead,9/19/17,10/14/19,Found Dead (FD),755,TRUE,Subdermal Lipoma on dorsal neck 1/29/19,FALSE
+DO-1D-3119,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,3R,other,Dead,4/11/17,10/7/19,Found Dead (FD),909,TRUE,3R,FALSE
+DO-1D-3120,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,3L,black,Dead,4/11/17,10/7/19,Found Dead (FD),909,TRUE,3L,FALSE
+DO-20-1130,G27,G27W1,G27W1D1,Monday,6184,6184,20,R,other,Dead,6/27/17,10/7/19,Found Dead (FD),832,TRUE,ear notch is curling,FALSE
+DO-2D-4155,G27,G27W2,G27W2D2,Monday,6300,6300,2D,L,other,Dead,7/18/17,10/7/19,Found Dead (FD),811,TRUE,faint toe tattoo,FALSE
+DO-2D-4037,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,2R,other,Dead,5/31/16,10/4/19,Found Dead (FD),1221,TRUE,left eye damaged,FALSE
+DO-2D-4188,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,B,other,Dead,10/10/17,10/4/19,Found Dead (FD),724,TRUE,NA,FALSE
+DO-2D-4090,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,R,white,Dead,10/4/16,10/2/19,Found Dead (FD),1093,TRUE,"R
+S7170554-6",FALSE
+DO-2D-4189,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,2R,other,Dead,10/10/17,10/1/19,Euthanized Sick (ES),721,TRUE,ES 10/1/19 no response to touch also cold to the touch GAV,FALSE
+DO-40-2180,G28,G28W2,G28W2D1,Tuesday,6535,8230,40,B,other,Dead,10/10/17,10/1/19,Euthanized Sick (ES),721,TRUE,"piloerection, thin, BCS1.5 7/16/19. start of head tilt 8/6/19. Start of hind limb paralysis, dehydrated, piloerection, and labored breathing. Moved to single housing and put grain on bottom of pen with hydrogel 9/30/19. Euthanized sick on 10/1/19- found lying on side, unresponsive to touch and shaking.",FALSE
+DO-1D-3075,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,L,other,Dead,9/20/16,9/30/19,Found Dead (FD),1105,TRUE,"Case 53-Mild Derm-11/16/17-11/30/17(H). Masses felt along spine 8/28/19. 
+",FALSE
+DO-20-1099,G26,G26W1,G26W1D1,Thursday,5836,5836,20,L,other,Dead,3/21/17,9/30/19,Found Dead (FD),923,TRUE,"L, hyperactive",FALSE
+DO-20-1117,G26,G26W2,G26W2D1,Thursday,5880,5880,20,2R,other,Dead,4/11/17,9/30/19,Found Dead (FD),902,TRUE,"2R, lypoma",FALSE
+DO-1D-3184,G28,G28W2,G28W2D2,Tuesday,6537,8369,1D,3L,black,Dead,10/10/17,9/27/19,Found Dead (FD),717,TRUE,NA,FALSE
+DO-40-2085,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,2R,other,Dead,10/4/16,9/24/19,Found Dead (FD),1085,TRUE,"2R
+S7170557-8",TRUE
+DO-40-2185,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,N,other,Dead,10/10/17,9/24/19,Found Dead (FD),714,TRUE,"prominent back bone, kyphosis,thin, frail 9/18/18",TRUE
+DO-AL-0177,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,N,white,Dead,10/10/17,9/24/19,Found Dead (FD),714,TRUE,NA,FALSE
+DO-2D-4019,G22,G22W2,G22W2D2,Monday,3397,3397,2D,L,other,Dead,3/1/16,9/23/19,Found Dead (FD),1301,TRUE,LEN,FALSE
+DO-AL-0139,G27,G27W1,G27W1D1,Monday,6183,6183,AL,L,other,Dead,6/27/17,9/23/19,Found Dead (FD),818,TRUE,NA,FALSE
+DO-1D-3102,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,2L,other,Dead,3/21/17,9/18/19,Found Dead (FD),911,TRUE,2L,FALSE
+DO-20-1082,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,R,other,Dead,10/4/16,9/18/19,Found Dead (FD),1079,TRUE,"R
+S7170560-8",FALSE
+DO-1D-3160,G27,G27W2,G27W2D2,Monday,6308,6308,1D,3L,black,Dead,7/18/17,9/16/19,Found Dead (FD),790,TRUE,NA,FALSE
+DO-40-2188,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,B,other,Dead,10/10/17,9/16/19,Found Dead (FD),706,TRUE,NA,FALSE
+DO-40-2003,G22,G22W1,G22W1D1,Monday,3302,3302,40,L,other,Dead,2/9/16,9/10/19,Euthanized Sick (ES),1309,TRUE,"Case 164-B8-2017-Moderate Derm-10/15/17-12/10/18(H). Case 27-B8-2019 Moderate Dermatitis 2/19/19 Alopecia, 1 cm multi-focal crusts to dorsal neck. found lying unresponsive on bottom of pen euthanized 9/10/19",FALSE
+DO-2D-4117,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,2R,other,Dead,4/11/17,9/9/19,Requested Euthanasia (RE),881,TRUE,"2R. 3/21/2018-Right Eye damage. Euthanized per clam for eye damage 9/9/19
+198-B8-2019-Eye (Severity not noted)-damaged or missing right eye, red and swollen-9/7/2019-9/9/19(DIT)",FALSE
+DO-2D-4058,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,R,other,Dead,6/21/16,9/7/19,Found Dead (FD),1173,TRUE,R. distended abdomen 8/27/18,FALSE
+DO-2D-4059,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,L,other,Dead,6/21/16,9/7/19,Found Dead (FD),1173,TRUE,L,FALSE
+DO-AL-0066,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,R,white,Dead,9/20/16,9/5/19,Euthanized Sick (ES),1080,TRUE,"REN, SCO-01 - Right Eye damage-11/29/2017 
+
+
+",FALSE
+DO-2D-4176,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,3L,other,Dead,9/19/17,9/3/19,Missing (MSG),714,TRUE,NA,TRUE
+DO-2D-4028,G22,G22W2,G22W2D2,Monday,3398,3398,2D,B,other,Dead,3/1/16,8/31/19,Found Dead (FD),1278,TRUE,BEN,FALSE
+DO-40-2090,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,R,other,Dead,10/4/16,8/28/19,Found Dead (FD),1058,TRUE,watch rectum. rectal prolapse?,FALSE
+DO-1D-3159,G27,G27W2,G27W2D2,Monday,6308,6308,1D,3R,black,Dead,7/18/17,8/27/19,Found Dead (FD),770,TRUE,NA,TRUE
+DO-1D-3056,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,3L,black,Dead,6/21/16,8/24/19,Found Dead (FD),1159,TRUE,"3LEN
+173-B8-2019-moderate rectal prolapse-8/12/19-8/24/19(DIT)
+",FALSE
+DO-AL-0167,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,3R,other,Dead,9/19/17,8/23/19,Found Dead (FD),703,TRUE,chocolate brown,FALSE
+DO-20-1120,G26,G26W2,G26W2D1,Thursday,5880,5880,20,3L,black,Dead,4/11/17,8/19/19,Found Dead (FD),860,TRUE,3L,FALSE
+DO-2D-4064,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,3L,black,Dead,6/21/16,8/19/19,Found Dead (FD),1154,TRUE,3L,FALSE
+DO-AL-0107,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,L,other,Dead,3/21/17,8/19/19,Found Dead (FD),881,TRUE,L,FALSE
+DO-20-1022,G22,G22W2,G22W2D1,Monday,3391,3391,20,2L,other,Dead,3/1/16,8/15/19,Found Dead (FD),1262,TRUE,dietgel cup in pen 6/8/18-6/11/18,FALSE
+DO-AL-0097,G26,G26W1,G26W1D1,Thursday,5835,5837,AL,N,white,Dead,3/21/17,8/15/19,Found Dead (FD),877,TRUE,N,TRUE
+DO-20-1060,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,B,other,Dead,6/21/16,8/13/19,Found Dead (FD),1148,TRUE,BEN. mass on back right foot 4/23/19,FALSE
+DO-40-2069,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,2R,other,Dead,9/20/16,8/13/19,Found Dead (FD),1057,TRUE,2REN,FALSE
+DO-AL-0122,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,R,white,Dead,4/11/17,8/13/19,Found Dead (FD),854,TRUE,R,TRUE
+DO-1D-3130,G27,G27W1,G27W1D2,Monday,6188,6188,1D,R,white,Dead,6/27/17,8/12/19,Euthanized Sick (ES),776,TRUE,left eye looks swollen 1/21/19. 23-B8-19-Moderate Eyes-5/8/19-8/12/19(DIT),FALSE
+DO-40-2138,G27,G27W1,G27W1D2,Monday,6187,6187,40,R,other,Dead,6/27/17,8/12/19,Found Dead (FD),776,TRUE,NA,FALSE
+DO-2D-4012,G22,G22W1,G22W1D2,Monday,3313,3313,2D,B,other,Dead,2/9/16,8/9/19,Found Dead (FD),1277,TRUE,BEN,FALSE
+DO-1D-3101,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,2R,other,Dead,3/21/17,8/8/19,Found Dead (FD),870,TRUE,2R,TRUE
+DO-20-1111,G26,G26W1,G26W1D1,Thursday,5838,5838,20,3R,other,Dead,3/21/17,8/8/19,Found Dead (FD),870,TRUE,3R,FALSE
+DO-AL-0189,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,2R,other,Dead,10/10/17,8/8/19,Found Dead (FD),667,TRUE,NA,TRUE
+DO-40-2068,G24,G24W1,G24W1D1,Wednesday,4974,7912,40,B,other,Dead,9/20/16,8/7/19,Found Dead (FD),1051,TRUE,BEN. hairloss on dorsal neck- watch for derm 2/6/19 moved to pen 7912 per CLAM request. 21-B8-2019 Severe Dermatitis - Eroded skin extending from left arm to dorsal neck about 2cm length (2/8/19)(H),FALSE
+DO-20-1166,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,2L,other,Dead,9/19/17,8/6/19,Found Dead (FD),686,TRUE,NA,FALSE
+DO-AL-0164,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,B,other,Dead,9/19/17,8/6/19,Found Dead (FD),686,TRUE,crusty ears,FALSE
+DO-1D-3157,G27,G27W2,G27W2D2,Monday,6308,6308,1D,2R,other,Dead,7/18/17,8/5/19,Found Dead (FD),748,TRUE,NA,FALSE
+DO-20-1148,G27,G27W2,G27W2D1,Monday,6303,6303,20,B,other,Dead,7/18/17,8/5/19,Found Dead (FD),748,TRUE,Jumpy,FALSE
+DO-20-1192,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,3L,black,Dead,10/10/17,8/5/19,Missing (MSG),664,TRUE,Changed missing date from 8/6/19 to 8/5/19-HJS 9/10/20,FALSE
+DO-2D-4129,G27,G27W1,G27W1D2,Monday,6190,6190,2D,N,white,Dead,6/27/17,8/5/19,Found Dead (FD),769,TRUE,NA,FALSE
+DO-AL-0132,G27,G27W1,G27W1D1,Monday,6182,6182,AL,B,other,Dead,6/27/17,8/5/19,Found Dead (FD),769,TRUE,NA,FALSE
+DO-2D-4085,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,2R,other,Dead,10/11/16,8/2/19,Found Dead (FD),1025,TRUE,"2R,S7171503. changed death date from MSG 8/9/19 to FD on 8/2/19 to match up with data collection(HJS 9/22/20)",TRUE
+DO-2D-4146,G27,G27W2,G27W2D2,Monday,6299,6299,2D,R,other,Dead,7/18/17,8/1/19,Found Dead (FD),744,TRUE,Case 110-B8-2019-Severe Eye Damage-5/15/19-8/1/19(DIT) Animal given SR buprenorphine starting 6/7/19(pain medication for eye),FALSE
+DO-AL-0098,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,R,white,Dead,3/21/17,8/1/19,Found Dead (FD),863,TRUE,R,FALSE
+DO-AL-0182,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,2L,other,Dead,10/10/17,8/1/19,Euthanized Sick (ES),660,TRUE,Left eye is swollen and sticking out,TRUE
+DO-1D-3149,G27,G27W2,G27W2D2,Monday,6307,6307,1D,2R,other,Dead,7/18/17,7/29/19,Found Dead (FD),741,TRUE,NA,FALSE
+DO-1D-3156,G27,G27W2,G27W2D2,Monday,6308,6308,1D,B,other,Dead,7/18/17,7/29/19,Found Dead (FD),741,TRUE,NA,FALSE
+DO-20-1139,G27,G27W1,G27W1D1,Monday,6185,6185,20,L,other,Dead,6/27/17,7/29/19,Found Dead (FD),762,TRUE,NA,FALSE
+DO-AL-0090,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,R,white,Dead,10/4/16,7/29/19,Found Dead (FD),1028,TRUE,"S7170555-8
+dietgel cup added to pen 3/9/18-6/11/18. Abdomen is severely distended, piloerection, prominent backbone 2/6/19. start of head tilt 7/24/19.153-B8-2019-Swollen abdomen and head tilt to the left-7/22/19-7/29/19(DIT)",FALSE
+DO-2D-4002,G22,G22W1,G22W1D2,Monday,3312,3312,2D,R,other,Dead,2/9/16,7/26/19,Found Dead (FD),1263,TRUE,"REN
+Damaged Left eye
+10/17/2016- closed Left eye, 3/27/2017- No eyes,damaged left eye 10/17/2016, subdermal lipoma dorsal neck , R eye damage 3/27/17
+",FALSE
+DO-2D-4127,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,3R,other,Dead,4/11/17,7/25/19,Found Dead (FD),835,TRUE,3R,FALSE
+DO-20-1078,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,2L,other,Dead,9/13/16,7/24/19,Found Dead (FD),1044,TRUE,"2LEN.. piloerection across entire body, low body temp, dehydrated, BCS1.5, low, shallow breaths, lethargic 7/24/19",FALSE
+DO-2D-4086,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,2L,other,Dead,10/11/16,7/24/19,Found Dead (FD),1016,TRUE,"2L
+S7171503",FALSE
+DO-40-2095,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,3R,other,Dead,10/4/16,7/24/19,Found Dead (FD),1023,TRUE,"3R
+S7170556-8",FALSE
+DO-AL-0174,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,2L,other,Dead,9/19/17,7/22/19,Found Dead (FD),671,TRUE,NA,FALSE
+DO-2D-4116,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,B,other,Dead,4/11/17,7/19/19,Found Dead (FD),829,TRUE,B,FALSE
+DO-1D-3083,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,L,white,Dead,10/4/16,7/18/19,Euthanized Sick (ES),1017,TRUE,"L
+S7170558-8",TRUE
+DO-1D-3090,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,R,other,Dead,10/4/16,7/18/19,Found Dead (FD),1017,TRUE,"R
+S7170561-8",TRUE
+DO-2D-4104,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,3L,black,Dead,3/21/17,7/17/19,Found Dead (FD),848,TRUE,Distended abdomen 6/20/19,FALSE
+DO-2D-4154,G27,G27W2,G27W2D2,Monday,6300,6300,2D,R,other,Dead,7/18/17,7/17/19,Found Dead (FD),729,TRUE,has tear in left ear that makes it look like BEN,FALSE
+DO-2D-4181,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,2R,black,Dead,10/10/17,7/16/19,Found Dead (FD),644,TRUE,NA,FALSE
+DO-2D-4187,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,L,other,Dead,10/10/17,7/16/19,Found Dead (FD),644,TRUE,NA,FALSE
+DO-40-2105,G26,G26W1,G26W1D2,Thursday,5841,5841,40,N,white,Dead,3/21/17,7/16/19,Found Dead (FD),847,TRUE,"N
+SCO-15-11/30/2017-Small Right eye
+R eye damage 9/12/2017,11/30/17-SCO-15
+",FALSE
+DO-1D-3129,G27,G27W1,G27W1D2,Monday,6188,6188,1D,N,white,Dead,6/27/17,7/15/19,Found Dead (FD),748,TRUE,Masses growing in mammary glands,FALSE
+DO-20-1062,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,2L,other,Dead,6/21/16,7/15/19,Found Dead (FD),1119,TRUE,2LEN. mass on back right leg 4/23/19,FALSE
+DO-AL-0068,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,B,other,Dead,9/20/16,7/15/19,Found Dead (FD),1028,TRUE,"BEN, seizure
+",FALSE
+DO-AL-0165,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,2R,other,Dead,9/19/17,7/15/19,Found Dead (FD),664,TRUE,NA,FALSE
+DO-AL-0144,G27,G27W1,G27W1D1,Monday,6183,6183,AL,3L,other,Dead,6/27/17,7/13/19,Found Dead (FD),746,TRUE,"Case 61-B8-18 Moderate tumor, 1cm dark mass on tail (blood filled?) open and bleeding",FALSE
+DO-40-2045,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,2R,other,Dead,5/31/16,7/12/19,Found Dead (FD),1137,TRUE,2REN,FALSE
+DO-20-1106,G26,G26W1,G26W1D1,Thursday,5838,5838,20,R,white,Dead,3/21/17,7/11/19,Found Dead (FD),842,TRUE,R,FALSE
+DO-40-2096,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,3L,black,Dead,10/4/16,7/10/19,Euthanized Sick (ES),1009,TRUE,"3L
+S7170556-8",FALSE
+DO-AL-0071,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,3R,other,Dead,9/20/16,7/10/19,Missing (MSG),1023,TRUE,3REN. distended abdomen 6/19/19,FALSE
+DO-20-1001,G22,G22W1,G22W1D1,Monday,3299,3299,20,N,white,Dead,2/9/16,7/3/19,Found Dead (FD),1240,TRUE,"Frail, thin 8/27/18. small right eye 6/21/18",FALSE
+DO-1D-3040,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,3L,black,Dead,5/31/16,7/1/19,Euthanized Sick (ES),1126,TRUE,"3LEN. distended abdomen 6/18/19. Mouse found in AM of 7/1/19 with hind limb paralysis, slow gasping breathing, piloerection, eyes held closed, BCS1 euthanzied 7/1/19",FALSE
+DO-1D-3045,G23,G23W1,G23W1D2,Tuesday,4113,6710,1D,2R,other,Dead,5/31/16,7/1/19,Found Dead (FD),1126,TRUE,"2REN
+seperated per clam 1/17/18
+",FALSE
+DO-1D-3107,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,L,other,Dead,3/21/17,7/1/19,Found Dead (FD),832,TRUE,"L
+mass forming under stomach
+",TRUE
+DO-1D-3121,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,N,white,Dead,4/11/17,7/1/19,Found Dead (FD),811,TRUE,N. tumor like mass on left arm 5/9/19,FALSE
+DO-AL-0123,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,L,other,Dead,4/11/17,7/1/19,Found Dead (FD),811,TRUE,L,FALSE
+DO-20-1133,G27,G27W1,G27W1D1,Monday,6184,6184,20,2R,other,Dead,6/27/17,6/29/19,Found Dead (FD),732,TRUE,"chalky white appearance to feet and tail, pilerection, bloated abdomen 6/3/19",FALSE
+DO-2D-4121,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,N,other,Dead,4/11/17,6/27/19,Found Dead (FD),807,TRUE,N,FALSE
+DO-1D-3066,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,R,other,Dead,9/20/16,6/26/19,Found Dead (FD),1009,TRUE,REN. No Right eye 2/6/19,FALSE
+DO-20-1079,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,3R,other,Dead,9/13/16,6/26/19,Found Dead (FD),1016,TRUE,3REN,FALSE
+DO-1D-3048,G23,G23W1,G23W1D2,Tuesday,4113,6710,1D,3L,black,Dead,5/31/16,6/24/19,Found Dead (FD),1119,TRUE,"3LEN
+seperated per clam 1/17/18.distended abdomen 3/26/19. distended abdomen, slight tremor 6/18/19
+
+",FALSE
+DO-1D-3095,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,3R,other,Dead,10/4/16,6/24/19,Found Dead (FD),993,TRUE,"3R
+S7170561-8",FALSE
+DO-2D-4032,G22,G22W2,G22W2D2,Monday,3398,3398,2D,3L,black,Dead,3/1/16,6/24/19,Missing (MSG),1210,TRUE,"3LEN
+Seizure",FALSE
+DO-2D-4100,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,B,other,Dead,3/21/17,6/24/19,Found Dead (FD),825,TRUE,B. large mass on right eye 5/9/19Case#95,FALSE
+DO-40-2075,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,L,white,Dead,9/20/16,6/24/19,Found Dead (FD),1007,TRUE,cloudy right eye 1/17/19. derm around left back leg-contacted CLAM 6/19/19,FALSE
+DO-40-2131,G27,G27W1,G27W1D1,Monday,6186,6186,40,L,white,Dead,6/27/17,6/24/19,Found Dead (FD),727,TRUE,NA,FALSE
+DO-40-2072,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,3L,other,Dead,9/20/16,6/19/19,Missing (MSG),1002,TRUE,3LEN,FALSE
+DO-2D-4179,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,L,other,Dead,10/10/17,6/17/19,Found Dead (FD),615,TRUE,"small, frail, kyphosis 5/29/19",FALSE
+DO-1D-3026,G22,G22W2,G22W2D2,Monday,3396,3396,1D,R,other,Dead,3/1/16,6/13/19,Found Dead (FD),1199,TRUE,REN,FALSE
+DO-1D-3097,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,N,white,Dead,3/21/17,6/13/19,Missing (MSG),814,TRUE,N. severe abdominal swelling. fluid filled?  5/9/19,FALSE
+DO-2D-4071,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,3R,other,Dead,9/20/16,6/13/19,Found Dead (FD),996,TRUE,"3REN,Ear-notch could be confused with 4 R/ tremor 3/15/2017
+",FALSE
+DO-AL-0109,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,2R,other,Dead,3/21/17,6/12/19,Found Dead (FD),813,TRUE,2R,FALSE
+DO-AL-0138,G27,G27W1,G27W1D1,Monday,6183,6183,AL,R,white,Dead,6/27/17,6/12/19,Found Dead (FD),715,TRUE,NA,FALSE
+DO-AL-0030,G22,G22W2,G22W2D1,Monday,3390,3390,AL,2L,other,Dead,3/1/16,6/11/19,Euthanized Sick (ES),1197,TRUE,2LEN,FALSE
+DO-AL-0170,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,R,white,Dead,9/19/17,6/11/19,Euthanized Sick (ES),630,TRUE,"Case 12-B8-2019  1/25/19  Moderate Eye Damage - Right eye cloudy, obs. cataract 6/11/19 mouse is very sluggish not moving in pen can not get to food or water. would not be able to even eat from a gel cup. Mouse was euthanized",TRUE
+DO-1D-3091,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,L,other,Dead,10/4/16,6/10/19,Found Dead (FD),979,TRUE,"L
+S7170561-8",FALSE
+DO-20-1063,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,3R,other,Dead,6/21/16,6/10/19,Found Dead (FD),1084,TRUE,3REN,FALSE
+DO-20-1141,G27,G27W1,G27W1D1,Monday,6185,6185,20,2R,other,Dead,6/27/17,6/6/19,Found Dead (FD),709,TRUE,"Case 64- Moderate Other(right eye damage) 11/29/17-6/6/19(DIT). tremor, piloerection, labored breathing, left eye looks swollen 6/3/19
+",FALSE
+DO-20-1094,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,2L,other,Dead,10/4/16,6/5/19,Found Dead (FD),974,TRUE,"piloerection, kyphosis, labored breathing 5/22/19",TRUE
+DO-1D-3039,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,3R,other,Dead,5/31/16,6/4/19,Found Dead (FD),1099,TRUE,3REN. abdomen becoming distended 8.14.18,FALSE
+DO-1D-3043,G23,G23W1,G23W1D2,Tuesday,4113,4113,1D,L,other,Dead,5/31/16,6/3/19,Euthanized Sick (ES),1098,TRUE,LEN. Distended abdomen 7/24/18,FALSE
+DO-1D-3059,G23,G23W2,G23W2D2,Tuesday,4341,4341,1D,L,other,Dead,6/21/16,6/3/19,Found Dead (FD),1077,TRUE,"Case10-Other-no severity noted-very slight head tilt-1/23/18-6/3/19
+
+",FALSE
+DO-40-2055,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,3R,black,Dead,6/21/16,6/3/19,Found Dead (FD),1077,TRUE,3REN,FALSE
+DO-AL-0134,G27,G27W1,G27W1D1,Monday,6182,6182,AL,2L,other,Dead,6/27/17,6/3/19,Found Dead (FD),706,TRUE,SCO-53-12/11/2017-Right Eye damage,FALSE
+DO-1D-3132,G27,G27W1,G27W1D2,Monday,6188,6188,1D,B,other,Dead,6/27/17,5/31/19,Found Dead (FD),703,TRUE,"thin, frail, piloerection, tumor-like mass on throat area 3/11/19",FALSE
+DO-AL-0127,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,3R,other,Dead,4/11/17,5/30/19,Found Dead (FD),779,TRUE,3R,FALSE
+DO-40-2139,G27,G27W1,G27W1D2,Monday,6187,6187,40,L,other,Dead,6/27/17,5/29/19,Euthanized Sick (ES),701,TRUE,NA,TRUE
+DO-1D-3028,G22,G22W2,G22W2D2,Monday,3396,3396,1D,B,other,Dead,3/1/16,5/28/19,Found Dead (FD),1183,TRUE,BEN. tumor-like mass forming in abdomen 1/28/19,FALSE
+DO-40-2019,G22,G22W2,G22W2D1,Monday,3393,7882,40,L,other,Dead,3/1/16,5/26/19,Found Dead (FD),1181,TRUE,"LEN
+Looks like Both
+tumor under neck-5/14/19",FALSE
+DO-20-1042,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,R,white,Dead,5/31/16,5/24/19,Found Dead (FD),1088,TRUE,REN,FALSE
+DO-20-1184,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,3L,black,Dead,10/10/17,5/24/19,Euthanized Sick (ES),591,TRUE,"Case 97-B8-2019-Hunched, pale, thin, less active but responsive. Wobbly Gait.-4/29/19-5/24/19(DIT) Euthanized",TRUE
+DO-1D-3076,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,B,other,Dead,9/20/16,5/22/19,Found Dead (FD),974,TRUE,BEN,FALSE
+DO-20-1088,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,3L,black,Dead,10/4/16,5/22/19,Requested Euthanasia (RE),960,TRUE,"found hunched, cold to touch, lethargic and injured front left leg",TRUE
+DO-1D-3044,G23,G23W1,G23W1D2,Tuesday,4113,4113,1D,B,other,Dead,5/31/16,5/21/19,Found Dead (FD),1085,TRUE,BEN,FALSE
+DO-1D-3060,G23,G23W2,G23W2D2,Tuesday,4341,4341,1D,B,other,Dead,6/21/16,5/21/19,Found Dead (FD),1064,TRUE,BEN,FALSE
+DO-1D-3186,G28,G28W2,G28W2D2,Tuesday,6538,6538,1D,R,white,Dead,10/10/17,5/21/19,Found Dead (FD),588,TRUE,NA,TRUE
+DO-20-1051,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,L,white,Dead,6/21/16,5/21/19,Found Dead (FD),1064,TRUE,LENSCO-05-11/29/2017-Eye damage to both eyes. mass on back right leg 4/23/19,FALSE
+DO-20-1058,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,R,white,Dead,6/21/16,5/21/19,Found Dead (FD),1064,TRUE,"REN, 10,20,115,116,117,118,119,120
+",FALSE
+DO-2D-4156,G27,G27W2,G27W2D2,Monday,6300,6300,2D,B,other,Dead,7/18/17,5/21/19,Found Dead (FD),672,TRUE,NA,FALSE
+DO-AL-0012,G22,G22W1,G22W1D1,Monday,3298,3298,AL,B,other,Dead,2/9/16,5/21/19,Found Dead (FD),1197,TRUE,BEN. right eye damage 6/21/18 Case 77-B8-2018 (No specific date entered) Moderate Eyes - Gland prolapsed out of right eye - eye bleed damage,TRUE
+DO-AL-0159,G27,G27W2,G27W2D1,Monday,6302,6302,AL,3R,other,Dead,7/18/17,5/21/19,Found Dead (FD),672,TRUE,NA,FALSE
+DO-AL-0169,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,N,white,Dead,9/19/17,5/21/19,Found Dead (FD),609,TRUE,NA,FALSE
+DO-2D-4089,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,N,white,Dead,10/4/16,5/20/19,Found Dead (FD),958,TRUE,Case 83-B8-2019-Moderate Derm between shoulder blades-4/15/19-4/22/19(H),FALSE
+DO-AL-0092,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,B,other,Dead,10/4/16,5/20/19,Found Dead (FD),958,TRUE,"S7170555-8
+dietgel cup added to pen 3/9/18-6/11/18",FALSE
+DO-AL-0114,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,R,white,Dead,4/11/17,5/16/19,Found Dead (FD),765,TRUE,R. purple sore on tail 8/9/18. Case 61A-Moderate Tumor on tail-5/29/18-5/15/19(DIT),FALSE
+DO-40-2048,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,3L,other,Dead,5/31/16,5/15/19,Missing (MSG),1079,TRUE,"3LEN. thin 1/24/17. tumor-like mass above right eye 3/26/19
+",FALSE
+DO-2D-4003,G22,G22W1,G22W1D2,Monday,3312,3312,2D,L,other,Dead,2/9/16,5/14/19,Found Dead (FD),1190,TRUE,"LEN, SCO-71-Cloudy Left eye-7/17/2017,imperforated vagina, L eye damage 7/17/17, sco-71
+",FALSE
+DO-40-2010,G22,G22W1,G22W1D2,Monday,3303,3303,40,R,other,Dead,2/9/16,5/14/19,Found Dead (FD),1190,TRUE,REN,FALSE
+DO-1D-3087,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,3R1L,other,Dead,10/4/16,5/13/19,Found Dead (FD),951,TRUE,"3R1L- chocolate brown :) 
+S7170558-8
+changed earnotch from 3R to 3R1L(needed EN sample for genotyping)",FALSE
+DO-1D-3133,G27,G27W1,G27W1D2,Monday,6188,6188,1D,2R,other,Dead,6/27/17,5/13/19,Found Dead (FD),685,TRUE,"Case 2- Moderate Derm-1/8/19- 
+9mm Ulceration on Dorsal Back",FALSE
+DO-20-1075,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,L,other,Dead,9/13/16,5/13/19,Found Dead (FD),972,TRUE,LEN,FALSE
+DO-1D-3062,G23,G23W2,G23W2D2,Tuesday,4341,7861,1D,2L,other,Dead,6/21/16,5/10/19,Found Dead (FD),1053,TRUE,"Case 6-B8-2019 Moderate Bite Wound - 2mm laceration to tail, separated from aggressor. 1/11/19-5/101/9(DIT)  piloerection, kyphosis, labored breathing 3/26/19. vaginal bleeding 4/23/19",FALSE
+DO-40-2051,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,L,other,Dead,6/21/16,5/9/19,Found Dead (FD),1052,TRUE,LEN,FALSE
+DO-1D-3158,G27,G27W2,G27W2D2,Monday,6308,6308,1D,2L,other,Dead,7/18/17,5/7/19,Found Dead (FD),658,TRUE,Changed death date from 5/21/19 to 5/7/19 to match cage card-HJS 9/10/20,FALSE
+DO-1D-3167,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,3R,other,Dead,9/19/17,5/7/19,Found Dead (FD),595,TRUE,NA,FALSE
+DO-40-2173,G28,G28W1,G28W1D2,Tuesday,6474,6474,40,2R,other,Dead,9/19/17,5/7/19,Missing (MSG),595,TRUE,NA,FALSE
+DO-1D-3172,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,B,other,Dead,9/19/17,5/6/19,Found Dead (FD),594,TRUE,NA,FALSE
+DO-2D-4042,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,R,other,Dead,5/31/16,5/6/19,Found Dead (FD),1070,TRUE,REN,FALSE
+DO-2D-4125,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,2R,other,Dead,4/11/17,5/6/19,Euthanized Sick (ES),755,TRUE,2R,FALSE
+DO-2D-4050,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,R,other,Dead,6/21/16,5/1/19,Found Dead (FD),1044,TRUE,R. Found dead during PIXI/ECHO Testing,FALSE
+DO-1D-3176,G28,G28W1,G28W1D2,Tuesday,6476,6476,1D,3L,black,Dead,9/19/17,4/29/19,Found Dead (FD),587,TRUE,"abdomen becoming distended, hips and backbone becoming prominent, ruffled fur 11/27/18",TRUE
+DO-40-2023,G22,G22W2,G22W2D1,Monday,3393,3393,40,3R,black,Dead,3/1/16,4/29/19,Euthanized Sick (ES),1154,TRUE,"3REN. Tremor, bulging eyes 7/23/18. red tag- unresponsive, piloerection, cold to touch, breathing is shallow and labored, ears held back, eyes held closed- euthanized 4/29/19",FALSE
+DO-1D-3071,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,3R,other,Dead,9/20/16,4/26/19,Found Dead (FD),948,TRUE,"3REN
+Case 61- Moderate Other(Eye Damage)-11/29/17-4/26/19(DIT)
+",FALSE
+DO-20-1039,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,3R,other,Dead,5/31/16,4/26/19,Found Dead (FD),1060,TRUE,3REN.,FALSE
+DO-2D-4134,G27,G27W1,G27W1D2,Monday,6190,6190,2D,2L,other,Dead,6/27/17,4/26/19,Found Dead (FD),668,TRUE,NA,FALSE
+DO-1D-3024,G22,G22W2,G22W2D2,Monday,3395,3395,1D,3L,black,Dead,3/1/16,4/25/19,Found Dead (FD),1150,TRUE,"3LEN
+subdermal lipoma on dorsal neck 3/21/17
+",FALSE
+DO-AL-0108,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,B,other,Dead,3/21/17,4/24/19,Requested Euthanasia (RE),764,TRUE,"B.Euthanized per CLAM 4/24/19-severely swollen right front limb that is distorting all digits, footpad is necrotic, and there is swelling/edema/and erythema from the digits to the elbow.",FALSE
+DO-20-1053,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,2R,other,Dead,6/21/16,4/23/19,Found Dead (FD),1036,TRUE,"2REN. small, frail, hips and backbone becoming prominent",FALSE
+DO-20-1093,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,2R,other,Dead,10/4/16,4/23/19,Found Dead (FD),931,TRUE,"
+",FALSE
+DO-1D-3010,G22,G22W1,G22W1D2,Monday,3311,3311,1D,R,other,Dead,2/9/16,4/20/19,Found Dead (FD),1166,TRUE,"right eye damage 6/25/18. piloerection, lethargic, tumor-like mass on throat area, blood found in shavings 3/25/19",TRUE
+DO-2D-4115,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,L,other,Dead,4/11/17,4/19/19,Found Dead (FD),738,TRUE,L,FALSE
+DO-2D-4170,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,R,other,Dead,9/19/17,4/19/19,Found Dead (FD),577,TRUE,"start of kyphosis,piloerection, tremor 10/9/18",FALSE
+DO-40-2142,G27,G27W1,G27W1D2,Monday,6187,6187,40,2L,other,Dead,6/27/17,4/19/19,Found Dead (FD),661,TRUE,"SCO-16-11/30/2017-Right Eye damage, aggressive",TRUE
+DO-40-2027,G22,G22W2,G22W2D2,Monday,3394,3394,40,L,other,Dead,3/1/16,4/16/19,Found Dead (FD),1141,TRUE,"LEN, thin/hunched 4/17/17
+",FALSE
+DO-AL-0026,G22,G22W2,G22W2D1,Monday,3390,3390,AL,R,white,Dead,3/1/16,4/15/19,Found Dead (FD),1140,TRUE,"REN. piloerection, lethargic, labored breathing, distended abdomen 3/25/19",FALSE
+DO-AL-0078,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,2L,other,Dead,9/20/16,4/15/19,Found Dead (FD),937,TRUE,"2LEN, Case 43-Other(Severity not noted), closed eye lid- sunken globe-11/6/2017
+derm on dorsal back 11/14/18   Case 60-B8-2019 Moderate Dermatitis  3/18/19-4/2/19(DIT)  Alopecia BCS 2.5 2mm wide linear erosion right side",FALSE
+DO-2D-4053,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,2R,other,Dead,6/21/16,4/12/19,Euthanized Sick (ES),1025,TRUE,"2R. tail tip missing 3/5/19  Euthanized sick 4/12/19  Labored breathing, cold, unresponsive to touch.",FALSE
+DO-AL-0050,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,R,other,Dead,6/21/16,4/12/19,Requested Euthanasia (RE),1025,TRUE,"REN,  135,136,137,139,140,141,153,159. Tumor forming on left shoulder 10/16/18. prolapsed tissue out of left eye 3/5/19. 61-B8-2019 Severe Eye Damage 3/18/19  Left eye bulging mass. inflammation, conjuctivitis.  Blinking, yes. sent to necropsy per CLAM 4/12/19",FALSE
+DO-AL-0103,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,3R,other,Dead,3/21/17,4/12/19,Requested Euthanasia (RE),752,TRUE,"3R, large, distended abdomen 8/9/2017 large tumor on left side of neck 
+7/12/18-Tumor has ruptured and is extending to the Left eye and is now swollen and disfigured looking.
+Case 122-B8-2018- Eye Damage(no severity noted)-8/24/18-4/12/19(DIT)
+",FALSE
+DO-1D-3098,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,R,other,Dead,3/21/17,4/11/19,Missing (MSG),751,TRUE,R,TRUE
+DO-40-2043,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,L,white,Dead,5/31/16,4/10/19,Found Dead (FD),1044,TRUE,LEN.Case 79-B8-2019- Moderate/Severe Eye Damage(L)-4/11/19-5/13/19(DIT),FALSE
+DO-1D-3052,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,B,other,Dead,6/21/16,4/9/19,Found Dead (FD),1022,TRUE,BEN,FALSE
+DO-20-1008,G22,G22W1,G22W1D1,Monday,3299,3299,20,3L,other,Dead,2/9/16,4/9/19,Found Dead (FD),1155,TRUE,3LEN,FALSE
+DO-2D-4035,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,L,other,Dead,5/31/16,4/5/19,Found Dead (FD),1039,TRUE,LEN. tremor. thin and frail 3/26/19,FALSE
+DO-1D-3122,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,R,other,Dead,4/11/17,4/4/19,Found Dead (FD),723,TRUE,"R
+tumor on back right leg",FALSE
+DO-2D-4105,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,N,white,Dead,3/21/17,4/4/19,Missing (MSG),744,TRUE,"N
+Case 57- Moderate Derm-11/21/17-4/4/19(DIT)
+",TRUE
+DO-2D-4106,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,R,other,Dead,3/21/17,4/4/19,Missing (MSG),744,TRUE,"R
+9/12/2017-Cloudy Right Eye-
+SCO-49-R eye damage. Bleeding at vagina 9/13/18",FALSE
+DO-40-2127,G26,G26W2,G26W2D2,Thursday,5883,5883,40,3R,other,Dead,4/11/17,4/4/19,Euthanized Sick (ES),723,TRUE,"Case 11-B8-2019-Moderate Derm on pinna-2/21/19-4/4/19(DIT)
+",FALSE
+DO-20-1140,G27,G27W1,G27W1D1,Monday,6185,8011,20,B,other,Dead,6/27/17,4/2/19,Found Dead (FD),644,TRUE,open derm on back. separated per CLAM(singly housed) for derm treatment 3/28/19  66-B8-2019  Severe Dermatitis 3/28/19 1.5 cm wide belt of eroded skin across midline BCS 2.5 Separated from others for derm.,FALSE
+DO-40-2025,G22,G22W2,G22W2D2,Monday,3394,8012,40,N,white,Dead,3/1/16,4/2/19,Found Dead (FD),1127,TRUE,"NEN, circling 3/27/2017.moved from pen 3394 per CLAM 3/29/19 due to circling and tail bites. 67-B8-2019  Moderate Bite Wounds/Circling 3/29/19  Circling.  Stops briefly, climbs on hut.  2mm multifocal tail lesions.  Separated.  
+",FALSE
+DO-2D-4102,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,2L,other,Dead,3/21/17,4/1/19,Found Dead (FD),741,TRUE,2L,FALSE
+DO-AL-0135,G27,G27W1,G27W1D1,Monday,6182,6182,AL,3R,black,Dead,6/27/17,3/29/19,Euthanized Sick (ES),640,TRUE,sent to necropsy per CLAM to rule out RO abscess 3/29/19,FALSE
+DO-1D-3061,G23,G23W2,G23W2D2,Tuesday,4341,8001,1D,2R,other,Dead,6/21/16,3/25/19,Found Dead (FD),1007,TRUE,"2REN. separated from pen 4341 to 8001 per CLAM for fighting 3/22/19
+63-B8-2019  Severe Bite Wounds 3/22/19 Severe tail tip loss and other tail lacerations.  Housed alone now, deydrated, less active.  FD 3/25/19",FALSE
+DO-1D-3166,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,2L,other,Dead,9/19/17,3/24/19,Found Dead (FD),551,TRUE,NA,FALSE
+DO-1D-3094,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,2L,other,Dead,10/4/16,3/20/19,Found Dead (FD),897,TRUE,"2L
+S7170561-8",TRUE
+DO-1D-3126,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,2L,other,Dead,4/11/17,3/18/19,Found Dead (FD),706,TRUE,2L,FALSE
+DO-1D-3165,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,2R,other,Dead,9/19/17,3/17/19,Found Dead (FD),544,TRUE,NA,FALSE
+DO-AL-0061,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,2R,other,Dead,6/21/16,3/17/19,Found Dead (FD),999,TRUE,2REN,FALSE
+DO-AL-0152,G27,G27W2,G27W2D1,Monday,6301,6301,AL,3L,black,Dead,7/18/17,3/17/19,Found Dead (FD),607,TRUE,NA,TRUE
+DO-40-2011,G22,G22W1,G22W1D2,Monday,3303,3303,40,L,other,Dead,2/9/16,3/14/19,Euthanized Sick (ES),1129,TRUE,LEN,FALSE
+DO-20-1110,G26,G26W1,G26W1D1,Thursday,5838,5838,20,2L,other,Dead,3/21/17,3/11/19,Found Dead (FD),720,TRUE,2L,FALSE
+DO-2D-4109,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,2R,other,Dead,3/21/17,3/11/19,Found Dead (FD),720,TRUE,2R,TRUE
+DO-40-2129,G27,G27W1,G27W1D1,Monday,6186,6186,40,N,white,Dead,6/27/17,3/11/19,Missing (MSG),622,TRUE,SCO 56(90-B8-2017)-Moderate Other(right eye damage)-12/5/2017-3/11/29(DIT),FALSE
+DO-AL-0077,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,2R,other,Dead,9/20/16,3/11/19,Found Dead (FD),902,TRUE,2REN,FALSE
+DO-AL-0171,G28,G28W1,G28W1D1,Tuesday,6470,6470,AL,L,white,Dead,9/19/17,3/11/19,Found Dead (FD),538,TRUE,NA,TRUE
+DO-20-1077,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,2R,other,Dead,9/13/16,3/6/19,Found Dead (FD),904,TRUE,2REN,FALSE
+DO-1D-3022,G22,G22W2,G22W2D2,Monday,3395,3395,1D,2L,other,Dead,3/1/16,3/4/19,Found Dead (FD),1098,TRUE,"2LEN, 4/10/2017-Proptosis-Both Eyes",FALSE
+DO-20-1027,G22,G22W2,G22W2D1,Monday,3392,3392,20,L,other,Dead,3/1/16,3/3/19,Found Dead (FD),1097,TRUE,LEN,FALSE
+DO-AL-0079,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,2R1L,other,Dead,9/20/16,2/28/19,Requested Euthanasia (RE),891,TRUE,"2R1LEN, BE CAREFUL NOT TO MIX UP WITH BEN THIS MOUSE IS LARGER BY @10G!
+Ear notch too close together, notched L ear to make it distinguishable Damaged R eye 9/22/2017-3/20/18. Left Eye Damage 2/6/19. Euthanized per CLAM on 2/28/19  for unresloved exophthalmos and inner eye contents are extruding from a hole in the cornea causing pain and distress
+",FALSE
+DO-1D-3127,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,3R,other,Dead,4/11/17,2/26/19,Found Dead (FD),686,TRUE,3R,FALSE
+DO-20-1003,G22,G22W1,G22W1D1,Monday,3299,3299,20,L,other,Dead,2/9/16,2/22/19,Found Dead (FD),1109,TRUE,LEN,FALSE
+DO-20-1004,G22,G22W1,G22W1D1,Monday,3299,3299,20,B,other,Dead,2/9/16,2/22/19,Found Dead (FD),1109,TRUE,"BEN, tremor, labored breathing 5/22/17
+",FALSE
+DO-2D-4075,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,L,other,Dead,9/20/16,2/22/19,Found Dead (FD),885,TRUE,"Case 3-B8-2019 Moderate Dermatitis across entire body-1/8/19-2/22/19(DIT)
+",FALSE
+DO-20-1114,G26,G26W2,G26W2D1,Thursday,5880,5880,20,R,other,Dead,4/11/17,2/20/19,Found Dead (FD),680,TRUE,R,FALSE
+DO-1D-3037,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,2R,other,Dead,5/31/16,2/19/19,Found Dead (FD),994,TRUE,2REN,FALSE
+DO-2D-4049,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,N,other,Dead,6/21/16,2/19/19,Found Dead (FD),973,TRUE,N,FALSE
+DO-40-2053,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,2R,black,Dead,6/21/16,2/19/19,Found Dead (FD),973,TRUE,2REN,FALSE
+DO-AL-0045,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,2R,other,Dead,5/31/16,2/19/19,Found Dead (FD),994,TRUE,2REN,FALSE
+DO-20-1159,G27,G27W2,G27W2D1,Monday,6304,6304,20,3R,other,Dead,7/18/17,2/16/19,Found Dead (FD),578,TRUE,"12-B8-2018-1/25/2018-Small Right Eye, cloudy R eye 1/25/18, runny diarrhea 1/31/18 Case 12-Other(eye damage)-1/25/18-
+",FALSE
+DO-40-2100,G26,G26W1,G26W1D1,Thursday,5840,5840,40,B,other,Dead,3/21/17,2/14/19,Found Dead (FD),695,TRUE,B,FALSE
+DO-20-1059,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,L,white,Dead,6/21/16,2/11/19,Found Dead (FD),965,TRUE,LEN,FALSE
+DO-20-1090,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,R,other,Dead,10/4/16,2/11/19,Found Dead (FD),860,TRUE,29-B8-2018-Small Right Eye-3/20/18-2/11/19(DIT),FALSE
+DO-2D-4027,G22,G22W2,G22W2D2,Monday,3398,3398,2D,L,other,Dead,3/1/16,2/11/19,Found Dead (FD),1077,TRUE,LEN. distended abdomen 1/28/19,FALSE
+DO-2D-4161,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,N,other,Dead,9/19/17,2/11/19,Found Dead (FD),510,TRUE,NA,TRUE
+DO-AL-0130,G27,G27W1,G27W1D1,Monday,6182,6182,AL,R,other,Dead,6/27/17,2/11/19,Found Dead (FD),594,TRUE,"SCO-53-12/11/2017-Bulging eyes, both, ear notch is curling",FALSE
+DO-AL-0183,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,3R,other,Dead,10/10/17,2/11/19,Found Dead (FD),489,TRUE,messy notches,FALSE
+DO-AL-0051,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,L,other,Dead,6/21/16,2/9/19,Euthanized Sick (ES),963,TRUE,LEN,TRUE
+DO-1D-3179,G28,G28W2,G28W2D2,Tuesday,6537,6537,1D,L,other,Dead,10/10/17,2/7/19,Missing (MSG),485,TRUE,Changed missing date from 2/8/19 to 2/7/19-HJS 9/10/20,FALSE
+DO-1D-3093,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,2R,other,Dead,10/4/16,2/6/19,Found Dead (FD),855,TRUE,"2R
+S7170561-8",TRUE
+DO-1D-3057,G23,G23W2,G23W2D2,Tuesday,4341,7861,1D,N,other,Dead,6/21/16,2/4/19,Found Dead (FD),958,TRUE,"Case 6-B8-2019 Mild Bite Wound - 2mm laceration to tail, separated from aggressor 1/11/19-2/10/19(DIT)
+
+from S7118843-8
+
+
+",FALSE
+DO-20-1154,G27,G27W2,G27W2D1,Monday,6304,6304,20,R,white,Dead,7/18/17,2/4/19,Found Dead (FD),566,TRUE,abdomen appears dark and distended 11/26/18,FALSE
+DO-AL-0053,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,2R,other,Dead,6/21/16,2/4/19,Found Dead (FD),958,TRUE,2REN,FALSE
+DO-AL-0091,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,L,other,Dead,10/4/16,2/4/19,Found Dead (FD),853,TRUE,"S7170555-8
+dietgel cup added to pen 3/9/18-6/11/18",FALSE
+DO-2D-4140,G27,G27W1,G27W1D2,Monday,6191,6191,2D,B,other,Dead,6/27/17,2/1/19,Found Dead (FD),584,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17-2/1/19(DIT)
+rectal prolapse 11/26/18
+",FALSE
+DO-AL-0190,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,2L,other,Dead,10/10/17,1/30/19,Requested Euthanasia (RE),477,TRUE,"messy notches. looks like 2L1R?. derm on neck -severe-contacted CLAM 9/18/18  Case 138-B8-2018 Moderate Dermatitis Abrasions on Dorsal Neck 9/18/18                    
+Severe Derm. Euthanized after request per CLAM for severe unresolving, self inflicted derm on face and neck. 1/30/19",FALSE
+DO-1D-3151,G27,G27W2,G27W2D2,Monday,6307,6307,1D,3R,other,Dead,7/18/17,1/28/19,Found Dead (FD),559,TRUE,NA,TRUE
+DO-40-2001,G22,G22W1,G22W1D1,Monday,3302,3302,40,N,other,Dead,2/9/16,1/28/19,Found Dead (FD),1084,TRUE,NEN,FALSE
+DO-1D-3073,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,N,white,Dead,9/20/16,1/23/19,Found Dead (FD),855,TRUE,"NEN
+SCO-51-11/29/2017- Eye damage
+4/12/2018-checked mouse, no visible damage to either eye. swollen abdomen 9/19/18",FALSE
+DO-1D-3050,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,R,white,Dead,6/21/16,1/22/19,Found Dead (FD),945,TRUE,"REN
+22,23,24,26,27,29,30,31
+Clam case#199
+
+
+
+
+",FALSE
+DO-2D-4098,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,R,white,Dead,3/21/17,1/22/19,Found Dead (FD),672,TRUE,"R. purple bruise on the middle of tail 9/13/18, lacerated tumor on tail
+Case 4-B8-2019 - 1/8/2019 - Moderate Tumor - Half tail is missing, 1 cm mass at end, necrotic and ulcerated",FALSE
+DO-1D-3152,G27,G27W2,G27W2D2,Monday,6307,6307,1D,3L,other,Dead,7/18/17,1/21/19,Found Dead (FD),552,TRUE,NA,FALSE
+DO-20-1145,G27,G27W2,G27W2D1,Monday,6303,6303,20,N,other,Dead,7/18/17,1/21/19,Found Dead (FD),552,TRUE,NA,TRUE
+DO-2D-4152,G27,G27W2,G27W2D2,Monday,6299,6299,2D,3L,black,Dead,7/18/17,1/21/19,Missing (MSG),552,TRUE,NA,TRUE
+DO-AL-0137,G27,G27W1,G27W1D1,Monday,6183,6183,AL,N,white,Dead,6/27/17,1/21/19,Euthanized Sick (ES),573,TRUE,"thin, frail, BCS1, lying on side, unresponsive to touch. Euthanized. hjs 1/21/19",TRUE
+DO-1D-3106,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,R,other,Dead,3/21/17,1/17/19,Found Dead (FD),667,TRUE,R - Left ear has two small tears that look like a double notch. Death date changed from 1/19/19 to 1/17/19 to match death date on cage card(HJS 9/22/20),FALSE
+DO-2D-4087,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,3R,other,Dead,10/11/16,1/16/19,Missing (MSG),827,TRUE,"3R Extensive Hair Loss 
+S7171503
+patchy hairloss 7/26/2017
+",FALSE
+DO-1D-3054,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,2L,other,Dead,6/21/16,1/14/19,Found Dead (FD),937,TRUE,2LEN,FALSE
+DO-2D-4110,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,2L,other,Dead,3/21/17,1/14/19,Found Dead (FD),664,TRUE,"2L
+2/26/2018-SCO-49-Right Eye damage bad ear notch",FALSE
+DO-2D-4141,G27,G27W1,G27W1D2,Monday,6191,6191,2D,2R,other,Dead,6/27/17,1/14/19,Found Dead (FD),566,TRUE,"Case 59- Mild Derm on Ears-11/22/17-1/14/19(DIT)
+",FALSE
+DO-AL-0154,G27,G27W2,G27W2D1,Monday,6302,6302,AL,R,white,Dead,7/18/17,1/14/19,Found Dead (FD),545,TRUE,NA,FALSE
+DO-20-1041,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,N,white,Dead,5/31/16,1/11/19,Euthanized Sick (ES),955,TRUE,NEN - Head tilt and spinning 9/18/18,FALSE
+DO-AL-0060,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,B,other,Dead,6/21/16,1/11/19,Euthanized Sick (ES),934,TRUE,BEN,FALSE
+DO-40-2002,G22,G22W1,G22W1D1,Monday,3302,3302,40,R,white,Dead,2/9/16,1/10/19,Found Dead (FD),1066,TRUE,"REN, Bad seizure when tube inserted during eyebleed 6/1/17
+",FALSE
+DO-20-1086,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,2L,other,Dead,10/4/16,1/9/19,Missing (MSG),827,TRUE,"2L
+S7170560-8",FALSE
+DO-20-1013,G22,G22W1,G22W1D1,Monday,3300,3300,20,2R,other,Dead,2/9/16,1/8/19,Found Dead (FD),1064,TRUE,2REN,FALSE
+DO-1D-3035,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,L,other,Dead,5/31/16,1/7/19,Found Dead (FD),951,TRUE,"LEN
+SCO-09-11/29/2017-Cloudy Left eye",TRUE
+DO-2D-4074,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,R,white,Dead,9/20/16,1/7/19,Found Dead (FD),839,TRUE,REN,FALSE
+DO-40-2052,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,B,other,Dead,6/21/16,1/7/19,Found Dead (FD),930,TRUE,BEN. Head tilt and circling 7/24/18,FALSE
+DO-AL-0076,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,B,other,Dead,9/20/16,1/7/19,Found Dead (FD),839,TRUE,"BEN looks like 2R1L THIS MOSE HAS A LARGE TEAR ON IT'S RIGHT EAR IT IS @10G SMALLER THAN 2R1L!
+3/20/2018-Right Eye damage, seizure",FALSE
+DO-AL-0110,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,2L,other,Dead,3/21/17,1/4/19,Euthanized Sick (ES),654,TRUE,"2L. tremor 9/13/18 mouse can not walk but is dragging its self by front paws. Mouse has a gell cup and is pulling herself up to it and eating. 1/3/19. Euthanized per Laura 1/4/19- severe tremor, extreme limited mobility, thin, frail",TRUE
+DO-20-1113,G26,G26W2,G26W2D1,Thursday,5880,5880,20,N,white,Dead,4/11/17,1/3/19,Missing (MSG),632,TRUE,"N
+LBS1",FALSE
+DO-AL-0116,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,B,other,Dead,4/11/17,1/3/19,Found Dead (FD),632,TRUE,"B
+diarrhea 4/10/2018
+
+",FALSE
+DO-20-1046,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,2L,other,Dead,5/31/16,1/2/19,Found Dead (FD),946,TRUE,2LEN,FALSE
+DO-2D-4077,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,2R,other,Dead,9/20/16,1/2/19,Found Dead (FD),834,TRUE,2REN,FALSE
+DO-20-1162,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,R,other,Dead,9/19/17,12/31/18,Found Dead (FD),468,TRUE,NA,TRUE
+DO-2D-4034,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,R,other,Dead,5/31/16,12/31/18,Found Dead (FD),944,TRUE,REN,FALSE
+DO-2D-4182,G28,G28W2,G28W2D2,Tuesday,6539,6539,2D,2L,black,Dead,10/10/17,12/31/18,Found Dead (FD),447,TRUE,NA,FALSE
+DO-1D-3109,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,2R,other,Dead,3/21/17,12/27/18,Found Dead (FD),646,TRUE,2R,TRUE
+DO-1D-3115,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,L,other,Dead,4/11/17,12/27/18,Missing (MSG),625,TRUE,L,FALSE
+DO-AL-0099,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,L,other,Dead,3/21/17,12/27/18,Found Dead (FD),646,TRUE,L,TRUE
+DO-40-2190,G28,G28W2,G28W2D2,Tuesday,6536,6536,40,2L,other,Dead,10/10/17,12/24/18,Found Dead (FD),440,TRUE,Beginning to drag back legs 12/18/18,FALSE
+DO-AL-0088,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,3L,black,Dead,10/4/16,12/24/18,Found Dead (FD),811,TRUE,"3L
+S7170558-8
+seizure and chirping 2/14/17
+kyphosis, piloerection, labored breathing 11/14/18",FALSE
+DO-2D-4052,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,B,other,Dead,6/21/16,12/21/18,Found Dead (FD),913,TRUE,B,FALSE
+DO-2D-4054,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,2L,other,Dead,6/21/16,12/21/18,Found Dead (FD),913,TRUE,2L,FALSE
+DO-1D-3027,G22,G22W2,G22W2D2,Monday,3396,3396,1D,L,other,Dead,3/1/16,12/20/18,Found Dead (FD),1024,TRUE,"LEN
+ulcerated tumor-like mass
+ on back, stiff to touch",FALSE
+DO-40-2012,G22,G22W1,G22W1D2,Monday,3303,3303,40,B,other,Dead,2/9/16,12/19/18,Accidental Death (AD),1044,FALSE,BEN.Found crushed on tunnel during PIXI/Echo testing per Jenn Ryan,FALSE
+DO-AL-0028,G22,G22W2,G22W2D1,Monday,3390,3390,AL,B,other,Dead,3/1/16,12/19/18,Found Dead (FD),1023,TRUE,BEN. right eye damage. Changed death date from 12/31/18 to 12/19/18-HJS 9/10/20,FALSE
+DO-1D-3011,G22,G22W1,G22W1D2,Monday,3311,3311,1D,2R1L,other,Dead,2/9/16,12/17/18,Found Dead (FD),1042,TRUE,"2R1LEN. The EN was originally ""L"" but was changed to ""2R1L"" - date it was changed is unk.",FALSE
+DO-20-1070,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,2L,other,Dead,9/13/16,12/17/18,Found Dead (FD),825,TRUE,"2LEN. distended abdomen, kyphosis, ruffled fur 10/17/18",FALSE
+DO-20-1105,G26,G26W1,G26W1D1,Thursday,5838,5838,20,N,white,Dead,3/21/17,12/17/18,Found Dead (FD),636,TRUE,"N
+LBS1",TRUE
+DO-40-2086,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,2L,black,Dead,10/4/16,12/17/18,Found Dead (FD),804,TRUE,"2L
+S7170557-8
+ 
+blood in urine 8/10/2017
+",FALSE
+DO-2D-4023,G22,G22W2,G22W2D2,Monday,3397,3397,2D,3R,black,Dead,3/1/16,12/16/18,Found Dead (FD),1020,TRUE,3REN,FALSE
+DO-20-1143,G27,G27W1,G27W1D1,Monday,6185,6185,20,3R,other,Dead,6/27/17,12/14/18,Found Dead (FD),535,TRUE,NA,FALSE
+DO-2D-4185,G28,G28W2,G28W2D2,Tuesday,6540,6540,2D,N,white,Dead,10/10/17,12/14/18,Found Dead (FD),430,TRUE,"labored breathing, ruffled fur, thin 10/23/18",FALSE
+DO-40-2093,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,2R,other,Dead,10/4/16,12/12/18,Found Dead (FD),799,TRUE,"2R
+S7170556-8",FALSE
+DO-1D-3063,G23,G23W2,G23W2D2,Tuesday,4341,4341,1D,3R,other,Dead,6/21/16,12/11/18,Found Dead (FD),903,TRUE,"3REN. Distended abdomen 10/17/18
+
+",FALSE
+DO-40-2063,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,3R,black,Dead,6/21/16,12/11/18,Found Dead (FD),903,TRUE,3REN 10/2/18 frail and hunched,FALSE
+DO-2D-4001,G22,G22W1,G22W1D2,Monday,3312,3312,2D,N,other,Dead,2/9/16,12/10/18,Found Dead (FD),1035,TRUE,"NEN
+SCO-71-11/30/2017-Cloudy Right eye,11/30/17-Case 68-Moderate Other(Eye Damage)-12/1/17-, SCO-71
+distended abdomen 7/23/18",TRUE
+DO-2D-4011,G22,G22W1,G22W1D2,Monday,3313,3313,2D,L,white,Dead,2/9/16,12/10/18,Found Dead (FD),1035,TRUE,"LEN,large abdominal mass-otherwise healthy, 7/17/17, abdomen looks severely distended with dark colored internal pigment, ruffled fur, labored breathing 3/26/18
+",FALSE
+DO-40-2029,G22,G22W2,G22W2D2,Monday,3394,3394,40,2R,other,Dead,3/1/16,12/10/18,Missing (MSG),1014,TRUE,2REN,FALSE
+DO-AL-0003,G22,G22W1,G22W1D1,Monday,3297,3297,AL,L,other,Dead,2/9/16,12/10/18,Found Dead (FD),1035,TRUE,"LEN
+LBS1",FALSE
+DO-AL-0025,G22,G22W2,G22W2D1,Monday,3390,3390,AL,N,white,Dead,3/1/16,12/10/18,Found Dead (FD),1014,TRUE,NEN,FALSE
+DO-AL-0052,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,B,other,Dead,6/21/16,12/10/18,Found Dead (FD),902,TRUE,BEN. Distended Abdomen  170-B8-2018  Mild Dermatitis - Abrasions on Back,FALSE
+DO-AL-0156,G27,G27W2,G27W2D1,Monday,6302,6302,AL,B,other,Dead,7/18/17,12/10/18,Found Dead (FD),510,TRUE,aggressive,FALSE
+DO-20-1018,G22,G22W2,G22W2D1,Monday,3391,3391,20,R,other,Dead,3/1/16,12/4/18,Found Dead (FD),1008,TRUE,"REN
+Cloudy left eye
+SCO-5-11/29/2017-Cataract in Left eye
+",FALSE
+DO-20-1009,G22,G22W1,G22W1D1,Monday,3300,3300,20,N,white,Dead,2/9/16,12/3/18,Found Dead (FD),1028,TRUE,"NEN. distended abdomen, derm on neck 8/13/18",FALSE
+DO-20-1028,G22,G22W2,G22W2D1,Monday,3392,3392,20,B,other,Dead,3/1/16,12/3/18,Found Dead (FD),1007,TRUE,BEN,TRUE
+DO-20-1057,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,N,white,Dead,6/21/16,12/3/18,Found Dead (FD),895,TRUE,"NEN, from S7118841-8
+",TRUE
+DO-40-2022,G22,G22W2,G22W2D1,Monday,3393,3393,40,2L,other,Dead,3/1/16,12/3/18,Found Dead (FD),1007,TRUE,2LEN,FALSE
+DO-AL-0005,G22,G22W1,G22W1D1,Monday,3297,3297,AL,2R,other,Dead,2/9/16,12/3/18,Found Dead (FD),1028,TRUE,2REN,FALSE
+DO-2D-4094,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,2L,other,Dead,10/11/16,12/1/18,Found Dead (FD),781,TRUE,"2L
+S7171563-2",FALSE
+DO-AL-0155,G27,G27W2,G27W2D1,Monday,6302,6302,AL,L,white,Dead,7/18/17,11/30/18,Found Dead (FD),500,TRUE,"Case 13-Other( right eye damage)-1/25/18-
+",FALSE
+DO-2D-4057,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,N,other,Dead,6/21/16,11/29/18,Found Dead (FD),891,TRUE,N,FALSE
+DO-2D-4101,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,2R,other,Dead,3/21/17,11/28/18,Found Dead (FD),617,TRUE,2R. Left eye damage 8/9/18,TRUE
+DO-1D-3187,G28,G28W2,G28W2D2,Tuesday,6538,6538,1D,L,other,Dead,10/10/17,11/27/18,Found Dead (FD),413,TRUE,NA,TRUE
+DO-2D-4169,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,N,white,Dead,9/19/17,11/27/18,Found Dead (FD),434,TRUE,NA,FALSE
+DO-1D-3019,G22,G22W2,G22W2D2,Monday,3395,3395,1D,L,other,Dead,3/1/16,11/26/18,Found Dead (FD),1000,TRUE,"LEN
+SCO-18-11/30/2017-Right eye is cloudy
+3/28/18-distended abdomen 4/12/18
+SCO-18-cloudy R eye-11/30/17-3/29/18/ distended abdomen 4/12/18
+tumor like growth on back right leg 7/23/18
+
+3/21/2018-Cloudy Right Eye",FALSE
+DO-1D-3058,G23,G23W2,G23W2D2,Tuesday,4341,4341,1D,R,other,Dead,6/21/16,11/26/18,Found Dead (FD),888,TRUE,"REN
+10,19,20,22,23,24,30,31
+",FALSE
+DO-2D-4091,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,L,other,Dead,10/4/16,11/26/18,Found Dead (FD),783,TRUE,"L
+S7170554-6
+experienced seizure
+SCO-04-11/29/2017-Small Left eye
+",FALSE
+DO-2D-4107,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,L,other,Dead,3/21/17,11/26/18,Found Dead (FD),615,TRUE,"L. Right eye Damage 8/9/18
+",TRUE
+DO-AL-0007,G22,G22W1,G22W1D1,Monday,3297,3297,AL,3R,other,Dead,2/9/16,11/26/18,Found Dead (FD),1021,TRUE,"3REN. distended abdomen 8/13/18 large tumor on right shoulder 10/15/18  SCO70-B8-2018  Moderate eye damage, right eye bulged out, globe dried out, BCS4",FALSE
+DO-AL-0148,G27,G27W2,G27W2D1,Monday,6301,6301,AL,B,other,Dead,7/18/17,11/26/18,Found Dead (FD),496,TRUE,NA,TRUE
+DO-1D-3038,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,2L,other,Dead,5/31/16,11/21/18,Missing (MSG),904,TRUE,2LEN,FALSE
+DO-1D-3080,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,3L,other,Dead,9/20/16,11/21/18,Euthanized Sick (ES),792,TRUE,"3LEN messy ears
+3/22/2017-Small Right Eye
+damaged during bleed, small R eye 3/22/17/ Case 17- mild derm on ears-6/8/17-9/19/17(H)
+ear notches are not readable
+11/14/18- distended abdomen, kyphosis, piloerection",FALSE
+DO-40-2032,G22,G22W2,G22W2D2,Monday,3394,3394,40,3L,black,Dead,3/1/16,11/19/18,Found Dead (FD),993,TRUE,"3LEN
+Missing Left Eye-no date indicated
+SCO-13-11/30/2017-Left Eye damage",FALSE
+DO-AL-0094,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,2L,other,Dead,10/4/16,11/19/18,Found Dead (FD),776,TRUE,"2L
+S7170555-8
+imperforate vagina? Unusually large lump on gential area 5/17/17
+dietgel cup added to pen 3/9/18-6/11/18
+piloerection, ruffled unkempt fur, labored breathing 11/14/18",FALSE
+DO-AL-0100,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,B,other,Dead,3/21/17,11/19/18,Found Dead (FD),608,TRUE,B,FALSE
+DO-1D-3089,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,N,other,Dead,10/4/16,11/16/18,Found Dead (FD),773,TRUE,"N - Has mass on tail , mass has opened
+S7170561-8",FALSE
+DO-20-1108,G26,G26W1,G26W1D1,Thursday,5838,5838,20,B,other,Dead,3/21/17,11/13/18,Found Dead (FD),602,TRUE,B,FALSE
+DO-2D-4096,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,3L,black,Dead,10/4/16,11/12/18,Found Dead (FD),769,TRUE,3L-open mass on ventral abdomen 10/17/18,FALSE
+DO-40-2064,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,3L,black,Dead,6/21/16,11/12/18,Found Dead (FD),874,TRUE,3LEN,FALSE
+DO-40-2071,G24,G24W1,G24W1D1,Wednesday,4974,4974,40,3R,other,Dead,9/20/16,11/12/18,Found Dead (FD),783,TRUE,Case 140-B8-2018  9/20/18 Moderate Dermatitis - Raw spot on nose,FALSE
+DO-AL-0024,G22,G22W2,G22W2D1,Monday,3389,3389,AL,3L,black,Dead,3/1/16,11/12/18,Found Dead (FD),986,TRUE,"3LEN,
+subdermal lipoma dorsal neck 6/19/17
+",FALSE
+DO-40-2166,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,2L,other,Dead,9/19/17,11/8/18,Found Dead (FD),415,TRUE,NA,FALSE
+DO-AL-0111,G26,G26W1,G26W1D1,Thursday,5837,5837,AL,3R,other,Dead,3/21/17,11/8/18,Found Dead (FD),597,TRUE,"3R, SCO-02-11/29/2017-Cataract in Right Eye",FALSE
+DO-1D-3031,G22,G22W2,G22W2D2,Monday,3396,3396,1D,3R,black,Dead,3/1/16,11/5/18,Found Dead (FD),979,TRUE,3REN,FALSE
+DO-1D-3049,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,N,white,Dead,6/21/16,11/5/18,Found Dead (FD),867,TRUE,"NEN
+from S7118842-8
+
+",FALSE
+DO-20-1084,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,B,other,Dead,10/4/16,11/5/18,Found Dead (FD),762,TRUE,"B small and frail 8/29/18
+S7170560-8",FALSE
+DO-2D-4081,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,N,white,Dead,10/11/16,11/5/18,Found Dead (FD),755,TRUE,"Case 166-B8-2018 10/18/18 Moderate Bite Wounds
+S7171503
+Case 15A-Moderate Derm on dorsal neck-1/30/18-2/22/18(H)
+",TRUE
+DO-AL-0072,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,3L1R,other,Dead,9/20/16,11/3/18,Found Dead (FD),774,TRUE,"3LEN
+EN changed to 3L1R on 2/22/18",FALSE
+DO-20-1033,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,N,white,Dead,5/31/16,11/2/18,Found Dead (FD),885,TRUE,Appears to be gasping infrequently,FALSE
+DO-2D-4040,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,3L,black,Dead,5/31/16,11/2/18,Found Dead (FD),885,TRUE,"3LEN. starting to drag back legs 8/14/18
+Tail has been chewed off",FALSE
+DO-40-2035,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,L,other,Dead,5/31/16,11/1/18,Found Dead (FD),884,TRUE,"LEN
+ Cloudy Right eye-No Date Indicated
+SCO-10-11/29/2017- Right Eye damage. Prominent hips and bacbones(BCS2) piloerection 7/24/18
+",FALSE
+DO-40-2074,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,R,white,Dead,9/20/16,11/1/18,Found Dead (FD),772,TRUE,REN,FALSE
+DO-AL-0121,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,N,white,Dead,4/11/17,11/1/18,Found Dead (FD),569,TRUE,N,TRUE
+DO-20-1072,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,3L,black,Dead,9/13/16,10/31/18,Found Dead (FD),778,TRUE,3LEN,FALSE
+DO-20-1044,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,B,other,Dead,5/31/16,10/30/18,Found Dead (FD),882,TRUE,"BEN. piloerection, backbone and hips starting to become prominent 7/24/18",FALSE
+DO-20-1155,G27,G27W2,G27W2D1,Monday,6304,6304,20,L,other,Dead,7/18/17,10/29/18,Found Dead (FD),468,TRUE,"12-B8-2018-1/25/2018-Small Right Eye
+Sickly looking, cool to the touch 10/22/18",TRUE
+DO-2D-4046,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,2L,black,Dead,5/31/16,10/29/18,Found Dead (FD),881,TRUE,2LEN Distended abdomen 10/16/18,FALSE
+DO-2D-4069,G24,G24W1,G24W1D2,Wednesday,4978,7146,2D,2R,other,Dead,9/20/16,10/29/18,Found Dead (FD),769,TRUE,"2REN,slight tremor 7/18/17
+Severe bite wounds on tail. Tumor-like mass growing under right arm 9/19/18
+",FALSE
+DO-20-1167,G28,G28W1,G28W1D1,Tuesday,6471,6471,20,3R,other,Dead,9/19/17,10/26/18,Found Dead (FD),402,TRUE,"diarrhea 7/3/18. Piloerection, thin, frail, prominent backbone 9/18/18",TRUE
+DO-2D-4041,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,N,white,Dead,5/31/16,10/23/18,Found Dead (FD),875,TRUE,"NEN  Rapid breathing, hunched, chalky looking 10/16/18",FALSE
+DO-40-2084,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,B,other,Dead,10/4/16,10/22/18,Found Dead (FD),748,TRUE,"B 10/3/18 small hunched and frail
+S7170557-8",FALSE
+DO-40-2091,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,L,other,Dead,10/4/16,10/22/18,Found Dead (FD),748,TRUE,"L torn right ear
+S7170556-8",FALSE
+DO-AL-0040,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,3L,other,Dead,5/31/16,10/22/18,Found Dead (FD),874,TRUE,3LEN Large Mass in Vaginal area 10/16/18,FALSE
+DO-AL-0075,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,L,other,Dead,9/20/16,10/22/18,Found Dead (FD),762,TRUE,"LEN, VERY AGGRESSIVE
+",FALSE
+DO-20-1121,G26,G26W2,G26W2D1,Thursday,5881,5881,20,N,white,Dead,4/11/17,10/18/18,Missing (MSG),555,TRUE,N,FALSE
+DO-20-1104,G26,G26W1,G26W1D1,Thursday,5836,5836,20,2L1R,black,Dead,3/21/17,10/17/18,Found Dead (FD),575,TRUE,"2L1R, SCO-54-Missing Right eye",FALSE
+DO-40-2040,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,3L,other,Dead,5/31/16,10/16/18,Found Dead (FD),868,TRUE,"3LEN. hips starting to become prominent, kyphosis 7/24/18",FALSE
+DO-40-2058,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,R,other,Dead,6/21/16,10/15/18,Found Dead (FD),846,TRUE,"REN 10/2/18 frail and hunched
+20,22023,24,26,27,28,29
+",FALSE
+DO-40-2083,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,L,other,Dead,10/4/16,10/15/18,Found Dead (FD),741,TRUE,"L
+S7170557-8",TRUE
+DO-AL-0074,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,R,other,Dead,9/20/16,10/15/18,Found Dead (FD),755,TRUE,"REN
+SCO-77-11/06/2017-Right Eye damage. small, labored breathing, piloerection 9/19/18
+
+",TRUE
+DO-AL-0129,G27,G27W1,G27W1D1,Monday,6182,6182,AL,N,white,Dead,6/27/17,10/15/18,Found Dead (FD),475,TRUE,NA,FALSE
+DO-2D-4033,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,N,other,Dead,5/31/16,10/12/18,Euthanized Sick (ES),864,TRUE,NEN,FALSE
+DO-20-1068,G24,G24W1,G24W1D1,Wednesday,4972,4972,20,B,other,Dead,9/13/16,10/10/18,Found Dead (FD),757,TRUE,"BEN mouse looks frail ad sickly 8/29/18
+tail has bite marks, low body score. 9/18/18- kyphosis, piloerection, chalky appearance to feet and ears.",FALSE
+DO-20-1010,G22,G22W1,G22W1D1,Monday,3300,3300,20,R,white,Dead,2/9/16,10/9/18,Found Dead (FD),973,TRUE,"REN,
+sickly, cold to touch 10/1/18",FALSE
+DO-2D-4118,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,2L,other,Dead,4/11/17,10/8/18,Found Dead (FD),545,TRUE,"2L.thin, frail hairloss all over body 8/9/18",FALSE
+DO-AL-0085,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,2R,other,Dead,10/4/16,10/8/18,Found Dead (FD),734,TRUE,"2R
+S7170558-8
+mild imperforate vagina 3/22/17 and bulging eyes 4/12/17
+",FALSE
+DO-2D-4024,G22,G22W2,G22W2D2,Monday,3397,3397,2D,3L,black,Dead,3/1/16,10/5/18,Found Dead (FD),948,TRUE,"3LEN,
+no tail",FALSE
+DO-20-1182,G28,G28W2,G28W2D1,Tuesday,6533,6533,20,2L,other,Dead,10/10/17,10/4/18,Found Dead (FD),359,TRUE,NA,FALSE
+DO-AL-0069,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,2R,other,Dead,9/20/16,10/3/18,Found Dead (FD),743,TRUE,"2REN, frail. domed appearance to skull, head tilt, piloerection, BCS2 9/19/18",FALSE
+DO-2D-4138,G27,G27W1,G27W1D2,Monday,6191,6191,2D,R,white,Dead,6/27/17,10/1/18,Found Dead (FD),461,TRUE,"SCO-58-2017(observation-previously case 59)- Mild Derm on Ears-11/22/17-10/1/18(DIT)
+",FALSE
+DO-40-2076,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,B,other,Dead,9/20/16,10/1/18,Found Dead (FD),741,TRUE,"BEN. swollen, red genital area- prolapsed vagina? contacted CLAM 9/19/18",FALSE
+DO-AL-0004,G22,G22W1,G22W1D1,Monday,3297,3297,AL,B,black,Dead,2/9/16,9/29/18,Found Dead (FD),963,TRUE,"BEN. thin, frail, BCS1, piloerection 8/13/18",FALSE
+DO-AL-0047,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,3R1L,other,Dead,5/31/16,9/28/18,Found Dead (FD),850,TRUE,This mouse was originally 3REN but was changed to 3R1LEN,FALSE
+DO-1D-3047,G23,G23W1,G23W1D2,Tuesday,4113,4113,1D,3R,other,Dead,5/31/16,9/27/18,Found Dead (FD),849,TRUE,"3REN
+Case-3A-1/10/18-Severe Derm - Deep raw lesion between shoulder blades",FALSE
+DO-20-1125,G26,G26W2,G26W2D1,Thursday,5881,5881,20,2R,other,Dead,4/11/17,9/27/18,Found Dead (FD),534,TRUE,2R,TRUE
+DO-AL-0126,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,2L,other,Dead,4/11/17,9/27/18,Missing (MSG),534,TRUE,"2L, biter/regular agouti????
+",FALSE
+DO-1D-3053,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,2R,other,Dead,6/21/16,9/25/18,Found Dead (FD),826,TRUE,2REN. Derm on neck and ears contacted CLAM 7/24/18,FALSE
+DO-20-1034,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,R,white,Dead,5/31/16,9/25/18,Found Dead (FD),847,TRUE,REN,FALSE
+DO-AL-0062,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,2L,other,Dead,6/21/16,9/25/18,Found Dead (FD),826,TRUE,2LEN,FALSE
+DO-1D-3096,G24,G24W2,G24W2D2,Wednesday,5094,5094,1D,3L,black,Dead,10/4/16,9/24/18,Found Dead (FD),720,TRUE,"Has large mass on right hip/thigh area
+S7170561-8. Mouse has trouble staying upright due to mass on side, put tag on box so someone is checking on this mouse several times a day. 9/19/18
+Case 109-B8-2018 8/1/18 Moderate Tumor - Raw Spot on Tumor",FALSE
+DO-2D-4004,G22,G22W1,G22W1D2,Monday,3312,3312,2D,B,other,Dead,2/9/16,9/24/18,Found Dead (FD),958,TRUE,"BEN
+Damaged Left eye
+SCO-71-11/30/2017-Left Eye damage,damaged left eye/ seizure Case 68- 11/30/17-Moderate Other(Eye Damage)-12/1/17,SCO-71
+",FALSE
+DO-2D-4015,G22,G22W1,G22W1D2,Monday,3313,3313,2D,3R,other,Dead,2/9/16,9/24/18,Found Dead (FD),958,TRUE,3REN,FALSE
+DO-AL-0036,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,B,other,Dead,5/31/16,9/24/18,Found Dead (FD),846,TRUE,"BEN, Case 21- Moderate derm- 7/10/17-7/26/17(H)
+",FALSE
+DO-AL-0037,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,2R,other,Dead,5/31/16,9/24/18,Found Dead (FD),846,TRUE,"2REN, Case 62- Moderate Derm on Shoulder- 11/29/17-12/15/17(H)
+",FALSE
+DO-AL-0192,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,3L,black,Dead,10/10/17,9/20/18,Requested Euthanasia (RE),345,TRUE,"Case 138-B8-2018 Moderate Eye Damage 9/18/18 Prolapsed Right Eye 
+Requested Euthansia from CLAM for right eye damage",FALSE
+DO-AL-0080,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,3L,other,Dead,9/20/16,9/18/18,Found Dead (FD),728,TRUE,"3LEN, Small Right eye-9/22/2017
+3/20/2018-Right Eye damage",TRUE
+DO-2D-4009,G22,G22W1,G22W1D2,Monday,3313,3313,2D,N,other,Dead,2/9/16,9/17/18,Found Dead (FD),951,TRUE,"NEN
+12/14/16 entered as FD in error.
+Low BC",FALSE
+DO-2D-4173,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,2R,other,Dead,9/19/17,9/15/18,Found Dead (FD),361,TRUE,NA,TRUE
+DO-AL-0084,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,B,other,Dead,10/4/16,9/12/18,Found Dead (FD),708,TRUE,"B
+S7170558-8",FALSE
+DO-20-1081,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,N,other,Dead,10/4/16,9/10/18,Found Dead (FD),706,TRUE,"N
+S7170560-8",FALSE
+DO-20-1153,G27,G27W2,G27W2D1,Monday,6304,6304,20,N,white,Dead,7/18/17,9/10/18,Found Dead (FD),419,TRUE,NA,FALSE
+DO-AL-0083,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,L,other,Dead,10/4/16,9/10/18,Found Dead (FD),706,TRUE,"L distended abdomen 8/28/18 
+S7170558-8
+distended ab",FALSE
+DO-1D-3065,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,N,white,Dead,9/20/16,9/6/18,Missing (MSG),716,TRUE,"NEN, 9/22/2017-Missing Right Eye
+R eye damage 9/22/17 Case 61- Moderate Other(Eye Damage)-11/29/17-
+",FALSE
+DO-1D-3069,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,2R,other,Dead,9/20/16,9/6/18,Missing (MSG),716,TRUE,"2REN
+subdermal lipoma on dorsal neck 7/18/2017
+",FALSE
+DO-20-1185,G28,G28W2,G28W2D1,Tuesday,6534,6534,20,N,white,Dead,10/10/17,9/5/18,Found Dead (FD),330,TRUE,"piloerection, distended abdomen, kyphosis, growth on ventral neck area 8/28/18",FALSE
+DO-AL-0187,G28,G28W2,G28W2D1,Tuesday,6532,6532,AL,L,other,Dead,10/10/17,9/5/18,Found Dead (FD),330,TRUE,NA,TRUE
+DO-1D-3014,G22,G22W1,G22W1D2,Monday,3311,3311,1D,2L,white,Dead,2/9/16,9/4/18,Found Dead (FD),938,TRUE,"Case 101-B8-2018 Moderate Malocclusion 
+BCS1, lethargic, piloerection 7/23/18
+",FALSE
+DO-20-1137,G27,G27W1,G27W1D1,Monday,6185,6185,20,N,white,Dead,6/27/17,9/4/18,Found Dead (FD),434,TRUE,"Case 64- Moderate Other(right eye damage) 11/29/17-9/4/18(DIT)
+",TRUE
+DO-20-1144,G27,G27W1,G27W1D1,Monday,6185,6185,20,3L,other,Dead,6/27/17,9/4/18,Found Dead (FD),434,TRUE,NA,FALSE
+DO-AL-0011,G22,G22W1,G22W1D1,Monday,3298,3298,AL,L,white,Dead,2/9/16,9/4/18,Found Dead (FD),938,TRUE,LEN. distended abdomen 8/13/18,TRUE
+DO-1D-3034,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,R,other,Dead,5/31/16,8/31/18,Found Dead (FD),822,TRUE,REN,TRUE
+DO-2D-4082,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,R,white,Dead,10/11/16,8/31/18,Found Dead (FD),689,TRUE,"126-B8-2018  Moderate Tumor/Other  Toe caught in wire lid, not using left hind foot.
+Case 166-B8-2018 10/18/18 Moderate Bite Wounds
+S7171503",FALSE
+DO-AL-0081,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,N,white,Dead,10/4/16,8/30/18,Euthanized Sick (ES),695,TRUE,"N
+S7170558-8
+found mouse gasping for breath, cold,rigid, and limited movement. Large tumor like interal mass on throat area that could potentially be blocking the airway? Mouse was euthanized",FALSE
+DO-20-1089,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,N,white,Dead,10/4/16,8/29/18,Found Dead (FD),694,TRUE,"N
+S7170559-8
+frail
+",FALSE
+DO-2D-4175,G28,G28W1,G28W1D2,Tuesday,6478,6478,2D,3R,other,Dead,9/19/17,8/28/18,Requested Euthanasia (RE),343,TRUE,right eye damage 8/28/18,FALSE
+DO-40-2128,G26,G26W2,G26W2D2,Thursday,5883,5883,40,3L,black,Dead,4/11/17,8/28/18,Found Dead (FD),504,TRUE,3L. dragging back legs 8/9/18,TRUE
+DO-40-2049,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,N,other,Dead,6/21/16,8/27/18,Found Dead (FD),797,TRUE,"Very frail, thin, bones starting to protrude 8/21/18
+",FALSE
+DO-2D-4080,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,3L,black,Dead,9/20/16,8/24/18,Found Dead (FD),703,TRUE,3LEN,FALSE
+DO-1D-3100,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,B,other,Dead,3/21/17,8/23/18,Found Dead (FD),520,TRUE,B tumor on L side of nose 8/2/18,TRUE
+DO-1D-3003,G22,G22W1,G22W1D2,Monday,3308,3308,1D,L,other,Dead,2/9/16,8/22/18,Found Dead (FD),925,TRUE,LEN,FALSE
+DO-1D-3113,G26,G26W2,G26W2D2,Thursday,5884,5884,1D,N,white,Dead,4/11/17,8/22/18,Found Dead (FD),498,TRUE,"N. thin, lethargic and frail 8/9/18",TRUE
+DO-1D-3162,G28,G28W1,G28W1D2,Tuesday,6475,6475,1D,R,white,Dead,9/19/17,8/22/18,Found Dead (FD),337,TRUE,NA,FALSE
+DO-40-2038,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,2L,other,Dead,5/31/16,8/21/18,Found Dead (FD),812,TRUE,"2LEN. prominent hips and backbone(BCS1), piloerection, frail, lethargic 8/14/18",FALSE
+DO-40-2060,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,B,other,Dead,6/21/16,8/21/18,Found Dead (FD),791,TRUE,"BEN
+SCO-11-11/30/2107-Right eye damage",FALSE
+DO-40-2013,G22,G22W1,G22W1D2,Monday,3303,3303,40,2R,other,Dead,2/9/16,8/20/18,Requested Euthanasia (RE),923,TRUE,"2REN, tremor 3/13/18. Severe tremor. starting to drag back legs 8/13/18
+Mouse euthanized 8/20/18 mouse was in distress.
+",TRUE
+DO-AL-0021,G22,G22W2,G22W2D1,Monday,3389,3389,AL,2R,other,Dead,3/1/16,8/20/18,Euthanized Sick (ES),902,TRUE,"2REN ES not responding to touch
+No left eye, SCO-03-11/29/2017-Left Eye damage
+Bulging right eye 7/23/18",FALSE
+DO-2D-4061,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,2R,other,Dead,6/21/16,8/15/18,Found Dead (FD),785,TRUE,right eye damage 6/21/18,FALSE
+DO-20-1050,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,R,white,Dead,6/21/16,8/14/18,Found Dead (FD),784,TRUE,"REN, 119,120,121,123,124,126,126,130, open tumor on ventral side 6/28/18
+",FALSE
+DO-AL-0101,G26,G26W1,G26W1D1,Thursday,5835,5835,AL,2R,other,Dead,3/21/17,8/9/18,Found Dead (FD),506,TRUE,2R. Bleeding from vagina 8/6/18,FALSE
+DO-2D-4111,G26,G26W1,G26W1D2,Thursday,5845,5845,2D,3R,other,Dead,3/21/17,8/8/18,Found Dead (FD),505,TRUE,3R,FALSE
+DO-40-2018,G22,G22W2,G22W2D1,Monday,3393,3393,40,R,white,Dead,3/1/16,8/6/18,Found Dead (FD),888,TRUE,"REN
+13-B8-2018-1/25/2018-Right Eye damage. Severe Tremor, BCS1, frail 7/23/18",FALSE
+DO-40-2044,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,B,other,Dead,5/31/16,8/6/18,Found Dead (FD),797,TRUE,BEN,NA
+DO-2D-4063,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,3R,black,Dead,6/21/16,8/3/18,Found Dead (FD),773,TRUE,3R,FALSE
+DO-1D-3140,G27,G27W1,G27W1D2,Monday,6189,6189,1D,B,other,Dead,6/27/17,7/31/18,Found Dead (FD),399,TRUE,"Case 56-Moderate Derm- 11/20/17- FD 7/31/2018
+",TRUE
+DO-2D-4160,G27,G27W2,G27W2D2,Monday,6300,6300,2D,3L,black,Dead,7/18/17,7/30/18,Found Dead (FD),377,TRUE,Frail 7/23/18,FALSE
+DO-2D-4045,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,2R,other,Dead,5/31/16,7/27/18,Found Dead (FD),787,TRUE,"2REN
+Found Dead in Promethion",FALSE
+DO-40-2030,G22,G22W2,G22W2D2,Monday,3394,3394,40,2L,other,Dead,3/1/16,7/27/18,Found Dead (FD),878,TRUE,"2LEN dragging hind legs 6/4/18
+cloudy Left eye, no date indicated
+SCO-13-11/30/2017-L Eye damage",TRUE
+DO-20-1012,G22,G22W1,G22W1D1,Monday,3300,3300,20,B,white,Dead,2/9/16,7/26/18,Found Dead (FD),898,TRUE,"BEN,  CASE 53,  Severe Dermatitis on neck. small, frail, piloerection, bloody discharge from anus 7.23.18",TRUE
+DO-AL-0178,G28,G28W2,G28W2D1,Tuesday,6531,6531,AL,R,white,Dead,10/10/17,7/24/18,Found Dead (FD),287,TRUE,NA,FALSE
+DO-1D-3001,G22,G22W1,G22W1D2,Monday,3308,3308,1D,N,black,Dead,2/9/16,7/23/18,Found Dead (FD),895,TRUE,NEN,FALSE
+DO-AL-0095,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,3R,other,Dead,10/4/16,7/19/18,Found Dead (FD),653,TRUE,"S7170555-8
+dietgel cup added to pen 3/9/18-6/11/18
+7/11/18-has gone significantly in weight, double checked it and is correct. Looks very sickly",FALSE
+DO-1D-3068,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,B,other,Dead,9/20/16,7/18/18,Found Dead (FD),666,TRUE,"BEN,9/22/17-Missing R eye
+R eye damage 9/22/17 Case 61- Moderate Other(Eye Damage)-11/29/17-7/18/18(DIT)
+",FALSE
+DO-20-1015,G22,G22W1,G22W1D1,Monday,3300,3300,20,3R,other,Dead,2/9/16,7/16/18,Found Dead (FD),888,TRUE,3REN,FALSE
+DO-20-1169,G28,G28W1,G28W1D1,Tuesday,6472,6472,20,N,white,Dead,9/19/17,7/16/18,Found Dead (FD),300,TRUE,Mouse appears thin and hunched 7/10/18,TRUE
+DO-20-1107,G26,G26W1,G26W1D1,Thursday,5838,5838,20,L,white,Dead,3/21/17,7/11/18,Found Dead (FD),477,TRUE,L,TRUE
+DO-1D-3070,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,2L,other,Dead,9/20/16,7/10/18,Missing (MSG),658,TRUE,2LEN,FALSE
+DO-40-2155,G27,G27W2,G27W2D2,Monday,6306,6306,40,L,other,Dead,7/18/17,7/9/18,Missing (MSG),356,TRUE,NA,FALSE
+DO-2D-4068,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,B,other,Dead,9/20/16,7/5/18,Found Dead (FD),653,TRUE,BEN,TRUE
+DO-AL-0001,G22,G22W1,G22W1D1,Monday,3297,3297,AL,N,white,Dead,2/9/16,7/5/18,Found Dead (FD),877,TRUE,"NEN
+Flickering of lights 12:19,ears are infected and left eye is bulging
+70-B8-2018  Moderate Eye Damage - Right eye squinted, left eye bulging - globe dried out and opaque  BCS 1  slightly bloated abdomen, eye ulcerated 
+",FALSE
+DO-40-2036,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,B,other,Dead,5/31/16,7/2/18,Found Dead (FD),762,TRUE,BEN,FALSE
+DO-AL-0160,G27,G27W2,G27W2D1,Monday,6302,6302,AL,3L,black,Dead,7/18/17,7/2/18,Found Dead (FD),349,TRUE,13-B8-2018-1/25/2018-Right Eye damage,FALSE
+DO-2D-4022,G22,G22W2,G22W2D2,Monday,3397,3397,2D,2L,black,Dead,3/1/16,6/29/18,Found Dead (FD),850,TRUE,2LEN,FALSE
+DO-2D-4018,G22,G22W2,G22W2D2,Monday,3397,3397,2D,R,other,Dead,3/1/16,6/25/18,Found Dead (FD),846,TRUE,REN,FALSE
+DO-20-1017,G22,G22W2,G22W2D1,Monday,3391,7094,20,N,other,Dead,3/1/16,6/22/18,Euthanized Sick (ES),843,TRUE,"head tilt, tremor, BCS 2 4/10/18/ 
+dietgel cup in pen 6/8/18-6/11/18
+moved to pen 7094 6/11/18 to have individual access to food and hydrogel- mouse lying on side from extreme head tilt
+Piloerection, BCS 1, unresponsive to touch, labored breathing- EUTHANIZED on 6/22/18",FALSE
+DO-2D-4026,G22,G22W2,G22W2D2,Monday,3398,3398,2D,R,white,Dead,3/1/16,6/22/18,Found Dead (FD),843,TRUE,REN,FALSE
+DO-2D-4070,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,2L,other,Dead,9/20/16,6/20/18,Found Dead (FD),638,TRUE,2LEN,FALSE
+DO-20-1047,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,3R,other,Dead,5/31/16,6/19/18,Found Dead (FD),749,TRUE,3REN,FALSE
+DO-AL-0042,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,R,other,Dead,5/31/16,6/19/18,Missing (MSG),749,TRUE,REN,FALSE
+DO-20-1049,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,N,white,Dead,6/21/16,6/18/18,Found Dead (FD),727,TRUE,"NEN, from S7117529
+",FALSE
+DO-AL-0096,G24,G24W2,G24W2D1,Wednesday,5077,7093,AL,3L,other,Dead,10/4/16,6/18/18,Found Dead (FD),622,TRUE,"S7170555-8
+dragging back legs, elevated breathing 8/23/17 gave gel cup 3/9/18 and removed 6/11/18(replaced with food on bottom of pen)
+Case 15A-Mild Other(parylsis of hind quarters) 1/31/18-
+moved to pen 7093 6/11/18 because of hind limb paralysis and easier access to food
+",FALSE
+DO-AL-0058,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,R,other,Dead,6/21/16,6/14/18,Euthanized Sick (ES),723,TRUE,"REN, 127,128,130,131,132,136,13
+9,159
+has a tumor on left hind
+",FALSE
+DO-1D-3017,G22,G22W2,G22W2D2,Monday,3395,3395,1D,N,white,Dead,3/1/16,6/13/18,Found Dead (FD),834,TRUE,"NEN
+distended abdomen 8/28/17
+",FALSE
+DO-AL-0067,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,L,white,Dead,9/20/16,6/13/18,Found Dead (FD),631,TRUE,"LEN, Small Right eye-8/29/2017
+8/29/17-damaged R eye 9/22/2017
+
+",FALSE
+DO-20-1037,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,2R,other,Dead,5/31/16,6/11/18,Found Dead (FD),741,TRUE,2REN,FALSE
+DO-40-2007,G22,G22W1,G22W1D1,Monday,3302,3302,40,3R,other,Dead,2/9/16,6/11/18,Found Dead (FD),853,TRUE,"3REN
+No Left Eye
+SCO-12-11/29/1017-Right Eye damage",FALSE
+DO-40-2008,G22,G22W1,G22W1D1,Monday,3302,3302,40,3L,other,Dead,2/9/16,6/11/18,Found Dead (FD),853,TRUE,3LEN,FALSE
+DO-40-2121,G26,G26W2,G26W2D2,Thursday,5883,5883,40,N,white,Dead,4/11/17,6/11/18,Found Dead (FD),426,TRUE,N,FALSE
+DO-1D-3125,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,2R,other,Dead,4/11/17,6/6/18,Found Dead (FD),421,TRUE,2R,TRUE
+DO-AL-0082,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,R,white,Dead,10/4/16,6/6/18,Found Dead (FD),610,TRUE,"R
+S7170558-8
+ulcerated tumor on right hind area
+mild seizure
+",FALSE
+DO-2D-4166,G28,G28W1,G28W1D2,Tuesday,6477,6477,2D,2L,other,Dead,9/19/17,6/5/18,Found Dead (FD),259,TRUE,"lethargic, BCS1, ruffled fur 4/19/18",TRUE
+DO-AL-0057,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,N,white,Dead,6/21/16,6/5/18,Found Dead (FD),714,TRUE,"NEN, from S7117527-8
+",FALSE
+DO-20-1032,G22,G22W2,G22W2D1,Monday,3392,3392,20,3L,black,Dead,3/1/16,6/4/18,Found Dead (FD),825,TRUE,"3LEN
+Seizure",FALSE
+DO-2D-4017,G22,G22W2,G22W2D2,Monday,3397,3397,2D,N,white,Dead,3/1/16,6/4/18,Found Dead (FD),825,TRUE,NEN,FALSE
+DO-2D-4036,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,B,other,Dead,5/31/16,6/4/18,Found Dead (FD),734,TRUE,"BEN,distended abdomen, ruffled fur, 2/1/18
+",FALSE
+DO-AL-0027,G22,G22W2,G22W2D1,Monday,3390,3390,AL,L,other,Dead,3/1/16,6/4/18,Found Dead (FD),825,TRUE,"LEN,subdermal lipoma dorsal neck 2/14/2017
+
+",FALSE
+DO-20-1103,G26,G26W1,G26W1D1,Thursday,5836,5836,20,3R,black,Dead,3/21/17,5/31/18,Found Dead (FD),436,TRUE,"3R, SCO-54-cloudy Right eye",TRUE
+DO-AL-0146,G27,G27W2,G27W2D1,Monday,6301,6301,AL,R,white,Dead,7/18/17,5/31/18,Failed to Recover (FTR),317,TRUE,NA,TRUE
+DO-2D-4016,G22,G22W1,G22W1D2,Monday,3313,3313,2D,3L,other,Dead,2/9/16,5/29/18,Found Dead (FD),840,TRUE,3LEN,FALSE
+DO-2D-4030,G22,G22W2,G22W2D2,Monday,3398,3398,2D,2L,other,Dead,3/1/16,5/29/18,Found Dead (FD),819,TRUE,2LEN,FALSE
+DO-2D-4047,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,3R,black,Dead,5/31/16,5/29/18,Found Dead (FD),728,TRUE,"3REN,Hind Limb paralysis - Gave gel cup
+",TRUE
+DO-AL-0014,G22,G22W1,G22W1D1,Monday,3298,3298,AL,2L,white,Dead,2/9/16,5/29/18,Found Dead (FD),840,TRUE,"2LEN, DNR during Bleed
+",FALSE
+DO-AL-0046,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,2L,other,Dead,5/31/16,5/28/18,Found Dead (FD),727,TRUE,2LEN,TRUE
+DO-20-1024,G22,G22W2,G22W2D1,Monday,3391,3391,20,3L,black,Dead,3/1/16,5/24/18,Found Dead (FD),814,TRUE,dietgel cup in pen 6/8/18-6/11/18,FALSE
+DO-1D-3029,G22,G22W2,G22W2D2,Monday,3396,3396,1D,2R,other,Dead,3/1/16,5/22/18,Found Dead (FD),812,TRUE,2REN,TRUE
+DO-2D-4067,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,L,white,Dead,9/20/16,5/21/18,Found Dead (FD),608,TRUE,"LEN,slight tremor 7/18/17
+",FALSE
+DO-AL-0054,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,2L,other,Dead,6/21/16,5/18/18,Found Dead (FD),696,TRUE,2LEN,FALSE
+DO-AL-0056,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,3L,other,Dead,6/21/16,5/18/18,Found Dead (FD),696,TRUE,3LEN,TRUE
+DO-20-1011,G22,G22W1,G22W1D1,Monday,3300,3300,20,L,other,Dead,2/9/16,5/16/18,Found Dead (FD),827,TRUE,LEN,TRUE
+DO-2D-4093,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,2R,other,Dead,10/4/16,5/16/18,Found Dead (FD),589,TRUE,"2R
+S7170554-6",TRUE
+DO-40-2034,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,R,other,Dead,5/31/16,5/14/18,Found Dead (FD),713,TRUE,"REN
+thin/hunched 1/3/17
+",TRUE
+DO-AL-0006,G22,G22W1,G22W1D1,Monday,3297,3297,AL,2L,other,Dead,2/9/16,5/14/18,Found Dead (FD),825,TRUE,2LEN,FALSE
+DO-AL-0010,G22,G22W1,G22W1D1,Monday,3298,3298,AL,R,other,Dead,2/9/16,5/14/18,Found Dead (FD),825,TRUE,"REN
+SCO-72-11/30/2017-Left Eye damage
+damaged - cloudy left eye/ Ascites 6/19/17/ Case 65/ SCO 72-Mild Other(Eye Damage) 11/30/17-
+",TRUE
+DO-2D-4031,G22,G22W2,G22W2D2,Monday,3398,3398,2D,3R,other,Dead,3/1/16,5/10/18,Found Dead (FD),800,TRUE,3REN,FALSE
+DO-40-2109,G26,G26W1,G26W1D2,Thursday,5841,5841,40,2R,other,Dead,3/21/17,5/10/18,Found Dead (FD),415,TRUE,2R,TRUE
+DO-AL-0055,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,3R,other,Dead,6/21/16,5/9/18,Euthanized Sick (ES),687,TRUE,3REN,FALSE
+DO-40-2037,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,2R,other,Dead,5/31/16,5/8/18,Found Dead (FD),707,TRUE,2REN,FALSE
+DO-2D-4135,G27,G27W1,G27W1D2,Monday,6190,6190,2D,2R1L,other,Dead,6/27/17,5/7/18,Found Dead (FD),314,TRUE,NA,FALSE
+DO-20-1083,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,L,other,Dead,10/4/16,5/2/18,Found Dead (FD),575,TRUE,"L
+S7170560-8",FALSE
+DO-2D-4065,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,N,white,Dead,9/20/16,5/2/18,Found Dead (FD),589,TRUE,NEN,FALSE
+DO-40-2082,G24,G24W2,G24W2D1,Wednesday,5085,5085,40,R,other,Dead,10/4/16,5/2/18,Found Dead (FD),575,TRUE,"R
+S7170557-8",FALSE
+DO-1D-3013,G22,G22W1,G22W1D2,Monday,3311,3311,1D,2R,white,Dead,2/9/16,4/30/18,Found Dead (FD),811,TRUE,235-B8-2019-Moderate Derm on dorsal neck-10/11/19-,FALSE
+DO-1D-3020,G22,G22W2,G22W2D2,Monday,3395,3395,1D,B,other,Dead,3/1/16,4/30/18,Found Dead (FD),790,TRUE,"BEN
+color drained out of ears,paws, and tail(chalky in appearance) 4/12/18",TRUE
+DO-2D-4120,G26,G26W2,G26W2D2,Thursday,5886,5886,2D,3L,other,Dead,4/11/17,4/30/18,Found Dead (FD),384,TRUE,"3L
+distended abdomen, ruffled fur,  color drained out of feet and tail, BCS1 4/19/18",TRUE
+DO-AL-0063,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,3R,other,Dead,6/21/16,4/30/18,Found Dead (FD),678,TRUE,3REN. Changed death date from 5/2/18 to 4/30/18 to coincide with testing records. HJS,FALSE
+DO-20-1096,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,3L,black,Dead,10/4/16,4/24/18,Found Dead (FD),567,TRUE,"3L
+S7170559-8",FALSE
+DO-40-2005,G22,G22W1,G22W1D1,Monday,3302,3302,40,2R,other,Dead,2/9/16,4/23/18,Found Dead (FD),804,TRUE,2REN,NA
+DO-2D-4056,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,3L,other,Dead,6/21/16,4/20/18,Found Dead (FD),668,TRUE,3L,FALSE
+DO-AL-0113,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,N,white,Dead,4/11/17,4/20/18,Found Dead (FD),374,TRUE,"N, lumpy mass on ventral thoracic area, lethargic, piloerection 4/10/18
+",TRUE
+DO-1D-3105,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,N,white,Dead,3/21/17,4/19/18,Found Dead (FD),394,TRUE,N,FALSE
+DO-AL-0041,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,N,other,Dead,5/31/16,4/19/18,Found Dead (FD),688,TRUE,labored breathing noted before acoustic startle testing by MNBF 4/19/18,FALSE
+DO-20-1080,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,3L,black,Dead,9/13/16,4/18/18,Found Dead (FD),582,TRUE,"3LEN
+lethargic, piloerection, kyphosis, colorloss in tail and feet 4/11/18",TRUE
+DO-AL-0048,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,3L,other,Dead,5/31/16,4/16/18,Found Dead (FD),685,TRUE,"3LEN
+FD on day of spont alt testing done by MNBF- body not saved",FALSE
+DO-1D-3077,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,2R,other,Dead,9/20/16,4/11/18,Found Dead (FD),568,TRUE,2REN,FALSE
+DO-1D-3147,G27,G27W2,G27W2D2,Monday,6307,6307,1D,L,other,Dead,7/18/17,4/11/18,Found Dead (FD),267,TRUE,NA,FALSE
+DO-2D-4066,G24,G24W1,G24W1D2,Wednesday,4978,4978,2D,R,white,Dead,9/20/16,4/11/18,Found Dead (FD),568,TRUE,REN,FALSE
+DO-20-1043,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,L,other,Dead,5/31/16,4/6/18,Found Dead (FD),675,TRUE,"LEN
+hind limb paralysis 4/3/18
+ no tail left on carcass",FALSE
+DO-1D-3099,G26,G26W1,G26W1D2,Thursday,5842,5842,1D,L,other,Dead,3/21/17,4/5/18,Found Dead (FD),380,TRUE,L,FALSE
+DO-AL-0065,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,N,white,Dead,9/20/16,4/4/18,Found Dead (FD),561,TRUE,"NEN
+FD by CLAM",TRUE
+DO-1D-3041,G23,G23W1,G23W1D2,Tuesday,4113,4113,1D,N,white,Dead,5/31/16,3/30/18,Accidental Death (AD),668,FALSE,NEN,FALSE
+DO-40-2054,G23,G23W2,G23W2D1,Tuesday,4338,4338,40,2L,black,Dead,6/21/16,3/27/18,Found Dead (FD),644,TRUE,"2LEN
+cloudy R eye
+",FALSE
+DO-2D-4007,G22,G22W1,G22W1D2,Monday,3312,3312,2D,3R,other,Dead,2/9/16,3/21/18,Found Dead (FD),771,TRUE,3REN,FALSE
+DO-20-1091,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,L,other,Dead,10/4/16,3/20/18,Found Dead (FD),532,TRUE,"L
+S7170559-8",FALSE
+DO-1D-3030,G22,G22W2,G22W2D2,Monday,3396,3396,1D,2L,black,Dead,3/1/16,3/19/18,Found Dead (FD),748,TRUE,"2LEN
+distended abdomen, prominent backbone 3/5/18
+",FALSE
+DO-1D-3042,G23,G23W1,G23W1D2,Tuesday,4113,4113,1D,R,white,Dead,5/31/16,3/13/18,Found Dead (FD),651,TRUE,REN,TRUE
+DO-1D-3082,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,R,white,Dead,10/4/16,3/13/18,Found Dead (FD),525,TRUE,"R
+S7170558-8",NA
+DO-40-2161,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,N,white,Dead,9/19/17,3/13/18,Missing (MSG),175,TRUE,NA,FALSE
+DO-AL-0020,G22,G22W2,G22W2D1,Monday,3389,3389,AL,B,other,Dead,3/1/16,3/12/18,Found Dead (FD),741,TRUE,"BEN,
+ruffled fur, lethargic, BCS 1 3/5/18
+",FALSE
+DO-20-1021,G22,G22W2,G22W2D1,Monday,3391,3391,20,2R,other,Dead,3/1/16,3/9/18,Found Dead (FD),738,TRUE,"2REN, vaginal bleeding 1/16/18 unstable gait, ruffled fur, kyphosis, labored breathing, BCS1 3/5/18
+",FALSE
+DO-40-2106,G26,G26W1,G26W1D2,Thursday,5841,5841,40,R,white,Dead,3/21/17,3/9/18,Euthanized Sick (ES),353,TRUE,R,FALSE
+DO-AL-0124,G26,G26W2,G26W2D1,Thursday,5879,5879,AL,B,other,Dead,4/11/17,3/9/18,Found Dead (FD),332,TRUE,B,TRUE
+DO-AL-0002,G22,G22W1,G22W1D1,Monday,3297,3297,AL,R,other,Dead,2/9/16,3/5/18,Found Dead (FD),755,TRUE,"REN distended abdomen(but otherwise healthy) 5/1/17 small tumor like mass on rear leg 4/5/18
+",TRUE
+DO-1D-3018,G22,G22W2,G22W2D2,Monday,3395,3395,1D,R,other,Dead,3/1/16,3/1/18,Found Dead (FD),730,TRUE,REN,FALSE
+DO-40-2006,G22,G22W1,G22W1D1,Monday,3302,3302,40,2L,other,Dead,2/9/16,2/28/18,Found Dead (FD),750,TRUE,2LEN,FALSE
+DO-1D-3064,G23,G23W2,G23W2D2,Tuesday,4341,4341,1D,3L,black,Dead,6/21/16,2/26/18,Missing (MSG),615,TRUE,3LEN,FALSE
+DO-1D-3144,G27,G27W1,G27W1D2,Monday,6189,6189,1D,3L,other,Dead,6/27/17,2/26/18,Missing (MSG),244,TRUE,"cloudy R eye 12/12/18., BCS 1, ruffled fur, kyphosis 2/19/18
+",TRUE
+DO-40-2021,G22,G22W2,G22W2D1,Monday,3393,3393,40,2R,other,Dead,3/1/16,2/26/18,Found Dead (FD),727,TRUE,2REN,FALSE
+DO-AL-0087,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,3R,black,Dead,10/4/16,2/26/18,Found Dead (FD),510,TRUE,"3R
+S7170558-8",FALSE
+DO-20-1030,G22,G22W2,G22W2D1,Monday,3392,3392,20,2L,other,Dead,3/1/16,2/22/18,Found Dead (FD),723,TRUE,2LEN,FALSE
+DO-40-2104,G26,G26W1,G26W1D1,Thursday,5840,5840,40,3L,other,Dead,3/21/17,2/22/18,Found Dead (FD),338,TRUE,"3L,9/22/2017-Small R eye",TRUE
+DO-40-2163,G28,G28W1,G28W1D1,Tuesday,6473,6473,40,L,white,Dead,9/19/17,2/21/18,Found Dead (FD),155,TRUE,NA,FALSE
+DO-1D-3085,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,2R,other,Dead,10/4/16,2/20/18,Found Dead (FD),504,TRUE,"2R
+S7170558-8",TRUE
+DO-20-1035,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,L,white,Dead,5/31/16,2/20/18,Found Dead (FD),630,TRUE,LEN,FALSE
+DO-AL-0018,G22,G22W2,G22W2D1,Monday,3389,3389,AL,R,other,Dead,3/1/16,2/19/18,Found Dead (FD),720,TRUE,"REN, diarrhea 6/26/2017
+",FALSE
+DO-AL-0029,G22,G22W2,G22W2D1,Monday,3390,3390,AL,2R,other,Dead,3/1/16,2/19/18,Found Dead (FD),720,TRUE,2REN,FALSE
+DO-AL-0168,G28,G28W1,G28W1D1,Tuesday,6469,6469,AL,3L,black,Dead,9/19/17,2/16/18,Missing (MSG),150,TRUE,NA,NA
+DO-2D-4126,G26,G26W2,G26W2D2,Thursday,5887,5887,2D,2L,other,Dead,4/11/17,2/15/18,Missing (MSG),310,TRUE,2L,FALSE
+DO-2D-4055,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,3R,other,Dead,6/21/16,2/14/18,Found Dead (FD),603,TRUE,3R,FALSE
+DO-AL-0049,G23,G23W2,G23W2D1,Tuesday,4332,4332,AL,N,white,Dead,6/21/16,2/14/18,Found Dead (FD),603,TRUE,"NEN, from S7117527-8
+",TRUE
+DO-1D-3150,G27,G27W2,G27W2D2,Monday,6307,6307,1D,2L,other,Dead,7/18/17,2/10/18,Found Dead (FD),207,TRUE,Found Dead in Promethion,FALSE
+DO-20-1007,G22,G22W1,G22W1D1,Monday,3299,3299,20,3R,other,Dead,2/9/16,2/10/18,Found Dead (FD),732,TRUE,3REN,FALSE
+DO-2D-4029,G22,G22W2,G22W2D2,Monday,3398,3398,2D,2R,other,Dead,3/1/16,2/5/18,Missing (MSG),706,TRUE,2REN,FALSE
+DO-AL-0035,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,L,other,Dead,5/31/16,1/30/18,Missing (MSG),609,TRUE,LEN,FALSE
+DO-AL-0151,G27,G27W2,G27W2D1,Monday,6301,6301,AL,3R,black,Dead,7/18/17,1/30/18,Found Dead (FD),196,TRUE,"not a lot of tail , no tail left",FALSE
+DO-40-2015,G22,G22W1,G22W1D2,Monday,3303,3303,40,3R,other,Dead,2/9/16,1/29/18,Found Dead (FD),720,TRUE,"3REN, Tail was chewed off 
+",FALSE
+DO-AL-0070,G24,G24W1,G24W1D1,Wednesday,4968,4968,AL,2L,other,Dead,9/20/16,1/24/18,Found Dead (FD),491,TRUE,"2LEN, no apparent cause
+",TRUE
+DO-1D-3002,G22,G22W1,G22W1D2,Monday,3308,3308,1D,R,other,Dead,2/9/16,1/23/18,Mishandled (MSH),714,FALSE,"REN
+subdermal lipoma on dorsal neck 2/20/17/ large, distended abdomen 8/28/17
+",FALSE
+DO-20-1036,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,B,other,Dead,5/31/16,1/16/18,Found Dead (FD),595,TRUE,BEN,FALSE
+DO-1D-3032,G22,G22W2,G22W2D2,Monday,3396,3396,1D,3L,black,Dead,3/1/16,1/12/18,Found Dead (FD),682,TRUE,"3LEN
+labored breathing, lost use of back legs, gel cup added to pen 11/24/17 bony mass on dorsal neck 12/26/17
+",FALSE
+DO-2D-4006,G22,G22W1,G22W1D2,Monday,3312,3312,2D,2L,other,Dead,2/9/16,1/12/18,Found Dead (FD),703,TRUE,2LEN,FALSE
+DO-AL-0089,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,N,white,Dead,10/4/16,1/10/18,Found Dead (FD),463,TRUE,"N
+S7170555-8",TRUE
+DO-1D-3108,G26,G26W1,G26W1D2,Thursday,5843,5843,1D,B,other,Dead,3/21/17,1/3/18,Found Dead (FD),288,TRUE,B,FALSE
+DO-AL-0031,G22,G22W2,G22W2D1,Monday,3390,3390,AL,3R,black,Dead,3/1/16,1/2/18,Found Dead (FD),672,TRUE,3REN,FALSE
+DO-40-2014,G22,G22W1,G22W1D2,Monday,3303,3303,40,2L,white,Dead,2/9/16,12/28/17,Found Dead (FD),688,TRUE,"2LEN
+SCO-14-11/29/2017-Cataract in Right Eye",FALSE
+DO-20-1076,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,B,other,Dead,9/13/16,12/27/17,Accidental Death (AD),470,FALSE,"BEN, 10
+",TRUE
+DO-2D-4025,G22,G22W2,G22W2D2,Monday,3398,3398,2D,N,white,Dead,3/1/16,12/26/17,Missing (MSG),665,TRUE,NEN,FALSE
+DO-AL-0093,G24,G24W2,G24W2D1,Wednesday,5077,5077,AL,2R,other,Dead,10/4/16,12/20/17,Found Dead (FD),442,TRUE,"S7170555-8
+dietgel cup added to pen 3/9/18-6/11/18",TRUE
+DO-1D-3007,G22,G22W1,G22W1D2,Monday,3308,3308,1D,3R,other,Dead,2/9/16,12/15/17,Found Dead (FD),675,TRUE,"3REN
+sub-dermal lipoma 1/17/17,kyposis, labored breathing, frail, ""chalky"" appearance to feet and tail, prominent hip and backbone 12/12/17
+",TRUE
+DO-40-2020,G22,G22W2,G22W2D1,Monday,3393,3393,40,B,other,Dead,3/1/16,12/15/17,Found Dead (FD),654,TRUE,"BEN, 4/10/2017-Proptosis-Both Eyes, large, bulging eyes 4/10/2017, small, frail, prominent backbone 7/17/17
+",FALSE
+DO-2D-4020,G22,G22W2,G22W2D2,Monday,3397,3397,2D,B,other,Dead,3/1/16,12/13/17,Found Dead (FD),652,TRUE,BEN,FALSE
+DO-AL-0039,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,3R,other,Dead,5/31/16,12/13/17,Found Dead (FD),561,TRUE,3REN,FALSE
+DO-40-2112,G26,G26W1,G26W1D2,Thursday,5841,5841,40,3L,other,Dead,3/21/17,12/12/17,Found Dead (FD),266,TRUE,"3L 
+SCO-15-11/30/2017-Right Eye damage
+R eye damage 9/12/2017,11/30/17-SCO-15
+",FALSE
+DO-AL-0038,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,2L,other,Dead,5/31/16,12/12/17,Found Dead (FD),560,TRUE,2LEN,FALSE
+DO-AL-0064,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,3L,other,Dead,6/21/16,12/12/17,Found Dead (FD),539,TRUE,"3LEN
+SCO-08-11/29/2017-Right eye damage
+damaged right eye 11/7/17, 11/29/17 SCO-8, dragging back legs- looks like parlysis is starting to set in. Gave gel cup 12/5/17 
+",FALSE
+DO-1D-3004,G22,G22W1,G22W1D2,Monday,3308,3308,1D,B,other,Dead,2/9/16,12/11/17,Found Dead (FD),671,TRUE,"BEN, 4/10/2017-Proptosis-Both eyes,seizures",FALSE
+DO-1D-3079,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,3R,other,Dead,9/20/16,12/11/17,Found Dead (FD),447,TRUE,3REN,FALSE
+DO-2D-4153,G27,G27W2,G27W2D2,Monday,6300,6300,2D,N,other,Dead,7/18/17,12/11/17,Found Dead (FD),146,TRUE,NA,FALSE
+DO-20-1073,G24,G24W1,G24W1D1,Wednesday,4973,4973,20,N,white,Dead,9/13/16,12/7/17,Accidental Death (AD),450,FALSE,"NEN
+found crushed under amber tunnel",FALSE
+DO-1D-3012,G22,G22W1,G22W1D2,Monday,3311,3311,1D,B,other,Dead,2/9/16,12/6/17,Found Dead (FD),666,TRUE,"BEN Vagina septa imperforate 11/1/16 ,SCO-17-11/30/2017-Left Eye damage,ruffled fur, huntchy, slow breathing
+
+",FALSE
+DO-40-2079,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,3R,other,Dead,9/20/16,12/6/17,Found Dead (FD),442,TRUE,"3REN
+small and hunched/ start of a domed skull 11/8/17
+
+
+
+",FALSE
+DO-1D-3016,G22,G22W1,G22W1D2,Monday,3311,3311,1D,3L,black,Dead,2/9/16,12/4/17,Found Dead (FD),664,TRUE,"3LEN
+sub-dermal lipoma on dorsal neck 12/15/16, tremor, lethargic, ruffled fur, labored breathing and dehydrated 11/27/2017
+",FALSE
+DO-20-1026,G22,G22W2,G22W2D1,Monday,3392,3392,20,R,white,Dead,3/1/16,12/4/17,Found Dead (FD),643,TRUE,"REN, large mass felt in distended abdomen, prominent backbone and hip bones 11/13/17
+",TRUE
+DO-AL-0073,G24,G24W1,G24W1D1,Wednesday,4969,4969,AL,N,white,Dead,9/20/16,11/30/17,Accidental Death (AD),436,FALSE,"NEN, found crushed under cage cover 
+",FALSE
+DO-2D-4051,G23,G23W2,G23W2D2,Tuesday,4334,4334,2D,L,other,Dead,6/21/16,11/28/17,Found Dead (FD),525,TRUE,L,FALSE
+DO-AL-0016,G22,G22W1,G22W1D1,Monday,3298,3298,AL,3L,black,Dead,2/9/16,11/27/17,Found Dead (FD),657,TRUE,"3LEN, sub dermal lipoma 2/6/17, thick, yellow anal discharge 6/7/17
+",FALSE
+DO-AL-0023,G22,G22W2,G22W2D1,Monday,3389,3389,AL,3R,black,Dead,3/1/16,11/27/17,Found Dead (FD),636,TRUE,"3REN
+severely tight, distended abdomen 9/5/17
+",FALSE
+DO-2D-4048,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,3L,black,Dead,5/31/16,11/21/17,Found Dead (FD),539,TRUE,3LEN,FALSE
+DO-AL-0015,G22,G22W1,G22W1D1,Monday,3298,3298,AL,3R,white,Dead,2/9/16,11/20/17,Found Dead (FD),650,TRUE,"3REN, sub -dermal lipoma 2/14/17/ two large masses on ventral side above back legs(uterine area), elevated breathing, ruffled fur 9/25/17
+",NA
+DO-AL-0019,G22,G22W2,G22W2D1,Monday,3389,3389,AL,L,other,Dead,3/1/16,11/20/17,Found Dead (FD),629,TRUE,"LEN
+
+10/17/2016-Missing left eye
+10/17/16-damaged - Cloudy left eye
+",FALSE
+DO-20-1118,G26,G26W2,G26W2D1,Thursday,5880,5880,20,2L,other,Dead,4/11/17,11/16/17,Found Dead (FD),219,TRUE,"2L, low ear notch
+",FALSE
+DO-1D-3128,G26,G26W2,G26W2D2,Thursday,5885,5885,1D,3L,black,Dead,4/11/17,11/15/17,Found Dead (FD),218,TRUE,"3L
+lethargic, frail, BCS1, dehydrated, 11/2/17",TRUE
+DO-2D-4021,G22,G22W2,G22W2D2,Monday,3397,3397,2D,2R,other,Dead,3/1/16,11/13/17,Missing (MSG),622,TRUE,2REN,FALSE
+DO-2D-4103,G26,G26W1,G26W1D2,Thursday,5844,5844,2D,3R,other,Dead,3/21/17,11/9/17,Found Dead (FD),233,TRUE,3R,FALSE
+DO-AL-0032,G22,G22W2,G22W2D1,Monday,3390,3390,AL,3L,black,Dead,3/1/16,10/30/17,Found Dead (FD),608,TRUE,"3LEN
+elevated breathing, lethargic, distended abdomen 10/10/17/ kyphosis, ruffled fur, lethargic 10/24/17",TRUE
+DO-40-2089,G24,G24W2,G24W2D2,Wednesday,5087,5087,40,N,white,Dead,10/4/16,10/25/17,Found Dead (FD),386,TRUE,"S7170556-8
+soft swelling on dorsal neck, BCS4, BARH active, groomed 8/10/17",TRUE
+DO-1D-3055,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,3R,black,Dead,6/21/16,10/24/17,Missing (MSG),490,TRUE,3REN,FALSE
+DO-40-2119,G26,G26W2,G26W2D1,Thursday,5882,5882,40,3R,other,Dead,4/11/17,10/18/17,Found Dead (FD),190,TRUE,3R,FALSE
+DO-1D-3023,G22,G22W2,G22W2D2,Monday,3395,3395,1D,3R,other,Dead,3/1/16,10/17/17,Found Dead (FD),595,TRUE,"3REN
+subdermal lipoma on dorsal neck 3/21/17
+",TRUE
+DO-20-1016,G22,G22W1,G22W1D1,Monday,3300,3300,20,3L,other,Dead,2/9/16,10/17/17,Found Dead (FD),616,TRUE,"3LEN, found dead- no apparent cause
+",FALSE
+DO-AL-0120,G26,G26W2,G26W2D1,Thursday,5878,5878,AL,3L,black,Dead,4/11/17,10/12/17,Missing (MSG),184,TRUE,3L,NA
+DO-40-2122,G26,G26W2,G26W2D2,Thursday,5883,5883,40,R,white,Dead,4/11/17,10/11/17,Found Dead (FD),183,TRUE,R,FALSE
+DO-20-1023,G22,G22W2,G22W2D1,Monday,3391,3391,20,3R,other,Dead,3/1/16,10/10/17,Found Dead (FD),588,TRUE,"3REN, ruffled fur, kyphosis, labored breathing, unhealthy looking 9/25/2017
+",FALSE
+DO-40-2033,G23,G23W1,G23W1D1,Tuesday,4108,4108,40,N,black,Dead,5/31/16,10/7/17,Found Dead (FD),494,TRUE,"NEN
+11/17/2017- Missing Right eye",TRUE
+DO-2D-4014,G22,G22W1,G22W1D2,Monday,3313,3313,2D,2L,other,Dead,2/9/16,10/2/17,Found Dead (FD),601,TRUE,"2LEN,seizure
+",FALSE
+DO-40-2120,G26,G26W2,G26W2D1,Thursday,5882,5882,40,3L,black,Dead,4/11/17,9/21/17,Mishandled (MSH),163,FALSE,"3L
+Mishandled during bleed",FALSE
+DO-20-1092,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,B,other,Dead,10/4/16,9/18/17,Found Dead (FD),349,TRUE,"B
+S7170559-8",NA
+DO-20-1038,G23,G23W1,G23W1D1,Tuesday,4106,4106,20,2L,other,Dead,5/31/16,9/12/17,Found Dead (FD),469,TRUE,"2LEN
+Found Dead- no apparent cause
+1/17/2017 cloudy R eye",FALSE
+DO-40-2110,G26,G26W1,G26W1D2,Thursday,5841,5841,40,2L,other,Dead,3/21/17,9/7/17,Found Dead (FD),170,TRUE,2L,TRUE
+DO-2D-4005,G22,G22W1,G22W1D2,Monday,3312,3312,2D,2R,other,Dead,2/9/16,9/6/17,Euthanized Sick (ES),575,TRUE,"2REN
+No right eye-10/17/2016
+cold, lethargic, unresponsive to touch, ruffled fur 9/6/17- euthanized",TRUE
+DO-40-2004,G22,G22W1,G22W1D1,Monday,3302,3302,40,B,other,Dead,2/9/16,9/5/17,Found Dead (FD),574,TRUE,"BEN
+No Left Eye-10/17/2016
+small, frail, prominent back bone 8/14/17
+only skull cap left for remains- No tail",TRUE
+DO-20-1019,G22,G22W2,G22W2D1,Monday,3391,3391,20,L,other,Dead,3/1/16,8/14/17,Found Dead (FD),531,TRUE,"LEN, 8/14/2017
+",TRUE
+DO-2D-4088,G24,G24W2,G24W2D2,Wednesday,5095,5095,2D,3L,other,Dead,10/11/16,8/14/17,Failed to Recover (FTR),307,TRUE,"S7171503
+labored breathing, low body temp, BCS 2
+8/1/2017 
+Failed to recover during PIXI testing",FALSE
+DO-1D-3088,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,3L,other,Dead,10/4/16,8/10/17,Found Dead (FD),310,TRUE,S7170558-8,NA
+DO-1D-3008,G22,G22W1,G22W1D2,Monday,3308,3308,1D,3L,black,Dead,2/9/16,8/8/17,Found Dead (FD),546,TRUE,"Found Dead-no apparent cause. Head was missing,sub-dermal lipoma 1/17/17 
+",FALSE
+DO-20-1052,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,B,other,Dead,6/21/16,8/8/17,Found Dead (FD),413,TRUE,"Case #12-moderate derm on neck-4/4/17-8/8/17(DIT)
+Mouse found dead in Promethion",FALSE
+DO-2D-4044,G23,G23W1,G23W1D2,Tuesday,4115,4115,2D,B,other,Dead,5/31/16,8/2/17,Accidental Death (AD),428,FALSE,BEN,FALSE
+DO-1D-3081,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,N,white,Dead,10/4/16,7/26/17,Found Dead (FD),295,TRUE,"N
+S7170558-8
+found dead no apparent cause
+",TRUE
+DO-1D-3067,G24,G24W1,G24W1D2,Wednesday,4976,4976,1D,L,other,Dead,9/20/16,7/20/17,Found Dead (FD),303,TRUE,LEN,FALSE
+DO-20-1095,G24,G24W2,G24W2D1,Wednesday,5082,5082,20,3R,black,Dead,10/4/16,7/18/17,Found Dead (FD),287,TRUE,"3R
+S7170559-8
+found dead- no apparent cause",FALSE
+DO-40-2047,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,3R,other,Dead,5/31/16,7/18/17,Found Dead (FD),413,TRUE,"found dead no apparent cause
+thin 2/14/2017
+",FALSE
+DO-1D-3046,G23,G23W1,G23W1D2,Tuesday,4113,4113,1D,2L,other,Dead,5/31/16,7/17/17,Missing (MSG),412,TRUE,"2LEN
+multiple growths on ventral side of neck area, prominent back bone, lethargic, tight distended abdomen 7/3/17
+",FALSE
+DO-20-1085,G24,G24W2,G24W2D1,Wednesday,5078,5078,20,2R,other,Dead,10/4/16,7/12/17,Found Dead (FD),281,TRUE,"2R
+S7170560-8
+extremely hunched
+
+",TRUE
+DO-AL-0059,G23,G23W2,G23W2D1,Tuesday,4333,4333,AL,L,other,Dead,6/21/16,7/10/17,Found Dead (FD),384,TRUE,LEN,FALSE
+DO-1D-3086,G24,G24W2,G24W2D2,Wednesday,5093,5093,1D,2L,other,Dead,10/4/16,7/5/17,Found Dead (FD),274,TRUE,"2L
+S7170558-8
+",TRUE
+DO-40-2098,G26,G26W1,G26W1D1,Thursday,5840,5840,40,R,other,Dead,3/21/17,6/29/17,Found Dead (FD),100,TRUE,R,TRUE
+DO-AL-0034,G23,G23W1,G23W1D1,Tuesday,4104,4104,AL,R,other,Dead,5/31/16,6/29/17,Found Dead (FD),394,TRUE,"REN
+Found Dead in Promethion
+
+thick, yellow anal discharge, thin, arched back 3/27/17
+",FALSE
+DO-2D-4013,G22,G22W1,G22W1D2,Monday,3313,3313,2D,2R,other,Dead,2/9/16,6/27/17,Found Dead (FD),504,TRUE,"2REN
+domed skull, mass felt in abdomen, orange tint to skin- technician performed necropsy and found enlarged liver and large tumor like mass in lower abdomen and polyps all throughout exterior intestinal tract. Orange/yellowish tint found in abdominal cavity and organs as well.
+
+Mouse found on 6/26/17 with domed skull, hard mass in abdomen, and an orange tint to skin. Mouse found dead on 6/27/17 and technician necropsy performed. Necropsy revealed an enlarged liver full of dark, chunky, congealed fluid. A large, hard mass was also found in the lower abdomen as well as polyps all along the exterior layer of the intestinal tract. The abdominal cavity along with the organs and fluids all had a yellowish/orange hue.",FALSE
+DO-AL-0008,G22,G22W1,G22W1D1,Monday,3297,3297,AL,3L,other,Dead,2/9/16,6/27/17,Accidental Death (AD),504,FALSE,"3LEN,  found crushed under tube
+",FALSE
+DO-20-1048,G23,G23W1,G23W1D1,Tuesday,4107,4107,20,3L,other,Dead,5/31/16,6/14/17,Found Dead (FD),379,TRUE,"3LEN
+domed skull, distended abdomen, frail and lethargic 6/6/17",FALSE
+DO-20-1002,G22,G22W1,G22W1D1,Monday,3299,3299,20,R,white,Dead,2/9/16,6/13/17,Found Dead (FD),490,TRUE,"REN,Case 15- Mild Derm-5/30/17-6/13/17(DIT)
+",FALSE
+DO-AL-0044,G23,G23W1,G23W1D1,Tuesday,4105,4105,AL,B,other,Dead,5/31/16,6/6/17,Found Dead (FD),371,TRUE,"BEN
+CLAM contacted on 6/6/17 for labored breathing. FD soon thereafter",FALSE
+DO-20-1005,G22,G22W1,G22W1D1,Monday,3299,3299,20,2R,other,Dead,2/9/16,6/1/17,Mishandled (MSH),478,FALSE,"2REN, MH Gav
+",FALSE
+DO-2D-4095,G24,G24W2,G24W2D2,Wednesday,5096,5096,2D,3R,other,Dead,10/11/16,5/24/17,Found Dead (FD),225,TRUE,"3R
+S7171563-2
+kyphosis, ruffled fur(otherswise healthy) 5/3/2017)
+",TRUE
+DO-1D-3009,G22,G22W1,G22W1D2,Monday,3311,3311,1D,N,black,Dead,2/9/16,5/23/17,Found Dead (FD),469,TRUE,"NEN
+Presented on 5/22/2017 as lethargic,  had a distinct abdominal mass, ""chalky"" looking paws, and bleeding at vaginal opening. Found dead on 5/23/2017. Technician preformed necropsy and found a large blood clot like mass in right uterine horn. Blood clot appeared to have round polyp like structures inside. Saved Tail.",TRUE
+DO-AL-0017,G22,G22W2,G22W2D1,Monday,3389,5062,AL,N,white,Dead,3/1/16,5/12/17,Found Dead (FD),437,TRUE,"NEN
+case 3, section4, derm, moderate, 5-11-16-5/12/2017
+1/5/2017-Cloudy Left Eye
+sub dermal lipoma 2/6/17, thick, yellow anal discharge 6/7/17
+",TRUE
+DO-1D-3078,G24,G24W1,G24W1D2,Wednesday,4977,4977,1D,2L,other,Dead,9/20/16,5/10/17,Found Dead (FD),232,TRUE,2LEN,TRUE
+DO-2D-4073,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,N,white,Dead,9/20/16,5/10/17,Found Dead (FD),232,TRUE,NEN,TRUE
+DO-40-2026,G22,G22W2,G22W2D2,Monday,3394,3394,40,R,other,Dead,3/1/16,5/1/17,Found Dead (FD),426,TRUE,"REN, thin/hunched 1/23/17
+",FALSE
+DO-40-2046,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,2L,other,Dead,5/31/16,5/1/17,Found Dead (FD),335,TRUE,"2LEN
+Aggression(mouse bit glove) followed by seizure and hind limb paralysis occurred on 4/28/2017. Mouse housed alone from 4/28/2017-5/1/2017 with CR measured food and napa. FD on 5/1/2017",FALSE
+DO-2D-4008,G22,G22W1,G22W1D2,Monday,3312,3312,2D,3L,other,Dead,2/9/16,4/24/17,Found Dead (FD),440,TRUE,"3LEN
+subdermal lipoma dorsal neck 3/21/17- FD- no apparent cause(head and hindparts missing
+",FALSE
+DO-2D-4038,G23,G23W1,G23W1D2,Tuesday,4114,4114,2D,2L,other,Dead,5/31/16,4/17/17,Found Dead (FD),321,TRUE,"2LEN
+labored breathing, cold, but alert - 4/17/17 - JDN",TRUE
+DO-2D-4076,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,B,other,Dead,9/20/16,4/12/17,Found Dead (FD),204,TRUE,BEN,TRUE
+DO-2D-4078,G24,G24W1,G24W1D2,Wednesday,4979,4979,2D,2L,other,Dead,9/20/16,4/12/17,Accidental Death (AD),204,FALSE,"2LEN,crushed on block ???
+",FALSE
+DO-40-2041,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,N,white,Dead,5/31/16,4/5/17,Accidental Death (AD),309,FALSE,"NEN
+Crushed on tunnel 
+",FALSE
+DO-1D-3033,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,N,other,Dead,5/31/16,3/28/17,Found Dead (FD),301,TRUE,"NEN
+Found dead- no apparent cause
+",FALSE
+DO-20-1014,G22,G22W1,G22W1D1,Monday,3300,3300,20,2L,other,Dead,2/9/16,3/21/17,Found Dead (FD),406,TRUE,"2LEN
+No left eye  10/17/2016
+damaged - no left eye 10/17/16, ""spotting"" blood at vagina, ruffled fur, hunched, low BCS, poor circulation to feet and tail(looked ""chalky""), tumor like mass on left side 3/20/17
+
+",FALSE
+DO-40-2080,G24,G24W1,G24W1D2,Wednesday,4975,4975,40,3L,black,Dead,9/20/16,3/7/17,Mishandled (MSH),168,FALSE,"3LEN
+MH during bleed
+
+",FALSE
+DO-1D-3051,G23,G23W2,G23W2D2,Tuesday,4340,4340,1D,L,other,Dead,6/21/16,2/28/17,Found Dead (FD),252,TRUE,"LEN
+mouse presented on 2/22 as thin/hunched/lethargic/ overall unhealthy
+",FALSE
+DO-AL-0009,G22,G22W1,G22W1D1,Monday,3298,3298,AL,N,other,Dead,2/9/16,1/23/17,Found Dead (FD),349,TRUE,"NEN Thin/hunched 12/5;  Enlarged abdomen 12/2
+",TRUE
+DO-AL-0086,G24,G24W2,G24W2D1,Wednesday,5076,5076,AL,2L,other,Dead,10/4/16,1/18/17,Found Dead (FD),106,TRUE,"2L
+S7170558-8",FALSE
+DO-1D-3015,G22,G22W1,G22W1D2,Monday,3311,3311,1D,3R,other,Dead,2/9/16,12/14/16,Accidental Death (AD),309,FALSE,"3REN
+crushed on tube
+
+",TRUE
+DO-2D-4010,G22,G22W1,G22W1D2,Monday,3313,3313,2D,R,white,Dead,2/9/16,12/14/16,Accidental Death (AD),309,FALSE,"REN,  crushed on tunnel
+",TRUE
+DO-20-1055,G23,G23W2,G23W2D1,Tuesday,4335,4335,20,3R,other,Dead,6/21/16,11/22/16,Found Dead (FD),154,TRUE,"3REN, Eye bleed that morning prior to FD
+",TRUE
+DO-1D-3036,G23,G23W1,G23W1D2,Tuesday,4112,4112,1D,B,other,Dead,5/31/16,11/15/16,Found Dead (FD),168,TRUE,BEN,TRUE
+DO-40-2057,G23,G23W2,G23W2D2,Tuesday,4339,4339,40,N,other,Dead,6/21/16,11/8/16,Found Dead (FD),140,TRUE,"NEN
+from S7118840
+",NA
+DO-40-2042,G23,G23W1,G23W1D2,Tuesday,4109,4109,40,R,white,Dead,5/31/16,11/2/16,Found Dead (FD),155,TRUE,REN,FALSE
+DO-1D-3006,G22,G22W1,G22W1D2,Monday,3308,3308,1D,2L,white,Dead,2/9/16,10/10/16,Found Dead (FD),244,TRUE,2LEN,TRUE
+DO-20-1031,G22,G22W2,G22W2D1,Monday,3392,3392,20,3R,other,Dead,3/1/16,9/23/16,Found Dead (FD),206,TRUE,3REN,TRUE
+DO-20-1061,G23,G23W2,G23W2D1,Tuesday,4337,4337,20,2R,other,Dead,6/21/16,9/12/16,Found Dead (FD),83,TRUE,2REN,TRUE
+DO-2D-4060,G23,G23W2,G23W2D2,Tuesday,4336,4336,2D,B,other,Dead,6/21/16,8/2/16,Found Dead (FD),42,TRUE,B,FALSE
+DO-AL-0013,G22,G22W1,G22W1D1,Monday,3298,3298,AL,2R,other,Dead,2/9/16,7/26/16,Mishandled (MSH),168,FALSE,2REN,TRUE
+DO-1D-3021,G22,G22W2,G22W2D2,Monday,3395,3395,1D,2R,other,Dead,3/1/16,7/25/16,Mishandled (MSH),146,FALSE,"2REN
+mishandled 7/25/16
+",NA
+DO-40-2031,G22,G22W2,G22W2D2,Monday,3394,3394,40,3R,black,Dead,3/1/16,7/22/16,Found Dead (FD),143,TRUE,3REN,NA
+DO-20-1020,G22,G22W2,G22W2D1,Monday,3391,3391,20,B,other,Dead,3/1/16,7/19/16,Missing (MSG),140,TRUE,BEN,NA
+DO-40-2009,G22,G22W1,G22W1D2,Monday,3303,3303,40,N,white,Dead,2/9/16,7/12/16,Found Dead (FD),154,TRUE,"NEN, Internal bleeding",NA
+DO-AL-0022,G22,G22W2,G22W2D1,Monday,3389,3389,AL,2L,black,Dead,3/1/16,5/11/16,Found Dead (FD),71,TRUE,2LEN,FALSE
+DO-1D-3025,G22,G22W2,G22W2D2,Monday,3396,3396,1D,N,white,Dead,3/1/16,5/3/16,Found Dead (FD),63,TRUE,"NEN
+FOUND DEAD",FALSE
+DO-1D-3005,G22,G22W1,G22W1D2,Monday,3308,3308,1D,2R,white,Dead,2/9/16,4/5/16,Found Dead (FD),56,TRUE,2REN,FALSE
