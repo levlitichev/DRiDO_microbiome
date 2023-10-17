@@ -1,0 +1,253 @@
+---
+title: "Analysis of Kraken results BEFORE aggregating by stool ID"
+---
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(phyloseq)
+library(speedyseq) # for faster tax_glom
+
+diet.palette <- c(AL="seashell4",
+                  `1D`="skyblue",
+                  `2D`="royalblue4",
+                  `20`="orange",
+                  `40`="firebrick")
+```
+
+# Import metadata
+
+```{r}
+seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", sep="\t", header=T)
+lib.meta.df <- read.table("../data/metadata/library_metadata_after_QC_n3213_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_230620.txt", sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+```
+
+```{r}
+seq.meta.annot.df <- seq.meta.df %>%
+  merge(lib.meta.df, by="lib.ID") %>%
+  merge(stool.meta.df, by="stool.ID") %>% 
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID", all.x=T)
+
+dim(seq.meta.df)
+dim(seq.meta.annot.df)
+```
+
+```{r}
+n_distinct(seq.meta.annot.df$stool.ID)
+
+seq.meta.annot.df %>% 
+  dplyr::filter(sample.type == "DO") %>% 
+  pull(stool.ID) %>% n_distinct()
+```
+
+* 3124 unique stool IDs, 2997 unique DO stool IDs
+
+# Import Kraken data
+
+```{r}
+kraken.df <- read.table("../data/kraken_matrix_after_QC_n1303x3473_230620.txt", sep="\t", header=T, row.names=1)
+dim(kraken.df)
+```
+
+# Import Kraken taxonomy
+
+```{r}
+kraken.tax.df <- read.table("../data/kraken_taxonomy_n1303.txt", sep="\t", header=T, quote="", row.names=1)
+dim(kraken.tax.df)
+```
+
+# Create phyloseq object
+
+```{r}
+tmp.kraken.sample.meta.df <- seq.meta.annot.df %>% column_to_rownames("seq.ID")
+kraken.sample.meta.df <- tmp.kraken.sample.meta.df[colnames(kraken.df), ]
+
+physeq <- phyloseq(
+  kraken.df %>% as.matrix %>% otu_table(taxa_are_rows=T),
+  kraken.sample.meta.df %>% sample_data,
+  kraken.tax.df %>% as.matrix %>% tax_table
+)
+```
+
+```{r}
+nsamples(physeq)
+physeq %>% 
+  subset_samples(sample.type=="DO") %>% 
+  nsamples
+```
+
+* 3473 samples, 3343 DO samples
+
+```{r}
+physeq %>% 
+  subset_samples(sample.type=="DO") %>%
+  sample_data() %>% 
+  data.frame() %>% 
+  rownames_to_column("seq.ID") %>% 
+  summarise(across(c(seq.ID, lib.ID, stool.ID, mouse.ID), n_distinct))
+```
+* 3343 DO samples correspond to 3086 unique libraries, 2997 stool samples, and 913 mice
+
+# Aggregate to genera
+
+```{r}
+physeq.genus <- physeq %>% tax_glom(taxrank="genus")
+```
+
+# Compute distances
+
+## With controls
+
+```{r}
+# Bray-Curtis on relative abundance
+genus.bc.dist.w.ctls <- physeq.genus %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+```
+
+## Without controls
+
+```{r}
+physeq.genus.no.ctls <- physeq.genus %>%
+  subset_samples(sample.type == "DO")
+
+meta.df.no.ctls <- physeq.genus.no.ctls %>% 
+  sample_data() %>% 
+  data.frame
+
+# Bray-Curtis on relative abundance
+genus.bc.dist <- physeq.genus.no.ctls %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+```
+
+# PCoA
+
+## With controls
+
+```{r}
+pcoa.genus.bc.w.ctls <- genus.bc.dist.w.ctls %>% 
+  cmdscale(eig=T, k=3)
+
+frac.expl.by.pcoa1 <- pcoa.genus.bc.w.ctls$eig[1] / sum(pcoa.genus.bc.w.ctls$eig)
+frac.expl.by.pcoa2 <- pcoa.genus.bc.w.ctls$eig[2] / sum(pcoa.genus.bc.w.ctls$eig)
+
+pcoa.genus.bc.w.ctls.df <- merge(
+  data.frame(pcoa.genus.bc.w.ctls$points) %>% setNames(c("PCoA1", "PCoA2", "PCoA3")),
+  kraken.sample.meta.df,
+  by="row.names")
+```
+
+```{r}
+(pcoa.w.ctls.p <- pcoa.genus.bc.w.ctls.df %>% 
+   arrange(sample.type) %>% 
+   ggplot(aes(x=PCoA1, y=PCoA2, color=sample.type)) +
+   geom_point(shape=16, size=0.5) +
+   scale_color_manual(values=c(DO="gray40", NEG="brown4", POS="steelblue")) +
+   labs(color="Sample type",
+        x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1),
+        y=sprintf("PCoA2 (%.0f%%)", 100*frac.expl.by.pcoa2)) +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/pcoa_w_controls.pdf", height=2, width=2)
+# pcoa.w.ctls.p + theme(legend.position="none")
+# dev.off()
+```
+
+```{r}
+pcoa.genus.bc.w.ctls.df %>% 
+  dplyr::filter(sample.type == "POS" & (PCoA2 < 0.4)) %>%
+  pull(Row.names)
+```
+
+* The two outlier poscons are JVOMNOOB and BZIZNTZA
+
+## Without controls
+
+```{r}
+pcoa.genus.bc <- genus.bc.dist %>% 
+  cmdscale(eig=T, k=3)
+
+frac.expl.by.pcoa1.no.ctls <- pcoa.genus.bc$eig[1] / sum(pcoa.genus.bc$eig)
+frac.expl.by.pcoa2.no.ctls <- pcoa.genus.bc$eig[2] / sum(pcoa.genus.bc$eig)
+
+pcoa.genus.bc.df <- merge(
+  data.frame(pcoa.genus.bc$points) %>% setNames(c("PCoA1", "PCoA2", "PCoA3")),
+  meta.df.no.ctls,
+  by="row.names")
+```
+
+### Same DNA, different libraries
+
+```{r}
+stool.IDs.w.multiple.libraries <- pcoa.genus.bc.df %>% 
+  group_by(stool.ID) %>% 
+  summarise(lib.IDs=paste(sort(unique(lib.ID)), collapse="|")) %>%
+  dplyr::filter(str_detect(lib.IDs, "\\|")) %>% 
+  pull(stool.ID)
+
+length(stool.IDs.w.multiple.libraries)
+```
+
+* 89 stool samples where a library was made twice from the same DNA
+
+```{r}
+(pcoa.same.DNA.p <- pcoa.genus.bc.df %>% 
+   ggplot(aes(x=PCoA1, y=PCoA2)) +
+   geom_point(shape=16, size=0.5, alpha=0.1) +
+   geom_path(aes(color=stool.ID, group=stool.ID), linewidth=0.5, data=(
+     pcoa.genus.bc.df %>% dplyr::filter(stool.ID %in% stool.IDs.w.multiple.libraries))) +
+   labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1.no.ctls),
+        y=sprintf("PCoA2 (%.0f%%)", 100*frac.expl.by.pcoa2.no.ctls),
+        title=sprintf("Same DNA, different libraries\nn=%i stool samples",
+                      length(stool.IDs.w.multiple.libraries))) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/pcoa_same_DNA_multiple_libs.pdf", width=2, height=2)
+# pcoa.same.DNA.p
+# dev.off()
+```
+
+
+### Same library, sequenced twice
+
+```{r}
+lib.IDs.seqd.more.than.once <- pcoa.genus.bc.df %>% 
+  dplyr::count(lib.ID) %>% 
+  dplyr::filter(n > 1) %>% 
+  pull(lib.ID)
+
+length(lib.IDs.seqd.more.than.once)
+```
+
+* 256 libraries sequenced at least twice (255 libraries sequenced twice, 1 library sequenced thrice)
+
+```{r}
+(pcoa.same.lib.p <- pcoa.genus.bc.df %>% 
+   ggplot(aes(x=PCoA1, y=PCoA2)) +
+   geom_point(shape=16, size=0.5, alpha=0.1) +
+   geom_path(aes(color=lib.ID, group=lib.ID), linewidth=0.5, data=(
+     pcoa.genus.bc.df %>% dplyr::filter(lib.ID %in% lib.IDs.seqd.more.than.once))) +
+   labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1.no.ctls),
+        y=sprintf("PCoA2 (%.0f%%)", 100*frac.expl.by.pcoa2.no.ctls),
+        title=sprintf("Same library, sequenced twice\nn=%i",
+                      length(lib.IDs.seqd.more.than.once))) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+* Pretty similar
+
+```{r}
+# pdf("../plots/pcoa_same_lib.pdf", width=2, height=2)
+# pcoa.same.lib.p
+# dev.off()
+```

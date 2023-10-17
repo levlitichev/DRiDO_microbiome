@@ -1,0 +1,1304 @@
+taxon.ID	phylum	class	order	family	genus	species
+3	Firmicutes_A					
+4	Firmicutes_A	Clostridia				
+5	Firmicutes_A	Clostridia	Lachnospirales			
+6	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae		
+7	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	
+8	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	MGBC000001
+9	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	MGBC000003
+11	Bacteroidota	Bacteroidia				
+12	Bacteroidota	Bacteroidia	Bacteroidales			
+13	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae		
+14	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	
+15	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	acidifaciens
+17	Firmicutes	Bacilli				
+18	Firmicutes	Bacilli	Lactobacillales			
+19	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae		
+20	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	
+21	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	intestinalis
+22	Proteobacteria					
+23	Proteobacteria	Gammaproteobacteria				
+24	Proteobacteria	Gammaproteobacteria	Enterobacterales			
+25	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae		
+27	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Proteus	mirabilis
+28	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Klebsiella	
+29	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Klebsiella	pneumoniae
+31	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Citrobacter_A	rodentium
+33	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Anaerostipes	sp000508985
+34	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia	
+35	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia	coli
+36	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	
+37	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC000041
+38	Firmicutes_A	Clostridia	Peptostreptococcales			
+39	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae		
+40	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Emergencia	
+41	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Emergencia	MGBC000042
+42	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae		
+43	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	
+44	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	timonensis
+45	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	
+46	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC000078
+47	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	
+48	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC000080
+49	Firmicutes	Bacilli	Staphylococcales			
+50	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae		
+51	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	
+52	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	nepalensis
+53	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC000083
+54	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC000089
+55	Firmicutes_A	Clostridia	Oscillospirales			
+56	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae		
+57	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Anaerotruncus	
+58	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Anaerotruncus	MGBC000100
+59	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Anaerotruncus	sp003612625
+60	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC000111
+61	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	
+62	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC000112
+63	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC000113
+64	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	
+65	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC000116
+66	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	
+67	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC000118
+68	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae		
+69	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	
+70	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC000120
+71	Actinobacteriota					
+73	Actinobacteriota	Coriobacteriia	Coriobacteriales			
+74	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae		
+75	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-34	
+76	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-34	MGBC000134
+77	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae		
+78	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	
+79	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC000135
+80	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC000137
+81	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	warneri
+82	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_G	
+83	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_G	MGBC000141
+84	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	
+85	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC000146
+86	Firmicutes	Bacilli	Erysipelotrichales			
+87	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae		
+88	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Erysipelotrichaceae_NOV	
+89	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Erysipelotrichaceae_NOV	MGBC000147
+90	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	
+91	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC000151
+92	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC000153
+93	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC000158
+97	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae		
+98	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	
+99	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	MGBC000161
+100	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC000170
+101	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC000171
+102	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae		
+103	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus	
+104	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus	oralis
+105	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-81	
+106	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-81	MGBC000176
+107	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Anaerovoracaceae_NOV	
+108	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Anaerovoracaceae_NOV	MGBC000178
+109	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Adlercreutzia	
+110	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Adlercreutzia	sp004793465
+111	Actinobacteriota	Coriobacteriia	Coriobacteriales	Atopobiaceae		
+112	Actinobacteriota	Coriobacteriia	Coriobacteriales	Atopobiaceae	NM07-P-09	
+113	Actinobacteriota	Coriobacteriia	Coriobacteriales	Atopobiaceae	NM07-P-09	sp004793665
+114	Firmicutes	Bacilli	Bacillales			
+115	Firmicutes	Bacilli	Bacillales	Bacillaceae_A		
+117	Firmicutes	Bacilli	Bacillales	Bacillaceae_A	Bacillus_AC	sp001076885
+118	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC000200
+121	Firmicutes	Bacilli	Bacillales	Bacillaceae	Bacillus	licheniformis
+122	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	
+123	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC000210
+124	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Parvibacter	
+125	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Parvibacter	caecicola
+126	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	pasteuri_A
+127	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	
+128	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC000219
+129	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Parvibacter	MGBC000220
+130	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	epidermidis
+131	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Anaerovoracaceae_NOV	MGBC000227
+134	Firmicutes	Bacilli	Lactobacillales	Aerococcaceae	Granulicatella	adiacens
+135	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC000243
+136	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Enterocloster	
+137	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Enterocloster	aldenensis
+138	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC000269
+139	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC000275
+140	Actinobacteriota	Actinomycetia				
+143	Actinobacteriota	Actinomycetia	Propionibacteriales	Propionibacteriaceae	Cutibacterium	
+144	Actinobacteriota	Actinomycetia	Propionibacteriales	Propionibacteriaceae	Cutibacterium	acnes
+150	Verrucomicrobiota_A	Chlamydiia	Chlamydiales	Chlamydiaceae	Chlamydia	muridarum
+151	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae		
+152	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	
+153	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	sp000364165
+154	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	sp000364245
+158	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae		
+160	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_A	bilis
+161	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	thetaiotaomicron
+162	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Phocaeicola	
+163	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Phocaeicola	vulgatus
+164	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Adlercreutzia	caecimuris
+166	Firmicutes	Bacilli	Paenibacillales	Paenibacillaceae		
+168	Firmicutes	Bacilli	Paenibacillales	Paenibacillaceae	Paenibacillus_A	barengoltzii
+169	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	sp000403435
+170	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	sp000403845
+171	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	sp000492175
+173	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Klebsiella_A	oxytoca
+174	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Faecalibaculum	
+175	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Faecalibaculum	rodentium
+176	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Flavonifractor	
+177	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Flavonifractor	plautii
+182	Verrucomicrobiota	Verrucomicrobiae	Verrucomicrobiales	Akkermansiaceae	Akkermansia	
+183	Verrucomicrobiota	Verrucomicrobiae	Verrucomicrobiales	Akkermansiaceae	Akkermansia	muciniphila
+185	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae		
+187	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Turicimonas	muris
+188	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae		
+190	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus	faecalis
+191	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Limosilactobacillus	
+192	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Limosilactobacillus	MGBC000370
+193	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	muris
+194	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae		
+195	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	
+196	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	intestinale
+197	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Limosilactobacillus	reuteri
+198	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	
+199	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	sp004792655
+200	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	sp004793545
+202	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-56	sp004793585
+203	Actinobacteriota	Actinomycetia	Propionibacteriales	Propionibacteriaceae	Cutibacterium	humerusii
+207	Proteobacteria	Gammaproteobacteria	Xanthomonadales	Xanthomonadaceae	Stenotrophomonas	maltophilia_AO
+208	Actinobacteriota	Actinomycetia	Actinomycetales			
+211	Actinobacteriota	Actinomycetia	Actinomycetales	Microbacteriaceae	Microbacterium	sp003293595
+212	Firmicutes_A	Clostridia	Clostridiales			
+213	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae		
+214	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium	
+215	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium	sartagoforme_B
+216	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	faecichinchillae
+217	Proteobacteria	Alphaproteobacteria				
+221	Proteobacteria	Alphaproteobacteria	Sphingomonadales	Sphingomonadaceae	Sphingomonas	olei
+222	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Klebsiella	variicola
+223	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia	flexneri
+224	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium	chromiireducens
+225	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Adlercreutzia	mucosicola
+226	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus	MGBC000431
+227	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium	paraputrificum
+228	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	
+229	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	sp003611875
+230	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD8-76	
+231	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD8-76	sp003611955
+233	Firmicutes	Bacilli	Bacillales	Bacillaceae_G	Bacillus_A	
+234	Firmicutes	Bacilli	Bacillales	Bacillaceae_G	Bacillus_A	thuringiensis
+235	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	sp003612335
+236	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	
+237	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	sp003612395
+238	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	
+239	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	sp003612475
+240	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-34	sp003612515
+242	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	C-53	sp003612525
+243	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	sp003612555
+245	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7160	sp003612585
+246	Firmicutes	Bacilli	Bacillales	Amphibacillaceae		
+248	Firmicutes	Bacilli	Bacillales	Amphibacillaceae	Virgibacillus	sp003612345
+249	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	ovatus
+250	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Muricomes	
+251	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Muricomes	sp000509105
+252	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	onderdonkii
+253	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Limosilactobacillus	MGBC000480
+254	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC000489
+255	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC000495
+256	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	
+257	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC000496
+258	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	sp003669055
+259	Firmicutes_A	Clostridia	Tissierellales			
+262	Firmicutes_A	Clostridia	Tissierellales	SIT17	Senegalia	MGBC000499
+263	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	sp000403295
+264	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae		
+265	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	Butyricicoccaceae_NOV	
+266	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	Butyricicoccaceae_NOV	MGBC000503
+267	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC000515
+268	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC000518
+269	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC000522
+271	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus_A	xiangfangensis
+272	Firmicutes_A	Clostridia	Peptostreptococcales	Peptostreptococcaceae		
+274	Firmicutes_A	Clostridia	Peptostreptococcales	Peptostreptococcaceae	Clostridioides	difficile
+275	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Erysipelotrichaceae_NOV	MGBC000527
+276	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC000531
+277	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC000533
+278	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC000538
+280	Firmicutes	Bacilli	Bacillales	Bacillaceae_A	Bacillus_AK	MGBC000539
+281	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Emergencia	MGBC000541
+282	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Flavonifractor	MGBC000542
+283	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC000548
+285	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus_C	asini
+286	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC000555
+287	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Muricomes	intestini
+289	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Cuneatibacter	caecimuris
+290	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	muris
+291	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae		
+293	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Longibaculum	muris
+295	Firmicutes	Bacilli	Paenibacillales	Paenibacillaceae	Paenibacillus	amylolyticus
+297	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Frisingicoccus	caecimuris
+298	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Blautia_A	
+299	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Blautia_A	sp000433815
+302	Actinobacteriota	Actinomycetia	Actinomycetales	Actinomycetaceae	Actinomyces	MGBC000565
+306	Firmicutes_A	Clostridia	Eubacteriales	Garciellaceae	Garciellaceae_NOV	MGBC000568
+307	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Enterocloster	bolteae
+308	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus_B	
+309	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus_B	hirae
+310	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	xylosus
+311	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	xylanisolvens
+313	Firmicutes_A	Clostridia	Peptostreptococcales	Peptostreptococcaceae	Paraclostridium	bifermentans
+314	Proteobacteria	Gammaproteobacteria	Enterobacterales	Pasteurellaceae		
+315	Proteobacteria	Gammaproteobacteria	Enterobacterales	Pasteurellaceae	Rodentibacter	
+316	Proteobacteria	Gammaproteobacteria	Enterobacterales	Pasteurellaceae	Rodentibacter	heylii
+317	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Longicatena	
+318	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Longicatena	caecimuris
+319	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Clostridium_Q	
+320	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Clostridium_Q	symbiosum
+321	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Longicatena	innocuum
+323	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium_F	tepidum
+324	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridium	
+325	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridium	ramosum
+328	Firmicutes_A	Clostridia	Tissierellales	Sporanaerobacteraceae	Anaerosalibacter_A	massiliensis
+330	Firmicutes	Bacilli	Bacillales	Amphibacillaceae	Oceanobacillus	caeni
+331	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	muris
+333	Firmicutes_A	Clostridia	Peptostreptococcales	Peptostreptococcaceae	Paeniclostridium	sordellii
+334	Firmicutes	Bacilli	Bacillales	Bacillaceae_G	Bacillus_A	cereus
+335	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium	MGBC000603
+337	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium_G	cochlearium
+338	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	rodentium
+340	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Intestinimonas	butyriciproducens
+341	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Rikenella	
+342	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Rikenella	MGBC100019
+343	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-510	
+344	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-510	MGBC100069
+345	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC100080
+346	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD8-76	MGBC100084
+347	Firmicutes	Bacilli	RF39			
+348	Firmicutes	Bacilli	RF39	CAG-1000		
+349	Firmicutes	Bacilli	RF39	CAG-1000	UBA11963	
+350	Firmicutes	Bacilli	RF39	CAG-1000	UBA11963	MGBC100111
+351	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Eubacterium_R	
+352	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Eubacterium_R	MGBC100127
+354	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	
+355	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	MGBC100138
+356	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus	
+357	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus	MGBC100158
+358	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	
+359	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp001689665
+361	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Tidjanibacter	MGBC100163
+363	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Butyrivibrio_A	MGBC100164
+364	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC100172
+365	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC100174
+366	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-510	MGBC100230
+368	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7050	sp003979345
+369	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	
+370	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp900548705
+371	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC100288
+372	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC100310
+374	Firmicutes_A	Clostridia_A	Christensenellales			
+375	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552		
+376	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	
+377	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC100320
+378	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC100342
+379	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-34	MGBC100369
+380	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Allobaculum	
+381	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Allobaculum	MGBC100415
+382	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700		
+383	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	
+384	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC100798
+385	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	
+386	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC100967
+387	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC101044
+388	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	
+389	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC101100
+390	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Eubacterium_R	MGBC101131
+391	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC101207
+392	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Mailhella	
+393	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Mailhella	MGBC101285
+394	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	
+395	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC101403
+396	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC101489
+397	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC101638
+398	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	sp000403275
+399	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	
+400	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC101899
+401	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC101916
+402	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Marseille-P3106	
+403	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Marseille-P3106	MGBC101917
+404	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC101923
+405	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae		
+406	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	
+407	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC101977
+408	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC101978
+409	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700	
+410	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700	MGBC101980
+411	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	CAG-115	
+412	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	CAG-115	MGBC102041
+413	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	
+414	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC102213
+415	Firmicutes	Bacilli	RF39	CAG-1000	CAG-582	
+416	Firmicutes	Bacilli	RF39	CAG-1000	CAG-582	MGBC102277
+417	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Dubosiella	
+418	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Dubosiella	newyorkensis
+419	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	sp001689565
+420	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Blautia_A	sp900551075
+421	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC102897
+422	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC102923
+423	Firmicutes	Bacilli	RF39	CAG-822		
+425	Firmicutes	Bacilli	RF39	CAG-822	CAG-822_NOV	MGBC102946
+426	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC102972
+427	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Dubosiella	sp004793885
+428	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC103062
+430	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Blautia	coccoides_A
+431	Firmicutes	Bacilli	RF39	CAG-611		
+433	Firmicutes	Bacilli	RF39	CAG-611	UBA2730	MGBC103219
+434	Firmicutes	Bacilli	RF39	CAG-822	UBA5026	
+435	Firmicutes	Bacilli	RF39	CAG-822	UBA5026	MGBC103251
+436	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC103294
+437	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC103306
+438	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC103317
+440	Proteobacteria	Alphaproteobacteria	RF32	CAG-239		
+441	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-267	
+442	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-267	MGBC103325
+443	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC103329
+444	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp900550395
+445	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	51-20	
+446	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	51-20	MGBC103387
+450	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae	Pseudomonas_E	fluorescens_BA
+451	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_C	
+452	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_C	MGBC103445
+458	Elusimicrobiota	Elusimicrobia	Elusimicrobiales	Elusimicrobiaceae	UBA1436	MGBC103454
+459	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-495	
+460	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-495	sp900538765
+462	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus_D	gallinarum
+463	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC103508
+464	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	merdae
+465	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC103678
+466	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC103686
+468	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	UMGS1071	MGBC103718
+469	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus	MGBC103721
+470	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC103936
+471	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC104027
+472	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC104031
+473	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC104191
+474	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-303	
+475	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-303	MGBC104195
+476	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	distasonis_A
+477	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC104261
+480	Firmicutes	Bacilli	Acholeplasmatales	Anaeroplasmataceae	UMGS268	
+481	Firmicutes	Bacilli	Acholeplasmatales	Anaeroplasmataceae	UMGS268	MGBC104323
+482	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	MGBC104324
+483	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-495	MGBC104355
+484	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	
+485	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC104380
+486	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC104416
+487	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC104426
+490	Cyanobacteria	Vampirovibrionia	Gastranaerophilales			
+492	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	
+493	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC104636
+494	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	sp002473395
+495	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_C	magdeburgensis
+496	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC104699
+497	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC104717
+498	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC104726
+499	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	
+500	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC104730
+502	Bacteroidota	Bacteroidia	Bacteroidales	UBA932	RC9	
+503	Bacteroidota	Bacteroidia	Bacteroidales	UBA932	RC9	MGBC104799
+504	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC104814
+505	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC104819
+506	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC104832
+507	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_D	
+508	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_D	ganmani
+509	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC104891
+510	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC104908
+511	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	
+512	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC104938
+513	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Roseburia	
+514	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Roseburia	MGBC104949
+515	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	
+516	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC104963
+517	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC104969
+518	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC104987
+519	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_C	hepaticus
+521	Firmicutes_A	Clostridia_A	Christensenellales	CAG-917	CAG-475	
+522	Firmicutes_A	Clostridia_A	Christensenellales	CAG-917	CAG-475	MGBC105042
+523	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC105045
+524	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC105053
+525	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC105056
+526	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC105120
+527	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC105122
+528	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC105132
+529	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	sp000403455
+531	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium_P	perfringens
+532	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	goldsteinii
+533	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC105174
+534	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC105190
+535	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC105224
+536	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC105242
+537	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC105254
+538	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Rikenella	MGBC105264
+539	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC105270
+540	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC105279
+541	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC105282
+542	Firmicutes_A	Clostridia_A	Christensenellales	CAG-917	CAG-475	MGBC105284
+543	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	sp002492665
+544	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC105340
+545	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcaceae_NOV	
+546	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcaceae_NOV	MGBC105346
+547	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC105353
+548	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC105355
+549	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC105391
+550	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC105404
+551	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC105408
+556	Deferribacterota	Deferribacteres	Deferribacterales	Mucispirillaceae	Mucispirillum	
+557	Deferribacterota	Deferribacteres	Deferribacterales	Mucispirillaceae	Mucispirillum	schaedleri
+558	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_D	rodentium
+561	Firmicutes_A	Clostridia	Clostridiales	Savagellaceae	Savagella	sp000270205
+562	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC105483
+563	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae		
+564	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Odoribacter	
+565	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Odoribacter	MGBC105490
+566	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC105519
+567	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	sp003611805
+569	Actinobacteriota	Coriobacteriia	Coriobacteriales	Atopobiaceae	Atopobiaceae_NOV	MGBC105563
+570	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Ligilactobacillus	
+571	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Ligilactobacillus	murinus
+572	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Rikenella	MGBC105593
+573	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC105925
+574	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp001689485
+575	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC106400
+576	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	sp000403335
+577	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC106726
+578	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC106841
+579	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_G	MGBC106873
+580	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC106896
+581	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC106904
+582	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	sp003979335
+583	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC107002
+584	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC107029
+585	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC107218
+586	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC107221
+588	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381		
+589	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	CAG-41	
+590	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	CAG-41	MGBC107251
+591	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	
+592	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC107413
+593	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC107450
+594	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC107459
+595	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC107550
+596	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC107581
+597	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC107693
+598	Firmicutes	Bacilli	Acholeplasmatales	Anaeroplasmataceae	UMGS268	MGBC107741
+599	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC107888
+600	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus_A	
+601	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus_A	sciuri
+602	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridium	cocleatum
+603	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Mailhella	MGBC107932
+605	Firmicutes	Bacilli	RF39	CAG-822	UMGS1648	MGBC107952
+606	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Leuconostoc	
+607	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Leuconostoc	citreum
+609	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Weissella	confusa
+610	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD8-76	MGBC108016
+611	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC108027
+612	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC108044
+613	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Parasutterella	
+614	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Parasutterella	sp900552195
+615	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Phocaeicola	sp002493165
+616	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC108134
+617	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC108169
+618	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC108232
+619	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp001915385
+620	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp002361155
+621	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC108457
+622	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC108519
+623	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-603	
+624	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-603	MGBC108656
+625	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC108684
+626	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	sp000403215
+627	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC108720
+628	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC108722
+629	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC108766
+630	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	
+631	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	MGBC108787
+632	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Phocaeicola	dorei
+633	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminiclostridium_E	
+634	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminiclostridium_E	MGBC108887
+635	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC108895
+636	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC108897
+637	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-510	sp003979355
+638	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC108918
+639	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA7177	
+640	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA7177	MGBC108922
+641	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC108936
+642	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA3818	
+643	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA3818	MGBC109100
+644	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC109106
+645	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	Anaerotignum	
+646	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	Anaerotignum	MGBC109121
+647	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC109474
+648	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC109634
+649	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC109699
+650	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	sp002492595
+651	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC109838
+652	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp002493045
+653	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp003979075
+654	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	AM07-15	
+655	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	AM07-15	MGBC109914
+656	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC109982
+658	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-45	MGBC110001
+659	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Limosilactobacillus	reuteri_D
+660	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC110096
+661	Verrucomicrobiota	Verrucomicrobiae	Verrucomicrobiales	Akkermansiaceae	Akkermansia	muciniphila_A
+662	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp002493945
+663	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	sp002494015
+666	Firmicutes	Bacilli	Staphylococcales	Salinicoccaceae	Jeotgalicoccus	nanhaiensis
+667	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	MGBC110198
+668	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_C	typhlonius
+669	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC110218
+670	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC110346
+671	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC110388
+676	Spirochaetota	Brachyspirae	Brachyspirales	Brachyspiraceae	Brachyspira	
+677	Spirochaetota	Brachyspirae	Brachyspirales	Brachyspiraceae	Brachyspira	MGBC110401
+678	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Mailhella	sp003512875
+679	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC110447
+680	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcaceae_NOV	MGBC110487
+682	Bacteroidota	Bacteroidia	Bacteroidales	P3	P3_NOV	
+683	Bacteroidota	Bacteroidia	Bacteroidales	P3	P3_NOV	MGBC110513
+684	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Mailhella	MGBC110551
+685	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC110562
+686	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Odoribacter	MGBC110565
+688	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	NHYN01	MGBC110621
+689	Firmicutes	Bacilli	Mycoplasmatales			
+690	Firmicutes	Bacilli	Mycoplasmatales	Mycoplasmoidaceae		
+692	Firmicutes	Bacilli	Mycoplasmatales	Mycoplasmoidaceae	Mycoplasmoidaceae_NOV	MGBC110633
+693	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC110670
+694	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC110736
+695	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	sp003979135
+696	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	intestinale
+702	Firmicutes_C	Negativicutes	Selenomonadales	Selenomonadaceae	Selenomonadaceae_NOV	MGBC110822
+703	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC110834
+704	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC110941
+705	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC111235
+706	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC111253
+707	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC111351
+708	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Ruminococcus_E	
+709	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Ruminococcus_E	sp002493635
+710	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC111445
+711	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC111446
+712	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC111450
+713	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC111451
+714	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	MGBC111476
+715	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC111479
+716	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Ligilactobacillus	agilis
+717	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC111501
+718	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	sp003611745
+719	Firmicutes	Bacilli	RF39	CAG-822	UBA5026	MGBC111601
+720	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-510	MGBC111722
+721	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp002361215
+722	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC111861
+723	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC111863
+724	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Evtepia	
+725	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Evtepia	MGBC111873
+726	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC111877
+727	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA7177	MGBC112108
+728	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC112435
+729	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	muris
+730	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC112619
+731	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	sp003150235
+732	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC112867
+733	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC113161
+734	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp002490635
+735	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	MGBC113195
+736	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp001689415
+737	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	AF33-28	
+738	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	AF33-28	MGBC113244
+739	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC113262
+740	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC113289
+741	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	MGBC113320
+742	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	CAG-115	MGBC113373
+743	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	MGBC113403
+744	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC113460
+745	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia	sp000208585
+746	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC113509
+747	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Anaerotruncus	sp000403395
+748	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC113602
+749	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC113609
+750	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC113610
+751	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcaceae_NOV	MGBC113616
+752	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridiaceae_NOV	
+753	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridiaceae_NOV	MGBC113645
+754	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Allobaculum	MGBC113668
+755	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	UBA1381_NOV	
+756	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	UBA1381_NOV	MGBC113686
+757	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC113809
+758	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC113841
+759	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	sp002358415
+760	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC113942
+761	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Roseburia	MGBC113951
+762	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC113998
+763	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC113999
+766	Firmicutes_A	Clostridia	Lachnospirales	CAG-274	CAG-274_NOV	MGBC114079
+767	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700	MGBC114095
+768	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC114107
+769	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC114113
+770	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC114200
+771	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC114255
+772	Firmicutes	Bacilli	RF39	CAG-611	UMGS995	
+773	Firmicutes	Bacilli	RF39	CAG-611	UMGS995	MGBC114289
+774	Firmicutes_A	Clostridia_A	Christensenellales	UBA1242		
+775	Firmicutes_A	Clostridia_A	Christensenellales	UBA1242	UBA11517	
+776	Firmicutes_A	Clostridia_A	Christensenellales	UBA1242	UBA11517	MGBC114398
+777	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC114452
+778	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC114492
+779	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC114583
+780	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC114603
+781	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC114681
+783	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	M3	sp001689445
+784	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC114844
+785	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	sp003612565
+786	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	sp000403475
+787	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	sp000403255
+788	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC114924
+791	Firmicutes	Bacilli	Mycoplasmatales	Metamycoplasmataceae	UBA710	sp002298905
+792	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC114950
+793	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC115029
+794	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC115043
+795	Verrucomicrobiota	Verrucomicrobiae	Verrucomicrobiales	Akkermansiaceae	Akkermansia	sp001580195
+796	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC115181
+797	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC115182
+798	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC115325
+800	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Enterobacter	himalayensis
+801	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC115396
+802	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	distasonis
+803	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus_B	faecium
+805	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactiplantibacillus	plantarum
+806	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC116392
+807	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Lactococcus	
+808	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Lactococcus	lactis
+809	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	uniformis
+810	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA3818	MGBC116419
+814	Firmicutes_A	Clostridia	Monoglobales	Monoglobaceae	Monoglobaceae_NOV	MGBC116426
+815	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Lactococcus	garvieae
+817	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Pediococcus	pentosaceus
+818	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Leuconostoc	pseudomesenteroides
+819	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	finegoldii
+820	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC116460
+821	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	sp002362235
+822	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC116657
+823	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC116682
+824	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC116689
+825	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UMGS1872	
+826	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UMGS1872	MGBC116724
+828	Actinobacteriota	Actinomycetia	Actinomycetales	Bifidobacteriaceae	Bifidobacterium	
+829	Actinobacteriota	Actinomycetia	Actinomycetales	Bifidobacteriaceae	Bifidobacterium	animalis
+830	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC116833
+831	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC116935
+832	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC116940
+834	Firmicutes_A	Clostridia_A	Christensenellales	Christensenellales_NOV	Christensenellales_NOV	
+835	Firmicutes_A	Clostridia_A	Christensenellales	Christensenellales_NOV	Christensenellales_NOV	MGBC116941
+836	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC116946
+837	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC116954
+838	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Phocaeicola	MGBC116964
+839	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC116970
+841	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	CAG-180	sp900540295
+842	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC117087
+843	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC117094
+847	Firmicutes	Bacilli	Haloplasmatales	Turicibacteraceae	Turicibacter	sp002311155
+848	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC117253
+850	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA3263	sp001689615
+851	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC117378
+852	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC117419
+853	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC117436
+854	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC117467
+855	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC117495
+856	Firmicutes	Bacilli	RF39	CAG-611	CAG-611_NOV	
+857	Firmicutes	Bacilli	RF39	CAG-611	CAG-611_NOV	MGBC117562
+858	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Evtepia	MGBC117610
+859	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC117628
+860	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus	MGBC117665
+861	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Flavonifractor	MGBC117744
+862	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus	MGBC117829
+863	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-267	MGBC117992
+864	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-81	MGBC118027
+865	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC118028
+866	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Eubacterium_R	MGBC118047
+867	Firmicutes	Bacilli	RF39	CAG-822	UBA5578	
+868	Firmicutes	Bacilli	RF39	CAG-822	UBA5578	MGBC118066
+869	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC118072
+870	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilaceae		
+872	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilaceae	CAG-196	MGBC118087
+873	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp002491945
+874	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC118394
+875	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC118395
+876	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC118412
+877	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	sp002490665
+878	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC118768
+880	Firmicutes	Bacilli	RF39	CAG-433	CAG-594	
+881	Firmicutes	Bacilli	RF39	CAG-433	CAG-594	MGBC118889
+882	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-495	MGBC118957
+883	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC119012
+884	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	Anaerovoracaceae_NOV	MGBC119074
+885	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes_A	
+886	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes_A	indistinctus
+887	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes_A	MGBC119114
+888	Bacteroidota	Bacteroidia	Bacteroidales	Tannerellaceae	Parabacteroides	MGBC119115
+889	Firmicutes	Bacilli	RF39	CAG-1000	CAG-1000_NOV	
+890	Firmicutes	Bacilli	RF39	CAG-1000	CAG-1000_NOV	MGBC119269
+891	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-303	MGBC119292
+892	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC119341
+893	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp900555165
+894	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC119608
+895	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Allobaculum	MGBC119653
+896	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC119725
+897	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UMGS1872	MGBC119734
+898	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC119765
+899	Firmicutes	Bacilli	RF39	CAG-433	CAG-594	MGBC119771
+900	Firmicutes	Bacilli	RF39	CAG-611	CAG-611_NOV	MGBC119817
+902	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC119866
+903	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC119923
+905	Firmicutes	Bacilli	RF39	CAG-611	UBA7057	MGBC119928
+906	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC119940
+907	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC120045
+908	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	sp003513705
+909	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC120187
+910	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC120236
+911	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Eubacterium_R	MGBC120247
+912	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC120314
+913	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC120343
+914	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC120354
+916	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus_C	MGBC120363
+917	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC120460
+918	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	sp001689575
+919	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminococcus	sp002362135
+920	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	MGBC120805
+922	Firmicutes_A	Clostridia	Oscillospirales	CAG-272	UMGS1815	
+923	Firmicutes_A	Clostridia	Oscillospirales	CAG-272	UMGS1815	MGBC120887
+924	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC120897
+925	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC120929
+926	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC121002
+927	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp002493515
+928	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC121214
+929	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-603	MGBC121271
+930	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Eubacterium_R	MGBC121343
+931	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	sp900545525
+932	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	MGBC121705
+933	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC121754
+934	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC122214
+935	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	hominis
+936	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC122324
+937	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC122397
+938	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC122484
+939	Firmicutes	Bacilli	Acholeplasmatales	Anaeroplasmataceae	UMGS268	sp900540705
+940	Firmicutes	Bacilli	RF39	CAG-822	UBA5026	MGBC122606
+941	Firmicutes	Bacilli	RF39	CAG-822	UBA5578	MGBC122614
+942	Firmicutes	Bacilli	Acholeplasmatales	Anaeroplasmataceae	UMGS268	MGBC122639
+943	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC122917
+944	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC122974
+945	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC123004
+946	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC123009
+947	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC123032
+948	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC123049
+949	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	MGBC123065
+950	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC123224
+951	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC123285
+952	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC123372
+953	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC123461
+954	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC123502
+955	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC123503
+956	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	sp003612285
+958	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	UBA1191	MGBC123563
+959	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC123773
+960	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC123815
+961	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC123817
+962	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Limosilactobacillus	MGBC123951
+963	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA946	
+964	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA946	MGBC124430
+965	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC124655
+966	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC124762
+967	Firmicutes_A	Clostridia_A	Christensenellales	CAG-917	CAG-475	MGBC124771
+969	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilaceae	Gastranaerophilaceae_NOV	MGBC124931
+971	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilaceae	Zag111	MGBC124934
+972	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC125006
+974	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-127	sp002493625
+975	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC125142
+976	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC125209
+977	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC125215
+978	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC125253
+979	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC125399
+980	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp001701295
+984	Actinobacteriota	Actinomycetia	Mycobacteriales	Mycobacteriaceae	Corynebacterium	stationis
+985	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC125940
+986	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC125952
+987	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC126105
+988	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	MGBC126123
+993	Spirochaetota	Spirochaetia	Treponematales	Treponemataceae	Treponema_D	MGBC126140
+994	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC126149
+995	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC126305
+996	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus_A	lentus
+997	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC127367
+999	Firmicutes	Bacilli	RF39	CAG-822	CAG-822	MGBC127554
+1000	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC127601
+1001	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC127629
+1002	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp900555715
+1004	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Butyricimonas	virosa
+1005	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Dubosiella	MGBC127872
+1006	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-590	
+1007	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-590	MGBC127878
+1008	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC127947
+1009	Firmicutes	Bacilli	RF39	CAG-1000	UBA11963	MGBC127997
+1011	Firmicutes_A	Clostridia_A	Christensenellales	UBA1242	UBA7862	MGBC128010
+1012	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC128103
+1013	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC128194
+1014	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA1394	
+1015	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA1394	sp900066845
+1016	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	arabinoxylanisolvens
+1017	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC128313
+1018	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	johnsonii
+1019	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Amulumruptor	
+1020	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Amulumruptor	sp900539915
+1021	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC128419
+1022	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC128531
+1023	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC128759
+1024	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	CAG-41	MGBC128762
+1025	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC128780
+1026	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC128920
+1027	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_C	japonicus
+1028	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC128948
+1029	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC128953
+1030	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculaceae_NOV	
+1031	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculaceae_NOV	MGBC128991
+1032	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC129052
+1033	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC129154
+1034	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	sp002362485
+1035	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC129192
+1036	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC129207
+1037	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-590	MGBC129221
+1038	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	MGBC129232
+1040	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eisenbergiella	MGBC129248
+1041	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC129263
+1042	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospira	
+1043	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospira	MGBC129270
+1044	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC129275
+1045	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD8-76	MGBC129284
+1046	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Marseille-P3106	MGBC129303
+1047	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC129315
+1048	Firmicutes_A	Clostridia_A	Christensenellales	Christensenellales_NOV	Christensenellales_NOV	MGBC129327
+1049	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC129342
+1050	Firmicutes_A	Clostridia_A	Christensenellales	UBA1242	UBA11517	MGBC129349
+1051	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC129472
+1052	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC129547
+1058	Firmicutes_B	Peptococcia	Peptococcales	Peptococcaceae	UBA7185	MGBC129548
+1059	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC129633
+1060	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC129690
+1061	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC129708
+1062	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminiclostridium_E	MGBC129722
+1063	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC129725
+1065	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	An181	MGBC129736
+1066	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC129764
+1067	Firmicutes	Bacilli	RF39	CAG-1000	CAG-776	
+1068	Firmicutes	Bacilli	RF39	CAG-1000	CAG-776	MGBC129856
+1069	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC129914
+1070	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC129933
+1071	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC129937
+1072	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC129972
+1073	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC129998
+1074	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC130208
+1075	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-303	MGBC130214
+1076	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC130266
+1078	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	CAG-1427	sp000435675
+1079	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC130483
+1080	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC130490
+1081	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_G	MGBC130525
+1082	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC130580
+1083	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC130615
+1084	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	
+1085	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC130616
+1086	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC130773
+1087	Firmicutes	Bacilli	RF39	CAG-822	UBA5026	MGBC130809
+1088	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC130908
+1089	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC131033
+1091	Firmicutes_A	Clostridia	Peptostreptococcales	Peptostreptococcaceae	Romboutsia	ilealis
+1092	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-81	MGBC131109
+1093	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Clostridium_Q	MGBC131118
+1094	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC131161
+1095	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC131258
+1096	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	sp000403315
+1097	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Adlercreutzia	MGBC131384
+1098	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	sp003612485
+1099	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC131434
+1100	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC131504
+1101	Firmicutes	Bacilli	RF39	CAG-611	UMGS995	MGBC131677
+1102	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC131735
+1103	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC131886
+1104	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC131887
+1105	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Odoribacter	MGBC131955
+1107	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	Butyricicoccus	MGBC131967
+1108	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Angelakisella	
+1109	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Angelakisella	MGBC131977
+1110	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC131995
+1111	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC132108
+1112	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC132220
+1113	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	CAG-41	MGBC132292
+1114	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC132302
+1115	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC132356
+1116	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC132469
+1122	Thermotogota	Thermotogae	Petrotogales	Kosmotogaceae	Kosmotoga_B	pacifica
+1125	Firmicutes_A	Clostridia	Tissierellales	Caloranaerobacteraceae	Caloranaerobacter	azorensis
+1126	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	sp002298815
+1128	Proteobacteria	Gammaproteobacteria	Enterobacterales	Pasteurellaceae	Muribacter	muris
+1129	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus	sp002300045
+1130	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	CAG-495	MGBC133411
+1131	Bacteroidota	Bacteroidia	Bacteroidales	UBA932	RC9	MGBC133433
+1132	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Paraprevotella	
+1133	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Paraprevotella	MGBC133623
+1134	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC134176
+1135	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC134341
+1136	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Parasutterella	MGBC134540
+1137	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	MGBC134914
+1138	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC135202
+1139	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD8-76	MGBC135302
+1140	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	Butyricicoccaceae_NOV	MGBC135451
+1141	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	sp002491635
+1142	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	sp001689535
+1143	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Paraprevotella	MGBC135601
+1144	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp002491305
+1145	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC135730
+1146	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC135946
+1147	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC136074
+1148	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Enterocloster	clostridioformis
+1149	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Angelakisella	MGBC136623
+1150	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC136627
+1151	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	Anaerotignum	MGBC136833
+1152	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Bilophila	
+1153	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Bilophila	MGBC136875
+1154	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Bilophila	MGBC136929
+1155	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp004102805
+1156	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA946	MGBC137711
+1157	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-81	MGBC137839
+1158	Firmicutes	Bacilli	RF39	CAG-611	CAG-611_NOV	MGBC137871
+1159	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC137892
+1160	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC137941
+1161	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC139270
+1162	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC139341
+1163	Firmicutes	Bacilli	RF39	CAG-1000	CAG-1000_NOV	MGBC139354
+1164	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	AM07-15	MGBC139400
+1165	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC139490
+1166	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC139511
+1167	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC139512
+1168	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC139654
+1169	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC139665
+1170	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC139669
+1171	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC139783
+1172	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Ruminococcus_E	MGBC139800
+1173	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC139812
+1174	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	plexicaudatum
+1175	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC139909
+1176	Bacteroidota	Bacteroidia	Bacteroidales	P3	P3_NOV	MGBC139916
+1177	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Erysipelotrichaceae_NOV	MGBC139950
+1178	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC139975
+1179	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC139981
+1180	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC140009
+1181	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC140028
+1182	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC140040
+1183	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC140066
+1184	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridiaceae_NOV	MGBC140090
+1185	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC140115
+1186	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC140131
+1187	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC140159
+1188	Deferribacterota	Deferribacteres	Deferribacterales	Mucispirillaceae	Mucispirillum	MGBC140179
+1189	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC140196
+1190	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC140221
+1191	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC140242
+1192	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC140257
+1193	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC140398
+1194	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	MGBC140467
+1195	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC140491
+1196	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC140522
+1197	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC140579
+1198	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruthenibacterium	
+1199	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruthenibacterium	MGBC140709
+1200	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Anaerotruncus	MGBC140748
+1201	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC140906
+1202	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	sp002358575
+1203	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC141809
+1204	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC141815
+1205	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	sp000403495
+1206	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC142035
+1207	Bacteroidota	Bacteroidia	Bacteroidales	UBA932	RC9	sp002298075
+1208	Firmicutes_A	Clostridia	Oscillospirales	CAG-272	UMGS1815	MGBC142214
+1209	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC142302
+1210	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC142332
+1211	Proteobacteria	Gammaproteobacteria	Enterobacterales	Pasteurellaceae	Rodentibacter	pneumotropicus
+1212	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC142608
+1213	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC142695
+1214	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC142918
+1215	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC142924
+1216	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	sp002358555
+1217	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC143115
+1218	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC143118
+1219	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC143123
+1221	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-632	MGBC143167
+1222	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospira	MGBC143173
+1223	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	MGBC143234
+1224	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	sp001689425
+1225	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC143446
+1226	Firmicutes	Bacilli	RF39	CAG-611	UMGS995	MGBC143456
+1227	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC143556
+1228	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC143594
+1229	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC143601
+1231	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	G11	MGBC143606
+1232	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC143610
+1233	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	MGBC143693
+1234	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC143734
+1235	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC143741
+1237	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Agathobacter	MGBC143759
+1238	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC143782
+1239	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA3818	MGBC143783
+1240	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	MGBC143807
+1241	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	MGBC143808
+1242	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	CAG-115	MGBC143865
+1243	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC143869
+1244	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	sp001689685
+1246	Firmicutes_A	Clostridia_A	Christensenellales	CAG-314	CAG-1435	
+1247	Firmicutes_A	Clostridia_A	Christensenellales	CAG-314	CAG-1435	MGBC143961
+1248	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC143965
+1249	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	congonensis
+1250	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	caecimuris
+1251	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC145212
+1252	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC145421
+1254	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilaceae	Zag1	MGBC145961
+1255	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC146413
+1256	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides	intestinalis
+1257	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC146938
+1258	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculaceae_NOV	MGBC147098
+1259	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruminiclostridium_E	MGBC147835
+1260	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC147959
+1261	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC148030
+1262	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC148330
+1263	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC149507
+1264	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp002491245
+1265	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC150826
+1266	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	MGBC150949
+1267	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC151438
+1268	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Alistipes	sp002428825
+1269	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	Butyricicoccaceae_NOV	MGBC151848
+1270	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC152050
+1271	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC152089
+1272	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Odoribacter	MGBC152178
+1273	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC152290
+1274	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC152421
+1275	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC152423
+1276	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC152544
+1277	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC152639
+1278	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC152734
+1279	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC152987
+1280	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC153020
+1281	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculaceae_NOV	MGBC153228
+1282	Firmicutes_A	Clostridia_A	Christensenellales	CAG-314	CAG-1435	MGBC153675
+1283	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC153954
+1284	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC153991
+1285	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC154005
+1286	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC154526
+1287	Firmicutes	Bacilli	RF39	CAG-1000	CAG-1000_NOV	MGBC155283
+1288	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC155975
+1289	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC156312
+1290	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC156614
+1291	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC156628
+1292	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	MGBC156629
+1293	Firmicutes	Bacilli	RF39	CAG-1000	CAG-582	MGBC156923
+1294	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC157066
+1295	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC157102
+1296	Firmicutes_A	Clostridia_A	Christensenellales	UBA1242	UBA11517	MGBC157384
+1297	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC157385
+1298	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	CAG-115	MGBC157433
+1299	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	sp003612405
+1300	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC157594
+1301	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC157705
+1302	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	MGBC157731
+1303	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC157735
+1304	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC157936
+1305	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	sp900553585
+1306	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC158044
+1307	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC158299
+1308	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Ruthenibacterium	lactatiformans
+1309	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC158472
+1310	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC158517
+1311	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC158728
+1312	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC158835
+1313	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC159243
+1314	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC159247
+1315	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC159253
+1316	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC159717
+1317	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC159740
+1318	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC159744
+1319	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC159851
+1320	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC159923
+1321	Desulfobacterota	Desulfovibrionia	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	MGBC159935
+1322	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA7182	MGBC159988
+1323	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC159997
+1324	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC160000
+1325	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC160006
+1326	Firmicutes_A	Clostridia_A	Christensenellales	CAG-314	CAG-1435	MGBC160019
+1328	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	UMGS1880	MGBC160026
+1329	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC160578
+1330	Proteobacteria	Alphaproteobacteria	RF32	CAG-239	51-20	MGBC160833
+1331	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	CAG-95	MGBC161056
+1332	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC161115
+1333	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC161128
+1334	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	sp001689495
+1335	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Dubosiella	sp000403415
+1336	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC161213
+1337	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Clostridium_Q	MGBC161412
+1338	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Marseille-P3106	MGBC161418
+1339	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC161419
+1340	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Ligilactobacillus	MGBC161554
+1341	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	MGBC161558
+1342	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC161624
+1343	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC161649
+1344	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	Angelakisella	MGBC161672
+1345	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC161676
+1346	Firmicutes	Bacilli	RF39	CAG-1000	CAG-776	MGBC161736
+1347	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC161747
+1348	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC161755
+1349	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Roseburia	MGBC161823
+1350	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Lactococcus	lactis_E
+1351	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC162018
+1352	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC162040
+1353	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC162081
+1354	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC162097
+1355	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC162151
+1356	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	MGBC162170
+1357	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	MGBC162267
+1358	Cyanobacteria	Vampirovibrionia	Gastranaerophilales	Gastranaerophilales_NOV	Gastranaerophilales_NOV	MGBC162268
+1359	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Amulumruptor	sp001689515
+1360	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Phocaeicola	sartorii
+1361	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Parvibacter	MGBC162393
+1362	Actinobacteriota	Actinomycetia	Actinomycetales	Bifidobacteriaceae	Bifidobacterium	globosum
+1363	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	sp002358615
+1364	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700_NOV	MGBC162486
+1366	Firmicutes_A	Clostridia	Peptostreptococcales	Anaerovoracaceae	CAG-145	MGBC162508
+1367	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotellamassilia	
+1368	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotellamassilia	sp002933955
+1369	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-34	MGBC162555
+1370	Firmicutes	Bacilli	RF39	CAG-611	CAG-611_NOV	MGBC162581
+1371	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC162663
+1372	Campylobacterota	Campylobacteria	Campylobacterales	Helicobacteraceae	Helicobacter_D	apodemus
+1373	Spirochaetota	Brachyspirae	Brachyspirales	Brachyspiraceae	Brachyspira	MGBC162742
+1374	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	MGBC162746
+1378	Bacteroidota	Bacteroidia	Flavobacteriales	UBA1820	UBA1820	sp003150615
+1379	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotellamassilia	MGBC162806
+1380	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	sp003979155
+1381	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UBA11940	MGBC162824
+1382	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	Borkfalkiaceae_NOV	MGBC162829
+1383	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC162832
+1384	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC162833
+1385	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC162871
+1386	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC162876
+1390	Proteobacteria	Alphaproteobacteria	Paracaedibacterales	UBA11393	UBA11393_NOV	MGBC162888
+1391	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC162917
+1392	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Kineothrix	MGBC162921
+1393	Firmicutes_A	Clostridia_A	Christensenellales	Borkfalkiaceae	UMGS1004	MGBC162943
+1394	Bacteroidota	Bacteroidia	Bacteroidales	Marinifilaceae	Odoribacter	MGBC162966
+1395	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC162980
+1396	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC163016
+1398	Bacteroidota	Bacteroidia	Bacteroidales	Rikenellaceae	Rikenellaceae_NOV	MGBC163017
+1399	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC163040
+1400	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC163085
+1401	Actinobacteriota	Coriobacteriia	Coriobacteriales	Atopobiaceae	NM07-P-09	sp004793925
+1403	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	CHKCI006	MGBC163165
+1404	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC163303
+1405	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC163323
+1406	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC163329
+1408	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA2882	MGBC163421
+1409	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC163448
+1410	Firmicutes	Bacilli	Erysipelotrichales	Erysipelatoclostridiaceae	Erysipelatoclostridiaceae_NOV	MGBC163490
+1412	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA11957	MGBC163510
+1413	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC163511
+1414	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	1XD42-69	MGBC163558
+1415	Firmicutes_A	Clostridia	Lachnospirales	Anaerotignaceae	ASF356	MGBC163564
+1416	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC163656
+1417	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC163672
+1418	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC163738
+1419	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	MGBC163752
+1420	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC163836
+1421	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Faecalibaculum	MGBC163852
+1422	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Parasutterella	excrementihominis
+1425	Firmicutes_A	Clostridia_A	Christensenellales	Christensenellaceae	QANA01	MGBC163952
+1426	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Erysipelotrichaceae_NOV	MGBC163961
+1427	Firmicutes	Bacilli	RF39	CAG-1000	UMGS1217	MGBC163973
+1428	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC164018
+1429	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC164045
+1430	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC164203
+1431	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC164205
+1432	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospira	MGBC164289
+1433	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC164298
+1434	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC164303
+1435	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC164316
+1436	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC164402
+1437	Firmicutes_A	Clostridia	Oscillospirales	Acutalibacteraceae	Acutalibacter	MGBC164404
+1438	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA9502	MGBC164417
+1439	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	AF33-28	MGBC164422
+1440	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillibacter	MGBC164430
+1441	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC164450
+1442	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC164454
+1443	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	UBA9475	MGBC164455
+1444	Firmicutes_A	Clostridia	Clostridiales	Clostridiaceae	Clostridium	MGBC164501
+1445	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	UBA7173	MGBC164577
+1446	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	TF01-11	MGBC164593
+1447	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC164599
+1449	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	CAG-110	MGBC164609
+1450	Firmicutes	Bacilli	RF39	CAG-1000	CAG-582	MGBC164624
+1451	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC164692
+1452	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Oscillospiraceae_NOV	MGBC164714
+1453	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC164771
+1456	Firmicutes	Bacilli	Lactobacillales	Carnobacteriaceae	Atopostipes	MGBC164801
+1457	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA1394	MGBC164932
+1458	Firmicutes_A	Clostridia_A	Christensenellales	CAG-552	CAG-552_NOV	MGBC164958
+1459	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Parvibacter	MGBC164983
+1460	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC165015
+1461	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Adlercreutzia	MGBC165019
+1462	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Hungatella_A	MGBC165023
+1463	Firmicutes_A	Clostridia	Oscillospirales	Butyricicoccaceae	Butyricicoccaceae_NOV	MGBC165025
+1465	Firmicutes_A	Clostridia	Oscillospirales	Ruminococcaceae	UBA1405	MGBC165041
+1466	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC165045
+1467	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UMGS1370	MGBC165049
+1468	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Marseille-P3106	MGBC165060
+1469	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC165061
+1470	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC165132
+1471	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC165149
+1472	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Acetatifactor	MGBC165152
+1473	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Erysipelotrichaceae_NOV	MGBC165187
+1474	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC165261
+1475	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Lachnospiraceae_NOV	MGBC165282
+1477	Firmicutes	Bacilli	Mycoplasmatales	Mycoplasmoidaceae	Ureaplasma	MGBC165308
+1478	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC165345
+1479	Firmicutes_A	Clostridia_A	Christensenellales	UBA3700	UBA3700	MGBC165376
+1480	Firmicutes_A	Clostridia	Oscillospirales	Oscillospiraceae	Lawsonibacter	MGBC165440
+1482	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	Ileibacterium	valens
+1483	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Muribaculum	MGBC165515
+1485	Firmicutes	Bacilli	RF39	CAG-611	UBA3789	MGBC165561
+1486	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC165605
+1487	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC165708
+1488	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC165752
+1489	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-485	MGBC165885
+1490	Firmicutes	Bacilli	RF39	CAG-822	UBA5578	MGBC165900
+1491	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	Parvibacter	MGBC165935
+1492	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC166049
+1493	Firmicutes_A	Clostridia	Monoglobales_A	UBA1381	UBA1381_NOV	MGBC166137
+1494	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	COE1	MGBC166178
+1498	Firmicutes_A	Clostridia	TANB77	CAG-508	CAG-273	MGBC166183
+1499	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Dorea	MGBC166213
+1500	Actinobacteriota	Coriobacteriia	Coriobacteriales	Eggerthellaceae	D16-63	MGBC166238
+1501	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Duncaniella	MGBC166381
+1502	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	Paramuribaculum	MGBC166390
+1503	Bacteroidota	Bacteroidia	Bacteroidales	Muribaculaceae	CAG-873	MGBC166434
+1504	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Schaedlerella	MGBC166500
+1505	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_J	MGBC166616
+1506	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	MGBC166701
+1507	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	Eubacterium_F	MGBC166763
+1508	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC166828
+1509	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC166864
+1510	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	14-2	MGBC167004
+1511	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus	taiwanensis
+1512	Firmicutes_A	Clostridia	Lachnospirales	Lachnospiraceae	UBA3282	MGBC167064
+1513	Bacteroidota	Bacteroidia	Bacteroidales	Bacteroidaceae	Prevotella	sp002933775
