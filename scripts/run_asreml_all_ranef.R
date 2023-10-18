@@ -14,7 +14,7 @@ suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
 asreml.license.offline(10)
 
 # change working directory
-setwd("~/Documents/phd/calico_aging/DRiDO_microbiome_github/scripts/")
+setwd("~/DRiDO_microbiome_github/scripts/")
 
 # check available cores with detectCores()
 cl <- makeCluster(6)
@@ -28,7 +28,8 @@ stopifnot(dir.exists(out.dir))
 
 # import microbiome data
 mb.df <- read.table(
-  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt", 
+  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
+  # "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
   sep="\t", header=T, row.names=1)
 # mb.df[1:5, 1:3]
 
