@@ -1,0 +1,932 @@
+We'll prepare 3 datasets at once: DO AL samples, B6 samples, and human samples.
+
+Input: genus relabs and pathway RPK
+Output: genus log2(relabs) and pathway log2(TPM), plus community features, after prevalence filtering
+
+# Load libraries
+
+```{r, message=F, warning=F}
+library(tidyverse)
+library(foreach) # %do%
+library(vegan) # diversity
+```
+
+# Import metadata
+
+## DO
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv")
+
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+## B6
+
+```{r}
+B6.meta.df <- read.table(
+  "../data/metadata/B6_sample_metadata.txt",
+  sep="\t", header=T, check.names=F)
+```
+
+## Humans
+
+```{r}
+human.meta.df <- read.table(
+  "../data/metadata/CMD_human_sample_metadata_n4101.txt",
+  sep="\t", header=T)
+```
+
+# Import data
+
+## DO
+
+```{r}
+DO.genus.relab.df <- read.table(
+  "../data/metaphlan_genus_agg_by_stool_ID_n376x2997.txt",
+  sep="\t", header=T, row.names=1)
+
+DO.pathway.tpm.df <- read.table(
+  "../data/pathabundance_tpm_agg_by_stool_ID_n422x2997.txt",
+  sep="\t", header=T, quote="", row.names=1)
+
+dim(DO.genus.relab.df)
+dim(DO.pathway.tpm.df)
+```
+
+* N.B. DO pathway abundance is already TPM because I needed to convert to TPM to aggregate by `stool.ID`.
+
+## DO AL
+
+```{r}
+tmp.DO.AL.genus.relab.df <- DO.genus.relab.df %>% 
+  dplyr::select(all_of(
+    stool.meta.annot.df %>% 
+      dplyr::filter(Diet == "AL") %>% 
+      pull(stool.ID)))
+
+tmp.DO.AL.pathway.tpm.df <- DO.pathway.tpm.df %>% 
+  dplyr::select(all_of(
+    stool.meta.annot.df %>% 
+      dplyr::filter(Diet == "AL") %>% 
+      pull(stool.ID)))
+```
+
+Remove features that are all zeros after subsetting to AL samples.
+
+```{r}
+DO.AL.genus.relab.df <- tmp.DO.AL.genus.relab.df[(rowSums(tmp.DO.AL.genus.relab.df != 0) > 0), ]
+DO.AL.pathway.tpm.df <- tmp.DO.AL.pathway.tpm.df[(rowSums(tmp.DO.AL.pathway.tpm.df != 0) > 0), ]
+
+dim(tmp.DO.AL.genus.relab.df)
+dim(tmp.DO.AL.pathway.tpm.df)
+
+dim(DO.AL.genus.relab.df)
+dim(DO.AL.pathway.tpm.df)
+```
+
+## B6
+
+```{r}
+B6.mpa.df <- read.table(
+  "../data/B6_metaphlan.txt", 
+  sep="\t", header=T, check.names=F)
+```
+
+Subset to genus-level relative abundances.
+
+```{r}
+tmp.B6.genus.relab.df <- B6.mpa.df %>% 
+  
+  # subset to genera (implicitly excludes UNCLASSIFIED)
+  dplyr::filter(str_detect(clade_name, "g__")) %>% 
+  dplyr::filter(!str_detect(clade_name, "s__")) %>% 
+  
+  # make "genus" column
+  mutate(genus = str_extract(clade_name, "g__(.*)")) %>% 
+  mutate(genus = str_sub(genus, 4)) %>% # remove g__ prefix 
+  dplyr::select(-clade_name) %>%
+  column_to_rownames("genus")
+```
+
+Adjust relabs so they add to 100.
+
+```{r}
+B6.genus.relab.df <- 100 * sweep(
+  tmp.B6.genus.relab.df, MARGIN=2, STATS=colSums(tmp.B6.genus.relab.df), FUN="/")
+```
+
+```{r}
+summary(colSums(tmp.B6.genus.relab.df))
+summary(colSums(B6.genus.relab.df))
+```
+
+```{r}
+tmp.B6.pathway.rpk.df <- read.table(
+  "../data/B6_humann_pathway_rpk.txt", 
+  sep="\t", header=T,
+  check.names=F, quote="") # sample IDs contain hyphens and pathway names contain apostrophes
+```
+
+Exclude UNMAPPED and UNINTEGRATED.
+
+```{r}
+B6.pathway.rpk.df <- tmp.B6.pathway.rpk.df %>% 
+  dplyr::filter(!(Pathway %in% c("UNMAPPED", "UNINTEGRATED"))) %>% 
+  column_to_rownames("Pathway")
+```
+
+## Human
+
+```{r}
+tmp.human.genus.relab.df <- read.table(
+  "../data/CMD_human_genus_relab_n331x4101.txt", 
+  sep="\t", header=T, row.names=1,
+  check.names=F) # sample IDs contain hyphens
+```
+
+Adjust relabs so they add to 100.
+
+```{r}
+human.genus.relab.df <- 100 * sweep(
+  tmp.human.genus.relab.df, MARGIN=2, STATS=colSums(tmp.human.genus.relab.df), FUN="/")
+```
+
+```{r}
+summary(colSums(tmp.human.genus.relab.df))
+summary(colSums(human.genus.relab.df))
+```
+
+```{r}
+tmp.human.pathway.rpk.df <- read.table(
+  "../data/CMD_human_pathway_rpk_n573x4101.txt", 
+  sep="\t", header=T,
+  check.names=F, quote="") # sample IDs contain hyphens and pathway names contain apostrophes
+```
+
+Exclude UNMAPPED and UNINTEGRATED.
+
+```{r}
+human.pathway.rpk.df <- tmp.human.pathway.rpk.df %>% 
+  dplyr::filter(!(pathway_id %in% c("UNMAPPED", "UNINTEGRATED"))) %>% 
+  column_to_rownames("pathway_id")
+```
+
+# Convert pathways to TPM
+
+DO pathways already TPM.
+
+## B6
+
+```{r}
+B6.pathway.tpm.df <- 1e6 * sweep(
+  B6.pathway.rpk.df, MARGIN=2, STATS=colSums(B6.pathway.rpk.df), FUN="/")
+```
+
+## Human
+
+```{r}
+human.pathway.tpm.df <- 1e6 * sweep(
+  human.pathway.rpk.df, MARGIN=2, STATS=colSums(human.pathway.rpk.df), FUN="/")
+```
+
+# Log transform
+
+First need to replace zeros. Will use the feature-specific non-zero minimum value divided by 2.
+
+## DO AL
+
+### Genus
+
+```{r}
+DO.AL.zero.replacement.per.genus <- apply(DO.AL.genus.relab.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+DO.AL.genus.relab.mat.no.zeros <- foreach(this.genus = rownames(DO.AL.genus.relab.df), .combine="rbind") %do% {
+  
+  this.genus.vec <- as.numeric(DO.AL.genus.relab.df[this.genus, ])
+  this.genus.vec[this.genus.vec == 0] <- DO.AL.zero.replacement.per.genus[[this.genus]]
+  
+  return(this.genus.vec)
+  
+}
+
+DO.AL.genus.relab.df.no.zeros <- data.frame(DO.AL.genus.relab.mat.no.zeros)
+rownames(DO.AL.genus.relab.df.no.zeros) <- rownames(DO.AL.genus.relab.df)
+colnames(DO.AL.genus.relab.df.no.zeros) <- colnames(DO.AL.genus.relab.df)
+```
+
+```{r}
+DO.AL.genus.log2relab.df <- log2(DO.AL.genus.relab.df.no.zeros)
+dim(DO.AL.genus.log2relab.df)
+```
+
+### Pathways
+
+```{r}
+DO.AL.zero.replacement.per.pathway <- apply(DO.AL.pathway.tpm.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+DO.AL.pathway.tpm.mat.no.zeros <- foreach(this.pathway = rownames(DO.AL.pathway.tpm.df), .combine="rbind") %do% {
+  
+  this.pathway.vec <- as.numeric(DO.AL.pathway.tpm.df[this.pathway, ])
+  this.pathway.vec[this.pathway.vec == 0] <- DO.AL.zero.replacement.per.pathway[[this.pathway]]
+  
+  return(this.pathway.vec)
+  
+}
+
+DO.AL.pathway.tpm.df.no.zeros <- data.frame(DO.AL.pathway.tpm.mat.no.zeros)
+rownames(DO.AL.pathway.tpm.df.no.zeros) <- rownames(DO.AL.pathway.tpm.df)
+colnames(DO.AL.pathway.tpm.df.no.zeros) <- colnames(DO.AL.pathway.tpm.df)
+```
+
+```{r}
+DO.AL.pathway.log2tpm.df <- log2(DO.AL.pathway.tpm.df.no.zeros)
+dim(DO.AL.pathway.log2tpm.df)
+```
+
+## B6
+
+### Genus
+
+```{r}
+B6.zero.replacement.per.genus <- apply(B6.genus.relab.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+B6.genus.relab.mat.no.zeros <- foreach(this.genus = rownames(B6.genus.relab.df), .combine="rbind") %do% {
+  
+  this.genus.vec <- as.numeric(B6.genus.relab.df[this.genus, ])
+  this.genus.vec[this.genus.vec == 0] <- B6.zero.replacement.per.genus[[this.genus]]
+  
+  return(this.genus.vec)
+  
+}
+
+B6.genus.relab.df.no.zeros <- data.frame(B6.genus.relab.mat.no.zeros)
+rownames(B6.genus.relab.df.no.zeros) <- rownames(B6.genus.relab.df)
+colnames(B6.genus.relab.df.no.zeros) <- colnames(B6.genus.relab.df)
+```
+
+```{r}
+B6.genus.log2relab.df <- log2(B6.genus.relab.df.no.zeros)
+dim(B6.genus.log2relab.df)
+```
+
+### Pathways
+
+```{r}
+B6.zero.replacement.per.pathway <- apply(B6.pathway.tpm.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+B6.pathway.tpm.mat.no.zeros <- foreach(this.pathway = rownames(B6.pathway.tpm.df), .combine="rbind") %do% {
+  
+  this.pathway.vec <- as.numeric(B6.pathway.tpm.df[this.pathway, ])
+  this.pathway.vec[this.pathway.vec == 0] <- B6.zero.replacement.per.pathway[[this.pathway]]
+  
+  return(this.pathway.vec)
+  
+}
+
+B6.pathway.tpm.df.no.zeros <- data.frame(B6.pathway.tpm.mat.no.zeros)
+rownames(B6.pathway.tpm.df.no.zeros) <- rownames(B6.pathway.tpm.df)
+colnames(B6.pathway.tpm.df.no.zeros) <- colnames(B6.pathway.tpm.df)
+```
+
+```{r}
+B6.pathway.log2tpm.df <- log2(B6.pathway.tpm.df.no.zeros)
+dim(B6.pathway.log2tpm.df)
+```
+
+## Human
+
+### Genus
+
+```{r}
+human.zero.replacement.per.genus <- apply(human.genus.relab.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+human.genus.relab.mat.no.zeros <- foreach(this.genus = rownames(human.genus.relab.df), .combine="rbind") %do% {
+  
+  this.genus.vec <- as.numeric(human.genus.relab.df[this.genus, ])
+  this.genus.vec[this.genus.vec == 0] <- human.zero.replacement.per.genus[[this.genus]]
+  
+  return(this.genus.vec)
+  
+}
+
+human.genus.relab.df.no.zeros <- data.frame(human.genus.relab.mat.no.zeros)
+rownames(human.genus.relab.df.no.zeros) <- rownames(human.genus.relab.df)
+colnames(human.genus.relab.df.no.zeros) <- colnames(human.genus.relab.df)
+```
+
+```{r}
+human.genus.log2relab.df <- log2(human.genus.relab.df.no.zeros)
+```
+
+### Pathways
+
+```{r}
+human.zero.replacement.per.pathway <- apply(human.pathway.tpm.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+human.pathway.tpm.mat.no.zeros <- foreach(this.pathway = rownames(human.pathway.tpm.df), .combine="rbind") %do% {
+  
+  this.pathway.vec <- as.numeric(human.pathway.tpm.df[this.pathway, ])
+  this.pathway.vec[this.pathway.vec == 0] <- human.zero.replacement.per.pathway[[this.pathway]]
+  
+  return(this.pathway.vec)
+  
+}
+
+human.pathway.tpm.df.no.zeros <- data.frame(human.pathway.tpm.mat.no.zeros)
+rownames(human.pathway.tpm.df.no.zeros) <- rownames(human.pathway.tpm.df)
+colnames(human.pathway.tpm.df.no.zeros) <- colnames(human.pathway.tpm.df)
+```
+
+```{r}
+human.pathway.log2tpm.df <- log2(human.pathway.tpm.df.no.zeros)
+```
+
+# Calculate alpha diversity
+
+## DO AL
+
+### Genus
+
+```{r}
+DO.AL.genus.alpha.div.long.df <- data.frame(
+  Shannon = diversity(DO.AL.genus.relab.df, index="shannon", MARGIN=2),
+  Simpson = diversity(DO.AL.genus.relab.df, index="simpson", MARGIN=2),
+  InvSimpson = diversity(DO.AL.genus.relab.df, index="invsimpson", MARGIN=2),
+  Observed = specnumber(DO.AL.genus.relab.df, MARGIN=2)) %>% 
+  rownames_to_column("stool.ID") %>% 
+  pivot_longer(-stool.ID, names_to="metric")
+```
+
+## B6
+
+### Genus
+
+```{r}
+B6.genus.alpha.div.long.df <- data.frame(
+  Shannon = diversity(B6.genus.relab.df, index="shannon", MARGIN=2),
+  Simpson = diversity(B6.genus.relab.df, index="simpson", MARGIN=2),
+  InvSimpson = diversity(B6.genus.relab.df, index="invsimpson", MARGIN=2),
+  Observed = specnumber(B6.genus.relab.df, MARGIN=2)) %>% 
+  rownames_to_column("id") %>% 
+  pivot_longer(-id, names_to="metric")
+```
+
+## Human
+
+### Genus
+
+```{r}
+human.genus.alpha.div.long.df <- data.frame(
+  Shannon = diversity(human.genus.relab.df, index="shannon", MARGIN=2),
+  Simpson = diversity(human.genus.relab.df, index="simpson", MARGIN=2),
+  InvSimpson = diversity(human.genus.relab.df, index="invsimpson", MARGIN=2),
+  Observed = specnumber(human.genus.relab.df, MARGIN=2)) %>% 
+  rownames_to_column("sample_id") %>% 
+  pivot_longer(-sample_id, names_to="metric")
+```
+
+# Calculate uniqueness
+
+For taxonomy, we'll use Bray-Curtis on relabs.
+
+For pathways, we'll use Euclidean on log2(TPM).
+
+## DO AL
+
+### Genus
+
+```{r}
+DO.AL.genus.relab.bc.dist.mat <- DO.AL.genus.relab.df %>% 
+  t() %>% vegdist(method="bray") %>% 
+  as.matrix()
+diag(DO.AL.genus.relab.bc.dist.mat) <- NA
+DO.AL.genus.uniq.df <- data.frame(
+  uniqueness=apply(DO.AL.genus.relab.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("stool.ID")
+```
+
+### Pathways
+
+```{r}
+DO.AL.pathway.dist.mat <- DO.AL.pathway.log2tpm.df %>% 
+  t() %>% dist() %>% as.matrix()
+diag(DO.AL.pathway.dist.mat) <- NA
+DO.AL.pathway.uniq.df <- data.frame(
+  uniqueness=apply(DO.AL.pathway.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("stool.ID")
+```
+
+## B6
+
+### Genus
+
+```{r}
+B6.genus.relab.bc.dist.mat <- B6.genus.relab.df %>% 
+  t() %>% vegdist(method="bray") %>% 
+  as.matrix()
+diag(B6.genus.relab.bc.dist.mat) <- NA
+B6.genus.uniq.df <- data.frame(
+  uniqueness=apply(B6.genus.relab.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("id")
+```
+
+### Pathways
+
+```{r}
+B6.pathway.dist.mat <- B6.pathway.log2tpm.df %>% 
+  t() %>% dist() %>% as.matrix()
+diag(B6.pathway.dist.mat) <- NA
+B6.pathway.uniq.df <- data.frame(
+  uniqueness=apply(B6.pathway.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("id")
+```
+
+## Human
+
+Will compute uniqueness separately within study.
+
+### Genus
+
+```{r}
+genus.uniq.df.across.studies <- foreach(this.study = unique(human.meta.df$study_name), 
+                                        .combine="rbind") %do% {
+  
+  # subset to this study
+  sample.ids.for.this.study <- human.meta.df %>% 
+    dplyr::filter(study_name == this.study) %>% 
+    pull(sample_id)
+  this.study.tmp.genus.relab.df <- human.genus.relab.df[, sample.ids.for.this.study]
+  
+  # remove genera with all zero relabs
+  this.study.genus.relab.df <- this.study.tmp.genus.relab.df[rowSums(this.study.tmp.genus.relab.df) > 0, ]
+  
+  # compute Bray-Curtis distance
+  this.study.bc.dist.mat <- this.study.genus.relab.df %>% 
+    t() %>% vegdist(method="bray") %>% 
+    as.matrix()
+  
+  # compute uniqueness
+  diag(this.study.bc.dist.mat) <- NA
+  this.uniq.df <- data.frame(
+    uniqueness=apply(this.study.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+    rownames_to_column("sample_id")
+
+  return(this.uniq.df)
+}
+```
+
+### Pathways
+
+```{r}
+pathway.uniq.df.across.studies <- foreach(this.study = unique(human.meta.df$study_name), 
+                                        .combine="rbind") %do% {
+                                          
+  # subset to this study
+  sample.ids.for.this.study <- human.meta.df %>% 
+    dplyr::filter(study_name == this.study) %>% 
+    pull(sample_id)
+  this.study.pathway.log2tpm.df <- human.pathway.log2tpm.df[, sample.ids.for.this.study]
+  
+  # compute Euclidean distance
+  this.study.dist.mat <- this.study.pathway.log2tpm.df %>% 
+    t() %>% dist() %>% as.matrix()
+  
+  # compute uniqueness
+  diag(this.study.dist.mat) <- NA
+  this.uniq.df <- data.frame(
+    uniqueness=apply(this.study.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+    rownames_to_column("sample_id")
+
+  return(this.uniq.df)
+}
+```
+
+# Prevalence filtering
+
+Relab filtration: 0.001% in at least 10% of samples
+TPM filtration: 100 in at least 10% of samples
+
+```{r}
+MIN.RELAB.ABUNDANCE <- 0.001
+MIN.TPM.ABUNDANCE <- 100
+MIN.PREVALENCE <- 0.1
+```
+
+Use relab and TPM data.
+
+## DO AL
+
+```{r}
+DO.AL.genera.to.keep <- rownames(DO.AL.genus.relab.df)[(rowSums(DO.AL.genus.relab.df > MIN.RELAB.ABUNDANCE) / ncol(DO.AL.genus.relab.df)) > MIN.PREVALENCE]
+
+nrow(DO.AL.genus.relab.df)
+length(DO.AL.genera.to.keep)
+```
+
+* 311 --> 248 genera
+
+```{r}
+DO.AL.pathways.to.keep <- rownames(DO.AL.pathway.tpm.df)[(rowSums(DO.AL.pathway.tpm.df > MIN.TPM.ABUNDANCE) / ncol(DO.AL.pathway.tpm.df)) > MIN.PREVALENCE]
+
+nrow(DO.AL.pathway.tpm.df)
+length(DO.AL.pathways.to.keep)
+```
+
+* 399 --> 262 pathways
+
+## B6
+
+```{r}
+B6.genera.to.keep <- rownames(B6.genus.relab.df)[(rowSums(B6.genus.relab.df > MIN.RELAB.ABUNDANCE) / ncol(B6.genus.relab.df)) > MIN.PREVALENCE]
+
+nrow(B6.genus.relab.df)
+length(B6.genera.to.keep)
+```
+
+* 310 --> 262 genera
+
+```{r}
+B6.pathways.to.keep <- rownames(B6.pathway.tpm.df)[(rowSums(B6.pathway.tpm.df > MIN.TPM.ABUNDANCE) / ncol(B6.pathway.tpm.df)) > MIN.PREVALENCE]
+
+nrow(B6.pathway.tpm.df)
+length(B6.pathways.to.keep)
+```
+
+* 329 --> 233 pathways
+
+## Human
+
+```{r}
+human.genera.to.keep <- rownames(human.genus.relab.df)[(rowSums(human.genus.relab.df > MIN.RELAB.ABUNDANCE) / ncol(human.genus.relab.df)) > MIN.PREVALENCE]
+
+nrow(human.genus.relab.df)
+length(human.genera.to.keep)
+```
+
+* 331 --> 90 genera
+
+```{r}
+human.pathways.to.keep <- rownames(human.pathway.tpm.df)[(rowSums(human.pathway.tpm.df > MIN.TPM.ABUNDANCE) / ncol(human.pathway.tpm.df)) > MIN.PREVALENCE]
+
+nrow(human.pathway.tpm.df)
+length(human.pathways.to.keep)
+```
+
+* 573 --> 358 pathways
+
+# Combine individual and community features
+
+Easiest to do this when all dataframes are in long form. 
+
+## DO AL
+
+### Genus
+
+```{r}
+DO.AL.genus.all.feats.long.df <- rbind(
+  
+  # log2(relab)
+  DO.AL.genus.log2relab.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% DO.AL.genera.to.keep) %>% 
+    pivot_longer(-feature, names_to="stool.ID"),
+  
+  # alpha div
+  DO.AL.genus.alpha.div.long.df %>% 
+    dplyr::rename(feature = metric) %>% 
+    dplyr::select(feature, stool.ID, value),
+  
+  # uniq
+  DO.AL.genus.uniq.df %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, stool.ID, value)
+  
+)
+```
+
+```{r}
+DO.AL.genus.all.feats.wide.df <- DO.AL.genus.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=stool.ID, values_from=value)
+
+dim(DO.AL.genus.all.feats.wide.df)
+```
+
+### Pathways
+
+```{r}
+DO.AL.pathway.all.feats.long.df <- rbind(
+  
+  # log2(TPM)
+  DO.AL.pathway.log2tpm.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% DO.AL.pathways.to.keep) %>% 
+    pivot_longer(-feature, names_to="stool.ID"),
+  
+  # uniq
+  DO.AL.pathway.uniq.df %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, stool.ID, value)
+  
+)
+```
+
+```{r}
+DO.AL.pathway.all.feats.wide.df <- DO.AL.pathway.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=stool.ID, values_from=value)
+
+dim(DO.AL.pathway.all.feats.wide.df)
+```
+
+## B6
+
+### Genus
+
+```{r}
+B6.genus.all.feats.long.df <- rbind(
+  
+  # log2(relab)
+  B6.genus.log2relab.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% B6.genera.to.keep) %>% 
+    pivot_longer(-feature, names_to="id"),
+  
+  # alpha div
+  B6.genus.alpha.div.long.df %>% 
+    dplyr::rename(feature = metric) %>% 
+    dplyr::select(feature, id, value),
+  
+  # uniq
+  B6.genus.uniq.df %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, id, value)
+  
+)
+```
+
+```{r}
+B6.genus.all.feats.wide.df <- B6.genus.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=id, values_from=value)
+
+dim(B6.genus.all.feats.wide.df)
+```
+
+### Pathways
+
+```{r}
+B6.pathway.all.feats.long.df <- rbind(
+  
+  # log2(TPM)
+  B6.pathway.log2tpm.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% B6.pathways.to.keep) %>% 
+    pivot_longer(-feature, names_to="id"),
+  
+  # uniq
+  B6.pathway.uniq.df %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, id, value)
+  
+)
+```
+
+```{r}
+B6.pathway.all.feats.wide.df <- B6.pathway.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=id, values_from=value)
+
+dim(B6.pathway.all.feats.wide.df)
+```
+
+## Human
+
+### Genus
+
+```{r}
+human.genus.all.feats.long.df <- rbind(
+  
+  # log2(relab)
+  human.genus.log2relab.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% human.genera.to.keep) %>% 
+    pivot_longer(-feature, names_to="sample_id"),
+  
+  # alpha div
+  human.genus.alpha.div.long.df %>% 
+    dplyr::rename(feature = metric) %>% 
+    dplyr::select(feature, sample_id, value),
+  
+  # uniq
+  genus.uniq.df.across.studies %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, sample_id, value)
+  
+)
+```
+
+```{r}
+human.genus.all.feats.wide.df <- human.genus.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=sample_id, values_from=value)
+
+dim(human.genus.all.feats.wide.df)
+```
+
+### Pathways
+
+```{r}
+human.pathway.all.feats.long.df <- rbind(
+  
+  # log2(TPM)
+  human.pathway.log2tpm.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% human.pathways.to.keep) %>% 
+    pivot_longer(-feature, names_to="sample_id"),
+  
+  # uniq
+  pathway.uniq.df.across.studies %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, sample_id, value)
+  
+)
+```
+
+```{r}
+human.pathway.all.feats.wide.df <- human.pathway.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=sample_id, values_from=value)
+
+dim(human.pathway.all.feats.wide.df)
+```
+
+# Clean up pathway names so they don't cause trouble later
+
+```{r}
+all.pathways <- union(union(
+  rownames(DO.pathway.tpm.df),
+  rownames(B6.pathway.rpk.df)),
+  rownames(human.pathway.rpk.df))
+
+length(all.pathways)
+```
+
+* 703 pathways across all 3 datasets
+
+```{r}
+pathway.names.df <- data.frame(
+  original = all.pathways) %>% 
+  
+  # extract the pathway ID (before the colon)
+  mutate(short = str_extract(original, "(.*):")) %>% 
+  mutate(short = str_sub(short, 1, nchar(short)-1)) %>% 
+  
+  # remove punctuation
+  mutate(short.clean = str_replace_all(short, "[:punct:]", "")) %>% 
+  
+  # for some reason, + not included in punct?
+  mutate(short.clean = str_replace_all(short.clean, "\\+", "")) %>%
+  
+  # prefix with X if it starts with a number
+  mutate(short.clean = case_when(
+    str_detect(short.clean, "^[:digit:]") ~ paste0("X", short.clean),
+    TRUE ~ short.clean)) %>% 
+  
+  arrange(short.clean) %>% 
+  relocate(short.clean) 
+```
+
+```{r}
+DO.AL.pathway.all.feats.wide.out.df <- DO.AL.pathway.all.feats.wide.df %>% 
+  merge(pathway.names.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="original",
+        all.x=T) %>% # to keep Uniqueness
+  mutate(short.clean = ifelse(is.na(short.clean), feature, short.clean)) %>% # for Uniqueness
+  dplyr::select(-feature) %>% 
+  relocate(short.clean) %>% 
+  dplyr::rename(feature = short.clean)
+
+DO.AL.pathway.all.feats.wide.out.df[1:3, 1:3]
+```
+
+```{r}
+B6.pathway.all.feats.wide.out.df <- B6.pathway.all.feats.wide.df %>% 
+  merge(pathway.names.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="original",
+        all.x=T) %>% # to keep Uniqueness
+  mutate(short.clean = ifelse(is.na(short.clean), feature, short.clean)) %>% # for Uniqueness
+  dplyr::select(-feature) %>% 
+  relocate(short.clean) %>% 
+  dplyr::rename(feature = short.clean)
+
+B6.pathway.all.feats.wide.out.df[1:3, 1:3]
+```
+
+```{r}
+human.pathway.all.feats.wide.out.df <- human.pathway.all.feats.wide.df %>% 
+  merge(pathway.names.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="original",
+        all.x=T) %>% # to keep Uniqueness
+  mutate(short.clean = ifelse(is.na(short.clean), feature, short.clean)) %>% # for Uniqueness
+  dplyr::select(-feature) %>% 
+  relocate(short.clean) %>% 
+  dplyr::rename(feature = short.clean)
+
+human.pathway.all.feats.wide.out.df[1:3, 1:3]
+```
+
+Make sure we don't export the wrong ones:
+
+```{r}
+rm(
+  DO.AL.pathway.all.feats.wide.df,
+  B6.pathway.all.feats.wide.df, 
+  human.pathway.all.feats.wide.df)
+```
+
+# Export
+
+```{r}
+dim(DO.AL.genus.all.feats.wide.df)
+dim(B6.genus.all.feats.wide.df)
+dim(human.genus.all.feats.wide.df)
+```
+
+```{r}
+dim(DO.AL.pathway.all.feats.wide.out.df)
+dim(B6.pathway.all.feats.wide.out.df)
+dim(human.pathway.all.feats.wide.out.df)
+```
+
+## DO AL
+
+```{r}
+DO.AL.genus.all.feats.wide.df %>%
+  write.table(sprintf(
+    "../results/DO_AL_genus_log2relab_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
+
+```{r}
+DO.AL.pathway.all.feats.wide.out.df %>%
+  write.table(sprintf(
+    "../results/DO_AL_pathway_log2tpm_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
+
+## B6
+
+```{r}
+B6.genus.all.feats.wide.df %>%
+  write.table(sprintf(
+    "../results/B6_genus_log2relab_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
+
+```{r}
+B6.pathway.all.feats.wide.out.df %>%
+  write.table(sprintf(
+    "../results/B6_pathway_log2tpm_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
+
+## Human
+
+```{r}
+human.genus.all.feats.wide.df %>%
+  write.table(sprintf(
+    "../results/CMD_human_genus_log2relab_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
+
+```{r}
+human.pathway.all.feats.wide.out.df %>%
+  write.table(sprintf(
+    "../results/CMD_human_pathway_log2tpm_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
