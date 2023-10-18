@@ -1,0 +1,232 @@
+Plot taxonomic composition of positive controls based on MetaPhlAn output. 
+
+MetaPhlAn database version: mpa_vOct22_CHOCOPhlAnSGB_202212
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(readxl)
+library(RColorBrewer)
+```
+
+# Import MetaPhlAn results
+
+```{r}
+mpa.df <- read.table("../data/metaphlan.txt", sep="\t", header=T)
+```
+
+Subset to species-level relative abundances.
+
+```{r}
+species.df <- mpa.df %>% 
+  
+  # subset to species (keep UNCLASSIFIED)
+  dplyr::filter(str_detect(clade_name, "s__") | (clade_name == "UNCLASSIFIED")) %>% 
+  dplyr::filter(!str_detect(clade_name, "t__")) %>% 
+  
+  # create "species" column and set as rownames
+  mutate(species = str_extract(clade_name, "s__(.*)")) %>% 
+  mutate(species = str_sub(species, 4)) %>% # remove s__ prefix
+  mutate(species = ifelse(clade_name == "UNCLASSIFIED", "Unclassified", species)) %>% # put back Unclassified
+  dplyr::select(-clade_name) %>% 
+  column_to_rownames("species")
+```
+
+# Import metadata
+
+```{r}
+seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", sep="\t", header=T)
+lib.meta.df <- read.table("../data/metadata/library_metadata_after_QC_n3213_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_230620.txt", sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+```
+
+```{r}
+seq.meta.annot.df <- seq.meta.df %>%
+  merge(lib.meta.df, by="lib.ID") %>%
+  merge(stool.meta.df, by="stool.ID") %>% 
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID", all.x=T)
+
+dim(seq.meta.df)
+dim(seq.meta.annot.df)
+```
+
+# Subset to poscons
+
+```{r}
+poscon.seq.meta.annot.df <- seq.meta.annot.df %>% 
+  dplyr::filter(sample.type == "POS")
+
+# confirm that we have a MetaPhlAn result for all poscons
+all(poscon.seq.meta.annot.df$seq.ID %in% colnames(species.df))
+```
+
+```{r}
+poscon.species.df <- species.df[, poscon.seq.meta.annot.df$seq.ID]
+dim(poscon.species.df)
+```
+
+# Import expected results
+
+## Import expected relative abundances
+
+```{r}
+expected.msa1001.df <- read_excel("../data/poscon_expected.xlsx", sheet="DNA_ATCC_MSA1001")
+expected.msa2003.df <- read_excel("../data/poscon_expected.xlsx", sheet="cells_ATCC_MSA2003")
+expected.zymo.df <- read_excel("../data/poscon_expected.xlsx", sheet="cells_Zymo_D6331")
+```
+
+## Keep track of which standard was used for each poscon
+
+* MSA2003 = even mix of bacterial cells; used up to (and including) EB53
+* Zymobiomics D6331 = staggered mix of cells from 19 bacteria and 2 yeast; used for EB54 and beyond
+* MSA1001 = staggered DNA mix; this is the only library control we used
+
+```{r}
+poscon.seq.meta.annot.df <- poscon.seq.meta.annot.df %>% 
+  
+  mutate(poscon.type = case_when(
+    str_detect(stool.ID, "EXT") & (ext.batch <= 53) ~ "MSA2003",
+    str_detect(stool.ID, "EXT") & (ext.batch > 53) ~ "ZymoD6331",
+    str_detect(stool.ID, "LIB") ~ "MSA1001"))
+
+table(poscon.seq.meta.annot.df$poscon.type)
+```
+
+## Combine expected dataframes
+
+```{r}
+expected.df <- rbind(
+
+  # MSA1001
+  expected.msa1001.df %>% 
+    mutate(species = paste0(Genus, "_", Species)) %>% 
+    dplyr::rename(relab = "Expected percentage") %>% 
+    dplyr::select(species, relab) %>% 
+    mutate(poscon.type = "MSA1001"),
+  
+  # MSA2003
+  expected.msa2003.df %>% 
+    mutate(species = paste0(Genus, "_", Species)) %>% 
+    dplyr::rename(relab = "Expected percentage") %>% 
+    dplyr::select(species, relab) %>% 
+    mutate(poscon.type = "MSA2003"),
+  
+  # Zymo
+  expected.zymo.df %>% 
+    mutate(species = paste0(Genus, "_", Species)) %>% 
+    dplyr::rename(relab = "Genome Copy (recommended for metagenomics)") %>% 
+    dplyr::select(species, relab) %>% 
+    mutate(poscon.type = "ZymoD6331")
+  
+)
+```
+
+## What genera need to be renamed to match MetaPhlAn?
+
+```{r}
+setdiff(expected.df$species, rownames(poscon.species.df))
+
+"Bacillus_cereus" %in% rownames(poscon.species.df)
+"Limosilactobacillus_fermentum" %in% rownames(poscon.species.df)
+```
+
+* Bacillus pacificus AKA Bacillus cereus
+* Lactobacillus fermentum AKA Limosilactobacillus fermentum
+
+Rename the expected dataframe to match MetaPhlAn database.
+
+```{r}
+expected.df <- expected.df %>% 
+  mutate(species = case_when(
+    species == "Bacillus_pacificus" ~ "Bacillus_cereus",
+    species == "Lactobacillus_fermentum" ~ "Limosilactobacillus_fermentum",
+    TRUE ~ species
+  ))
+```
+
+# Merge observed with expected
+
+First, pivot the MetaPhlAn data to be longer.
+
+```{r}
+poscon.species.long.df <- poscon.species.df %>% 
+  rownames_to_column("species") %>% 
+  pivot_longer(-species, names_to="seq.ID", values_to="relab")
+```
+
+```{r}
+mpa.poscon.obs.v.expected.df <- rbind(
+  
+  # expected
+  expected.df %>% 
+    dplyr::rename(agg.species = "species") %>% 
+    mutate(obs.or.expected = "expected",
+           seq.ID = "Expected") %>% 
+    dplyr::select(seq.ID, agg.species, relab, poscon.type, obs.or.expected),
+  
+  # observed
+  poscon.species.long.df %>% 
+    mutate(agg.species = case_when(
+      species %in% species.in.poscons ~ species,
+      species == "Unclassified" ~ "Unclassified",
+      TRUE ~ "Other")) %>%
+    
+    # collapse "Other" entries into a single entry
+    group_by(seq.ID, agg.species) %>% summarise(relab = sum(relab), .groups="drop") %>%
+  
+    merge(poscon.seq.meta.annot.df, by="seq.ID") %>% 
+    dplyr::select(seq.ID, agg.species, relab, poscon.type) %>%
+    mutate(obs.or.expected = "observed")
+)
+
+# move "Other" and "Unclassified" to the end
+mpa.poscon.obs.v.expected.df <- mpa.poscon.obs.v.expected.df %>% 
+  mutate(agg.species = factor(agg.species, levels=c(species.in.poscons, "Other", "Unclassified")))
+```
+
+# Plot
+
+```{r}
+species.in.poscons <- sort(unique(expected.df$species))
+length(species.in.poscons)
+```
+
+* We'll need 24 + 2 (other, unclassified) colors for the barplots
+
+```{r}
+set.seed(999)
+set1.palette <- colorRampPalette(brewer.pal(8, "Set1"))
+poscon.species.palette <- c(sample(set1.palette(length(species.in.poscons))), "gray30", "gray50")
+names(poscon.species.palette) <- levels(mpa.poscon.obs.v.expected.df$agg.species)
+```
+
+```{r}
+(mpa.poscon.barplots.p <- mpa.poscon.obs.v.expected.df %>%
+   ggplot(aes(x=seq.ID, y=relab, fill=agg.species)) +
+   geom_col(position="stack") +
+   facet_grid(~poscon.type + obs.or.expected, scales="free_x", space="free_x") +
+   labs(y="Relative abundance", x="", fill="Species") +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+   scale_fill_manual(values = poscon.species.palette))
+```
+
+```{r}
+# pdf("../plots/poscon_barplots_metaphlan.pdf", height=2, width=5)
+# mpa.poscon.barplots.p + theme(legend.position="none")
+# dev.off()
+```
+
+Export the legend.
+
+```{r}
+# library(grid)
+# library(cowplot)
+# 
+# pdf("../plots/poscon_barplots_metaphlan_legend.pdf", height=2, width=2)
+# grid.newpage()
+# grid.draw(cowplot::get_legend(mpa.poscon.barplots.p))
+# dev.off()
+```
