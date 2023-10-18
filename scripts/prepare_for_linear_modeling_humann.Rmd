@@ -199,6 +199,34 @@ human.pathway.tpm.df <- 1e6 * sweep(
 
 First need to replace zeros. Will use the feature-specific non-zero minimum value divided by 2.
 
+## DO
+
+### Pathways
+
+```{r}
+DO.zero.replacement.per.pathway <- apply(DO.pathway.tpm.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+DO.pathway.tpm.mat.no.zeros <- foreach(this.pathway = rownames(DO.pathway.tpm.df), .combine="rbind") %do% {
+  
+  this.pathway.vec <- as.numeric(DO.pathway.tpm.df[this.pathway, ])
+  this.pathway.vec[this.pathway.vec == 0] <- DO.zero.replacement.per.pathway[[this.pathway]]
+  
+  return(this.pathway.vec)
+  
+}
+
+DO.pathway.tpm.df.no.zeros <- data.frame(DO.pathway.tpm.mat.no.zeros)
+rownames(DO.pathway.tpm.df.no.zeros) <- rownames(DO.pathway.tpm.df)
+colnames(DO.pathway.tpm.df.no.zeros) <- colnames(DO.pathway.tpm.df)
+```
+
+```{r}
+DO.pathway.log2tpm.df <- log2(DO.pathway.tpm.df.no.zeros)
+dim(DO.pathway.log2tpm.df)
+```
+
 ## DO AL
 
 ### Genus
@@ -409,6 +437,19 @@ For taxonomy, we'll use Bray-Curtis on relabs.
 
 For pathways, we'll use Euclidean on log2(TPM).
 
+## DO
+
+### Pathways
+
+```{r}
+DO.pathway.dist.mat <- DO.pathway.log2tpm.df %>% 
+  t() %>% dist() %>% as.matrix()
+diag(DO.pathway.dist.mat) <- NA
+DO.pathway.uniq.df <- data.frame(
+  uniqueness=apply(DO.pathway.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("stool.ID")
+```
+
 ## DO AL
 
 ### Genus
@@ -532,6 +573,17 @@ MIN.PREVALENCE <- 0.1
 
 Use relab and TPM data.
 
+## DO
+
+```{r}
+DO.pathways.to.keep <- rownames(DO.pathway.tpm.df)[(rowSums(DO.pathway.tpm.df > MIN.TPM.ABUNDANCE) / ncol(DO.pathway.tpm.df)) > MIN.PREVALENCE]
+
+nrow(DO.pathway.tpm.df)
+length(DO.pathways.to.keep)
+```
+
+* 422 --> 272 pathways
+
 ## DO AL
 
 ```{r}
@@ -595,6 +647,35 @@ length(human.pathways.to.keep)
 # Combine individual and community features
 
 Easiest to do this when all dataframes are in long form. 
+
+## DO
+
+### Pathways
+
+```{r}
+DO.pathway.all.feats.long.df <- rbind(
+  
+  # log2(TPM)
+  DO.pathway.log2tpm.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% DO.pathways.to.keep) %>% 
+    pivot_longer(-feature, names_to="stool.ID"),
+  
+  # uniq
+  DO.pathway.uniq.df %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, stool.ID, value)
+  
+)
+```
+
+```{r}
+DO.pathway.all.feats.wide.df <- DO.pathway.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=stool.ID, values_from=value)
+
+dim(DO.pathway.all.feats.wide.df)
+```
 
 ## DO AL
 
@@ -816,6 +897,19 @@ pathway.names.df <- data.frame(
 ```
 
 ```{r}
+DO.pathway.all.feats.wide.out.df <- DO.pathway.all.feats.wide.df %>% 
+  merge(pathway.names.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="original",
+        all.x=T) %>% # to keep Uniqueness
+  mutate(short.clean = ifelse(is.na(short.clean), feature, short.clean)) %>% # for Uniqueness
+  dplyr::select(-feature) %>% 
+  relocate(short.clean) %>% 
+  dplyr::rename(feature = short.clean)
+
+DO.pathway.all.feats.wide.out.df[1:3, 1:3]
+```
+
+```{r}
 DO.AL.pathway.all.feats.wide.out.df <- DO.AL.pathway.all.feats.wide.df %>% 
   merge(pathway.names.df %>% dplyr::select(original, short.clean),
         by.x="feature", by.y="original",
@@ -858,6 +952,7 @@ Make sure we don't export the wrong ones:
 
 ```{r}
 rm(
+  DO.pathway.all.feats.wide.df,
   DO.AL.pathway.all.feats.wide.df,
   B6.pathway.all.feats.wide.df, 
   human.pathway.all.feats.wide.df)
@@ -872,9 +967,20 @@ dim(human.genus.all.feats.wide.df)
 ```
 
 ```{r}
+dim(DO.pathway.all.feats.wide.out.df)
 dim(DO.AL.pathway.all.feats.wide.out.df)
 dim(B6.pathway.all.feats.wide.out.df)
 dim(human.pathway.all.feats.wide.out.df)
+```
+
+## DO
+
+```{r}
+DO.pathway.all.feats.wide.out.df %>%
+  write.table(sprintf(
+    "../results/DO_pathway_log2tpm_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
 ```
 
 ## DO AL
