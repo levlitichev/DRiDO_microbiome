@@ -1,0 +1,146 @@
+We will run PERMANOVA on the full dataset to determine if age and diet have a significant overall effect. This analysis is in its own script because it's slow.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(phyloseq)
+library(vegan) # adonis2
+library(parallel) # to speed up PERMANOVA
+```
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv")
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+Pre-randomization timepoints are AL.
+
+```{r}
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  mutate(Diet.5mo.as.AL=case_when(
+    age.wks < 25 ~ "AL",
+    TRUE ~ as.character(Diet)))
+```
+
+# Import pathway data
+
+```{r}
+pathway.tpm.df <- read.table(
+  "../data/pathabundance_tpm_agg_by_stool_ID_n422x2997.txt",
+  sep="\t", header=T, quote="", row.names=1)
+
+dim(pathway.tpm.df)
+```
+
+## log2(TPM)
+
+```{r}
+zero.replacement.per.pathway <- apply(pathway.tpm.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+pathway.tpm.mat.no.zeros <- foreach(this.pathway = rownames(pathway.tpm.df), .combine="rbind") %do% {
+  
+  this.pathway.vec <- as.numeric(pathway.tpm.df[this.pathway, ])
+  this.pathway.vec[this.pathway.vec == 0] <- zero.replacement.per.pathway[[this.pathway]]
+  
+  return(this.pathway.vec)
+  
+}
+
+pathway.tpm.df.no.zeros <- data.frame(pathway.tpm.mat.no.zeros)
+rownames(pathway.tpm.df.no.zeros) <- rownames(pathway.tpm.df)
+colnames(pathway.tpm.df.no.zeros) <- colnames(pathway.tpm.df)
+```
+
+```{r}
+pathway.log2tpm.df <- log2(pathway.tpm.df.no.zeros)
+dim(pathway.log2tpm.df)
+```
+
+# Compute distances
+
+We'll start with `agg.physeq.genus` made in `kraken.Rmd`.
+
+Bray-Curtis distance on genus-level relative abundances.
+
+```{r}
+agg.genus.bc.dist <- agg.physeq.genus %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+
+agg.genus.bc.dist.mat <- as.matrix(agg.genus.bc.dist)
+```
+
+Euclidean distance on log2(TPM) pathway abundances.
+
+```{r}
+pathway.dist <- dist(t(pathway.log2tpm.df))
+pathway.dist.mat <- as.matrix(pathway.dist)
+dim(pathway.dist.mat)
+```
+
+# PERMANOVA
+
+## Random subset of samples
+
+```{r}
+# subset to N random samples so that it runs faster
+set.seed(1899)
+n.random.stool.IDs <- sample(rownames(agg.genus.bc.dist.mat), size=500)
+this.dist <- as.dist(agg.genus.bc.dist.mat[n.random.stool.IDs, n.random.stool.IDs])
+this.tmp.meta.df <- stool.meta.annot.df %>% column_to_rownames("stool.ID")
+this.meta.df <- this.tmp.meta.df[n.random.stool.IDs, ] %>% rownames_to_column("stool.ID")
+
+# confirm that rownames of distance matrix match the order in the metadata
+# identical(this.meta.df$stool.ID, rownames(as.matrix(this.dist)))
+
+permanova.res <- adonis2(
+  this.dist ~ age.approx.months + Diet.5mo.as.AL,
+  by="margin",
+  data=this.meta.df, 
+  permutations=999, 
+  parallel=4)
+```
+
+## All samples
+
+```{r}
+# confirm that rownames of distance matrix match the order in the metadata
+# identical(stool.meta.annot.df$stool.ID, rownames(agg.genus.bc.dist.mat))
+
+permanova.res <- adonis2(
+  agg.genus.bc.dist.mat ~ age.approx.months + Diet.5mo.as.AL,
+  by="margin",
+  data=stool.meta.annot.df, 
+  permutations=999, 
+  parallel=4)
+```
+
+```{r}
+permanova.res
+```
+
+## Pathways
+
+```{r}
+# confirm that rownames of distance matrix match the order in the metadata
+# identical(stool.meta.annot.df$stool.ID, rownames(pathway.dist.mat))
+
+pathway.permanova.res <- adonis2(
+  pathway.dist.mat ~ age.approx.months + Diet.5mo.as.AL,
+  by="margin",
+  data=stool.meta.annot.df, 
+  permutations=999, 
+  parallel=4)
+```
+
+```{r}
+pathway.permanova.res
+```
