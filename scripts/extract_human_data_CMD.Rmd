@@ -1,0 +1,288 @@
+Using `curatedMetagenomicData` package, extract a human cohort for comparison with DO and B6 datasets.
+
+```{r, message=F, warning=F}
+library(tidyverse)
+library(curatedMetagenomicData) # 3.6.2
+library(vegan) # vegdist
+library(foreach)
+```
+
+# Import all metadata
+
+Start by seeing all the samples available.
+
+```{r}
+all.sample.meta.df <- curatedMetagenomicData::sampleMetadata 
+dim(all.sample.meta.df)
+```
+
+* 22k samples x 141 metadata fields
+
+# Subset to samples of interest
+
+Subset based on the following criteria:
+
+* age >= 18
+* stool samples
+* no treatment, AKA control group
+* no disease
+* non-longitudinal data
+* no current antibiotic use
+
+```{r}
+sample.meta.filt.df <- all.sample.meta.df %>% 
+  dplyr::filter(
+    age >= 18 &
+      body_site == "stool" &
+      study_condition == "control" & 
+      disease == "healthy" &
+      days_from_first_collection %in% c(0, NA) &
+      (is.na(antibiotics_current_use) | antibiotics_current_use == "no"))
+    
+nrow(sample.meta.filt.df)
+```
+
+* 4790 samples
+
+# Further subset by study
+
+Based on the following criteria:
+
+* Enough samples (n >= 50)
+* Sufficient age diversity (IQR >= 5)
+
+```{r}
+sample.meta.filt.df %>%
+  dplyr::count(study_name) %>%
+  arrange(desc(n))
+```
+
+* 47 studies
+* The two biggest by far are the Dutch Microbiome Project and Asnicar 2021, which is Great Britain
+* 10 studies have >=100 samples
+* 21 have >= 50 samples
+
+```{r}
+sample.meta.filt.df %>%
+  group_by(study_name) %>%
+  summarise(n = n(),
+            min.age = min(age),
+            max.age = max(age),
+            mean.age = mean(age),
+            iqr.age = IQR(age)) %>% 
+  arrange(desc(n))
+```
+
+* Filtering for IQR >=5 will omit a handful of studies with very little age variation
+
+```{r}
+studies_to_include <- sample.meta.filt.df %>%
+  group_by(study_name) %>%
+  summarise(n = n(),
+            min.age = min(age),
+            max.age = max(age),
+            mean.age = mean(age),
+            iqr.age = IQR(age)) %>% 
+  dplyr::filter(n >= 50 & iqr.age >= 5) %>% 
+  pull(study_name)
+
+length(studies_to_include)
+```
+
+* 20 studies
+
+```{r}
+sample.meta.final.df <- sample.meta.filt.df %>% 
+  dplyr::filter(study_name %in% studies_to_include)
+nrow(sample.meta.final.df)
+```
+
+* 4101 samples
+
+```{r}
+summary(sample.meta.final.df$number_reads)
+```
+
+* Median 33.2 M, mean 42.9 M reads/sample (don't know if this is counting mates twice)
+
+```{r}
+summary(sample.meta.final.df$median_read_length)
+```
+
+* Median of median read length is 101 bp
+
+```{r}
+table(sample.meta.final.df$sequencing_platform)
+```
+
+# Plots to describe the cohort
+
+```{r}
+sample.meta.final.df %>% 
+  dplyr::count(study_name) %>% 
+  ggplot(aes(x=n, y=reorder(study_name, n))) +
+  geom_col() +
+  labs(x="# samples", y="Study", 
+       title=sprintf("n=%i samples", nrow(sample.meta.final.df)))
+```
+
+* LifeLinesDeep_2016 (Netherlands) and AscinarF_2021 (Great Britain) have the lion's share of samples
+
+```{r}
+sample.meta.final.df %>% 
+  dplyr::count(country) %>% 
+  ggplot(aes(x=n, y=reorder(country, n))) +
+  geom_col() +
+  labs(x="# samples", y="Country", 
+       title=sprintf("n=%i samples", nrow(sample.meta.final.df)))
+```
+
+* As expected, most samples are from Great Britain and the Netherlands
+
+```{r}
+sample.meta.final.df %>% 
+  dplyr::count(study_name, gender) %>% 
+  ggplot(aes(x=n, y=reorder(study_name, n), fill=gender, group=gender)) +
+  geom_col(position = position_dodge()) +
+  labs(x="# samples", y="Study", 
+       title=sprintf("n=%i samples", nrow(sample.meta.final.df)))
+```
+
+* Fairly even split by gender (though XieH_2016 is all women)
+
+```{r}
+sample.meta.final.df %>%
+  ggplot(aes(x=age, y=reorder(study_name, age))) +
+  geom_boxplot() +
+  labs(x="Age (years)", y="Study", 
+       title=sprintf("n=%i samples", nrow(sample.meta.final.df)))
+```
+
+```{r}
+sample.meta.final.df %>% 
+  dplyr::count(age) %>% 
+  ggplot(aes(x=age, y=n)) +
+  geom_col() +
+  labs(x="Age", y="# samples", title=sprintf("n=%i samples", nrow(sample.meta.final.df)))
+```
+
+* Good distribution of ages up to ~80 years
+
+# Retrieve data
+
+## Relative abundance
+
+Output is a (Tree)SummarizedExperiment, thus `tse`.
+
+```{r, message=F, warning=F}
+tse.relab <- curatedMetagenomicData::returnSamples(
+  sample.meta.final.df, 
+  dataType = "relative_abundance",
+  rownames = "short")
+
+dim(tse.relab)
+```
+
+* 1353 features x 4101 samples
+
+Relative abundances don't add to 100, probably because the relative abundance calculation includes unclassified reads.
+
+```{r}
+summary(colSums(data.frame(assay(tse.relab), check.names=F)))
+```
+
+I won't renormalize the relative abundances, but this means that each column won't add to 100. So the relative abundance is "% of reads".
+
+### Genera
+
+This will make it easier to compare to mouse data.
+
+```{r}
+tmp.genus.relab.df <- data.frame(assay(tse.relab), check.names=F) %>% 
+  mutate(genus = rowData(tse.relab)$genus) %>% 
+  group_by(genus) %>% 
+  summarise(across(everything(), sum), .groups="drop") %>% 
+  dplyr::filter(!is.na(genus)) %>% # exclude MAGs that don't have a genus annotation
+  column_to_rownames("genus")
+```
+
+We need to remove genera without any counts.
+
+```{r}
+genus.relab.df <- tmp.genus.relab.df[rowSums(tmp.genus.relab.df) > 0, ]
+
+dim(tmp.genus.relab.df)
+dim(genus.relab.df)
+```
+
+* 392 --> 331 genera
+
+## Pathway abundance (slow)
+
+Retrieving gene families is too slow. 
+
+Pathway data is returned as a SummarizedExperiment, rather than a TreeSummarizedExperiment.
+
+```{r, message=F, warning=F}
+se.pathway_abundance.taxon_specific <- curatedMetagenomicData::returnSamples(
+  sample.meta.final.df, 
+  dataType = "pathway_abundance")
+
+dim(se.pathway_abundance.taxon_specific)
+```
+
+This object is really big because it includes stratified pathway abundances. I'll just subset to unstratified abundances.
+
+```{r}
+se.pathway_abundance <- se.pathway_abundance.taxon_specific[
+  str_detect(rownames(se.pathway_abundance.taxon_specific), "\\|", negate=T), ]
+
+# convert to df
+tmp.pathway.rpk.df <- data.frame(assay(se.pathway_abundance), check.names=F)
+dim(tmp.pathway.rpk.df)
+```
+
+* 62k rows to 617 rows
+
+Remove 44 pathways with all zero counts.
+
+```{r}
+pathway.rpk.df <- tmp.pathway.rpk.df[rowSums(tmp.pathway.rpk.df != 0) > 0, ]
+
+dim(tmp.pathway.rpk.df)
+dim(pathway.rpk.df)
+```
+
+* 617 --> 573 pathways
+
+```{r}
+pathway.rpk.df[1:5, 1:5]
+```
+
+These are MetaCyc identifiers.
+
+# Export
+
+```{r}
+# genus.relab.df %>%
+#   rownames_to_column("genus") %>%
+#   write.table(sprintf(
+#     "../data/CMD_human_genus_relab_n%ix%i.txt", nrow(.), ncol(.)-1),
+#     sep="\t", quote=F, row.names=F)
+```
+
+```{r}
+# pathway.rpk.df %>%
+#   rownames_to_column("pathway_id") %>%
+#   write.table(sprintf(
+#     "../data/CMD_human_pathway_rpk_n%ix%i.txt", nrow(.), ncol(.)-1),
+#     sep="\t", quote=F, row.names=F)
+```
+
+```{r}
+# sample.meta.final.df %>% 
+#   relocate(sample_id) %>% 
+#   write.table(sprintf(
+#     "../data/metadata/CMD_human_sample_metadata_n%i.txt", nrow(.)),
+#     sep="\t", quote=F, row.names=F)
+```
