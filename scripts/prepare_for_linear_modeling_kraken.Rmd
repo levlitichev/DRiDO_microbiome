@@ -80,8 +80,30 @@ TOP.N.GENERA.CLEAN <- as.character(sapply(
 ```{r}
 top.n.genera.df <- data.frame(
   genus = TOP.N.GENERA,
-  ID = TOP.N.GENERA.IDs,
   clean = TOP.N.GENERA.CLEAN)
+rownames(top.n.genera.df) <- TOP.N.GENERA.IDs
+```
+
+# Export relab for top 100 genera
+
+We use this in `prediction.Rmd`, but not in linear modeling.
+
+```{r}
+genus.relab.df <- agg.physeq.genus %>%
+  transform_sample_counts(function(x) {100 * x/sum(x)}) %>% 
+  prune_taxa(taxa = TOP.N.GENERA.IDs) %>% 
+  otu_table() %>% data.frame()
+
+rownames(genus.relab.df) <- top.n.genera.df[rownames(genus.relab.df), "clean"]
+```
+
+```{r}
+# genus.relab.df %>%
+#   rownames_to_column("genus") %>%
+#   write.table(sprintf(
+#     "../data/kraken_genus_relab_n%ix%i.txt",
+#     nrow(.), ncol(.)-1),
+#     sep="\t", row.names=F, quote=F)
 ```
 
 # Convert to CLR
