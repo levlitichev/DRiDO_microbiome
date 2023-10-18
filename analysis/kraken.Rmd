@@ -1,0 +1,1092 @@
+---
+title: "Analysis of Kraken results after aggregating by stool ID"
+---
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(foreach)
+library(phyloseq)
+library(speedyseq) # faster tax_glom
+library(patchwork) # for mega PCoA
+library(ggpubr) # for t-tests
+library(ggrepel) # for labels
+library(corrr) # stretch, DR scatterplots
+library(GGally) # ggpairs, DR scatterplots
+
+PADJ.THRESH <- 0.01
+
+age.color <- "seagreen"
+genetics.color <- "gold"
+diet.color <- "mediumorchid"
+
+diet.palette <- c(AL="seashell4",
+                  `1D`="skyblue",
+                  `2D`="royalblue4",
+                  `20`="orange",
+                  `40`="firebrick")
+CR.v.fasting.palette <- c(fasting="royalblue4", CR="firebrick")
+```
+
+# Import Kraken data
+
+```{r}
+agg.kraken.df <- read.table(
+  "../data/kraken_matrix_agg_by_stool_ID_n1303x2997.txt", 
+  sep="\t", header=T, row.names=1)
+dim(agg.kraken.df)
+```
+
+* 1303 taxons x 2997 stool IDs
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+
+dim(stool.meta.annot.df)
+n_distinct(stool.meta.annot.df$stool.ID)
+```
+
+* 2997 (unique) stool IDs, as expected
+
+Pre-randomization timepoints are AL.
+
+```{r}
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  mutate(Diet.5mo.as.AL=case_when(
+    age.wks < 25 ~ "AL",
+    TRUE ~ as.character(Diet)))
+```
+
+Create character version of cage.
+
+```{r}
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  mutate(Cage=paste0("c", HID))
+```
+
+# Import Kraken taxonomy
+
+```{r}
+kraken.tax.df <- read.table(
+  "../data/kraken_taxonomy_n1303.txt", 
+  sep="\t", header=T, quote="", row.names=1)
+dim(kraken.tax.df)
+```
+
+# Import ASReml results
+
+## Age and DR as fixed effects
+
+Model: y_mb ~ age (f) + diet (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+
+```{r}
+fixef.df <- read.table(
+  "../results/asreml_kraken_genus/fixef.txt",
+  sep="\t", header=T)
+
+ranef.df <- read.table(
+  "../results/asreml_kraken_genus/ranef.txt",
+  sep="\t", header=T)
+
+herit.df <- read.table(
+  "../results/asreml_kraken_genus/herit.txt",
+  sep="\t", header=T)
+```
+
+## All random effects
+
+Model: y_mb ~ age (r) + diet (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+
+```{r}
+# all.ranef.model.out.paths <- list.files("../results/asreml_kraken_genus_all_ranef/", pattern=".txt", full.names=T)
+# 
+# ranef.df.all.ranef.model <- foreach(this.path=all.ranef.model.out.paths, .combine="rbind") %do% {
+#   read.table(this.path, sep="\t", header=T)
+# }
+# 
+# ranef.df.all.ranef.model %>% 
+#   write.table("../results/asreml_kraken_genus_all_ranef/ranef.txt", 
+#               sep="\t", quote=F, row.names=F)
+```
+
+```{r}
+ranef.df.all.ranef.model <- read.table(
+  "../results/asreml_kraken_genus_all_ranef/ranef.txt",
+  sep="\t", header=T)
+```
+
+# Create phyloseq object
+
+```{r}
+kraken.sample.meta.df <- stool.meta.annot.df %>% column_to_rownames("stool.ID")
+
+agg.physeq <- phyloseq(
+  agg.kraken.df %>% as.matrix %>% otu_table(taxa_are_rows=T),
+  kraken.sample.meta.df %>% sample_data,
+  kraken.tax.df %>% as.matrix %>% tax_table
+)
+nsamples(agg.physeq)
+```
+
+* 2997 samples
+
+# Aggregate to genera
+
+```{r}
+agg.physeq.genus <- agg.physeq %>% tax_glom(taxrank="genus")
+```
+
+```{r}
+ntaxa(agg.physeq)
+ntaxa(agg.physeq.genus)
+```
+
+* 1303 taxa --> 252 genera
+
+```{r}
+sum(otu_table(agg.physeq.genus)) / sum(otu_table(agg.physeq))
+```
+
+* 85% of reads could be assigned to genus level
+
+# Compute distances
+
+Bray-Curtis on genus-level relative abundances.
+
+```{r}
+agg.genus.bc.dist <- agg.physeq.genus %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+```
+
+# Alpha diversity
+
+```{r}
+alpha.div.df.genus <- estimate_richness(
+  agg.physeq.genus, 
+  measures=c("Observed", "Chao1", "Shannon", "Simpson")) %>% 
+  rownames_to_column("stool.ID") %>% 
+  merge(stool.meta.annot.df, by="stool.ID")
+
+alpha.div.long.df.genus <- alpha.div.df.genus %>% 
+  pivot_longer(c(Observed, Chao1, Shannon, Simpson), names_to="metric")
+```
+
+## Shannon
+
+Versus diet.
+
+```{r}
+(shannon.v.diet.p <- alpha.div.long.df.genus %>% 
+   dplyr::filter(metric == "Shannon") %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples for consistency with the versus age plot
+   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+   ggplot(aes(x=Diet.5mo.as.AL, y=value, fill=Diet.5mo.as.AL)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
+   labs(x="", y="Shannon index") +
+   scale_fill_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/shannon_v_diet.pdf", width=2, height=2)
+# shannon.v.diet.p
+# dev.off()
+```
+
+Versus age.
+
+```{r}
+(shannon.v.age.p <- alpha.div.long.df.genus %>% 
+   dplyr::filter(metric == "Shannon") %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+   ggplot(aes(x=age.approx.months, y=value)) +
+   geom_smooth(method="lm", color="gray80", linewidth=0.5) +
+   geom_boxplot(aes(group=age.approx.months), fill=age.color,
+                outlier.shape=16, outlier.size=0.25) +
+   geom_vline(xintercept=6, lty=2) +
+   labs(title="Alpha diversity", x="Age (mo)", y="Shannon index") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/shannon_v_age.pdf", width=2, height=2)
+# shannon.v.age.p
+# dev.off()
+```
+
+## Simpson
+
+Versus age.
+
+```{r}
+(simpson.v.age.p <- alpha.div.long.df.genus %>% 
+   dplyr::filter(metric == "Simpson") %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+   ggplot(aes(x=age.approx.months, y=value)) +
+   geom_smooth(method="lm", color="gray80", linewidth=0.5) +
+   geom_boxplot(aes(group=age.approx.months), fill=age.color,
+                outlier.shape=16, outlier.size=0.25) +
+   geom_vline(xintercept=6, lty=2) +
+   labs(title="Alpha diversity", x="Age (mo)", y="Simpson index") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/simpson_v_age.pdf", width=2, height=2)
+# simpson.v.age.p
+# dev.off()
+```
+
+# PCoA
+
+```{r}
+agg.pcoa.genus.bc <- agg.genus.bc.dist %>% 
+  cmdscale(eig=T, k=3)
+
+agg.pcoa.genus.bc.df <- merge(
+  data.frame(agg.pcoa.genus.bc$points) %>% setNames(c("PCoA1", "PCoA2", "PCoA3")),
+  kraken.sample.meta.df,
+  by="row.names") %>% 
+  mutate(Diet=factor(Diet, levels=c("AL", "1D", "2D", "20", "40")),
+         Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40")))
+```
+
+```{r}
+frac.var.explained.by.pcos <- agg.pcoa.genus.bc$eig / sum(agg.pcoa.genus.bc$eig)
+frac.var.explained.by.pcos[1:3]
+```
+
+```{r}
+full.pcoa.p <- agg.pcoa.genus.bc.df %>% 
+  arrange(desc(age.approx.months)) %>%
+  ggplot(aes(x=PCoA1, y=PCoA2, color=Diet.5mo.as.AL, size=age.approx.months)) +
+  geom_point(shape=16, alpha=0.8) +
+  scale_color_manual(values=diet.palette) +
+  scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2))
+```
+
+## With barplots
+
+```{r}
+pcoa1.lims <- layer_scales(full.pcoa.p, 1, 1)$x$range$range
+pcoa1.intervals <- seq(from=pcoa1.lims[1], to=pcoa1.lims[2], length.out=20)
+
+pcoa1.age.barplots <- agg.pcoa.genus.bc.df %>% 
+  mutate(PCoA1.discrete=cut(PCoA1, pcoa1.intervals, include.lowest=T)) %>%
+  group_by(PCoA1.discrete) %>%
+  summarise(mean.age.mo=mean(age.approx.months), .groups="drop") %>%
+  ggplot(aes(x=PCoA1.discrete, y=mean.age.mo)) +
+  geom_col() +
+  theme_classic(base_size=8) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+
+```{r}
+pcoa2.lims <- layer_scales(full.pcoa.p, 1, 1)$y$range$range
+pcoa2.intervals <- seq(from=pcoa2.lims[1], to=pcoa2.lims[2], length.out=20)
+
+pcoa2.age.barplots <- agg.pcoa.genus.bc.df %>% 
+  mutate(PCoA2.discrete=cut(PCoA2, pcoa2.intervals, include.lowest=T)) %>%
+  group_by(PCoA2.discrete) %>%
+  summarise(mean.age.mo=mean(age.approx.months), .groups="drop") %>%
+  ggplot(aes(x=mean.age.mo, y=PCoA2.discrete)) +
+  geom_col() +
+  theme_classic(base_size=8) +
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+```{r}
+pcoa1.diet.boxplots <- agg.pcoa.genus.bc.df %>% 
+  ggplot(aes(x=PCoA1, y=fct_rev(Diet.5mo.as.AL), fill=Diet.5mo.as.AL)) +
+  geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+  scale_fill_manual(values=diet.palette)
+```
+
+```{r}
+pcoa2.diet.boxplots <- agg.pcoa.genus.bc.df %>% 
+  ggplot(aes(x=Diet.5mo.as.AL, y=PCoA2, fill=Diet.5mo.as.AL)) +
+  geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+  scale_fill_manual(values=diet.palette)
+```
+
+```{r}
+mega.pcoa.layout <- "
+#AAAAAA#
+BCCCCCCD
+BCCCCCCD
+BCCCCCCD
+BCCCCCCD
+BCCCCCCD
+BCCCCCCD
+#EEEEEE#
+"
+
+(mega.pcoa <- (
+  
+  # A = PCoA1 diet boxplots
+  pcoa1.diet.boxplots + 
+    scale_x_continuous(position="top") + 
+    labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.var.explained.by.pcos[1])) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none", 
+          axis.title.y=element_blank()) +
+    
+    # B = PCoA2 diet boxplots
+    pcoa2.diet.boxplots + 
+    labs(y=sprintf("PCoA2 (%.0f%%)", 100*frac.var.explained.by.pcos[2])) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none", 
+          axis.title.x=element_blank()) +
+    
+    # C = PCoA
+    full.pcoa.p + 
+    theme_classic(base_size=8) +
+    theme(legend.position="none",
+          axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank()) +
+    
+    # D = PCoA2 age barplots
+    pcoa2.age.barplots + 
+    scale_y_discrete(position="right") +
+    scale_x_continuous(position="top") +
+    labs(x="Mean age (mo)", y="Binned PCoA2") +
+    
+    # E = PCoA1 age barplots
+    pcoa1.age.barplots + 
+    scale_y_reverse(position="right") +
+    labs(x="Binned PCoA1", y="Mean age (mo)")) +
+    
+    plot_layout(design=mega.pcoa.layout))
+```
+
+```{r}
+# pdf("../plots/full_pcoa_w_barplots.pdf", height=5, width=5)
+# mega.pcoa
+# dev.off()
+```
+
+```{r}
+# library(cowplot) # plot_grid
+# pdf("../plots/full_pcoa_legend.pdf", height=3, width=1)
+# plot_grid(get_legend(full.pcoa.p))
+# dev.off()
+```
+
+## Just young and old, AL versus 40% CR
+
+Ordination with just these samples.
+  
+```{r}
+agg.genus.bc.dist.just.young.v.old.AL.v.40 <- agg.physeq.genus %>%
+  subset_samples(age.approx.months %in% c(10, 28)) %>% 
+  subset_samples(Diet %in% c("AL", "40")) %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+
+agg.pcoa.genus.bc.res.just.young.v.old.AL.v.40 <- agg.genus.bc.dist.just.young.v.old.AL.v.40 %>% 
+  cmdscale(eig=T, k=3)
+
+frac.var.explained.by.pcos.just.young.v.old.AL.v.40 <- (
+  agg.pcoa.genus.bc.res.just.young.v.old.AL.v.40$eig) / (
+    sum(agg.pcoa.genus.bc.res.just.young.v.old.AL.v.40$eig))
+
+agg.pcoa.genus.bc.df.just.young.v.old.AL.v.40 <- merge(
+  data.frame(agg.pcoa.genus.bc.res.just.young.v.old.AL.v.40$points) %>% setNames(c("PCoA1", "PCoA2", "PCoA3")),
+  kraken.sample.meta.df,
+  by="row.names") %>% 
+  mutate(Diet=factor(Diet, levels=c("AL", "40")))
+```
+
+```{r}
+AL.CR.10mo.28mo.new.ordination.centroids.df <- agg.pcoa.genus.bc.df.just.young.v.old.AL.v.40 %>% 
+  dplyr::filter(age.approx.months %in% c(10, 28)) %>% 
+  dplyr::filter(Diet %in% c("AL", "40")) %>% 
+  group_by(age.approx.months, Diet) %>% 
+  summarise(PCoA1=mean(PCoA1), PCoA2=mean(PCoA2), .groups="drop")
+```
+
+```{r}
+(AL.CR.10mo.28mo.new.ordination.p <- agg.pcoa.genus.bc.df.just.young.v.old.AL.v.40 %>% 
+   ggplot(aes(x=PCoA1, y=PCoA2, color=Diet, shape=factor(age.approx.months))) +
+   geom_point(size=0.5, alpha=0.3) +
+   geom_point(data=AL.CR.10mo.28mo.new.ordination.centroids.df, size=2) +
+   stat_ellipse(aes(linetype=factor(age.approx.months))) +
+   scale_shape_manual(values=c(`10`=16, `28`=1)) +
+   scale_color_manual(values=diet.palette) +
+   labs(x=sprintf("PCoA1 (%.1f%%)", 100*frac.var.explained.by.pcos.just.young.v.old.AL.v.40[1]),
+        y=sprintf("PCoA2 (%.1f%%)", 100*frac.var.explained.by.pcos.just.young.v.old.AL.v.40[2]),
+        shape="Age (mo)", 
+        linetype="Age (mo)", 
+        title="Ordination based on just these samples") +
+   theme_classic(base_size=8))
+```
+
+We see that 40% CR pulls both young and old samples to the left and up, and age also pulls samples left and up
+  
+```{r}
+# pdf("../plots/pcoa_AL_v_40CR_10mo_v_28mo.pdf", height=2, width=2)
+# AL.CR.10mo.28mo.new.ordination.p + theme(legend.position="none")
+# dev.off()
+```
+
+# Uniqueness
+
+```{r}
+agg.genus.bc.dist.mat <- agg.genus.bc.dist %>% as.matrix
+diag(agg.genus.bc.dist.mat) <- NA
+agg.genus.uniq.bc.df <- data.frame(
+  uniqueness=apply(agg.genus.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)}),
+  stool.ID=sample_names(agg.physeq.genus)) %>%
+  merge(stool.meta.annot.df, by="stool.ID")
+```
+
+## Versus age
+
+```{r}
+agg.genus.uniq.bc.lm.summary <- agg.genus.uniq.bc.df %>%
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  lm(uniqueness ~ age.approx.months, data=.) %>% summary
+
+agg.genus.uniq.bc.lm.pval <- agg.genus.uniq.bc.lm.summary$coefficients["age.approx.months", "Pr(>|t|)"]
+agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients["age.approx.months", "Estimate"]
+```
+
+```{r}
+(uniq.v.age.p <- agg.genus.uniq.bc.df %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+   ggplot(aes(x=age.approx.months, y=uniqueness)) +
+   geom_vline(xintercept=6, lty=2) +
+   geom_smooth(method="lm", color=age.color, linewidth=0.5) +
+   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
+                outlier.shape=16, outlier.size=0.5) +
+   labs(x="Age (months)", y="Uniqueness", 
+        title="Taxonomic uniqueness") +
+   # , slope = %.1e, p-value = %.1e",
+   #        agg.genus.uniq.bc.lm.beta, agg.genus.uniq.bc.lm.pval)
+   theme_classic(base_size=8) +
+   theme(legend.position="none")
+)
+```
+
+```{r}
+# pdf("../plots/tax_uniq_v_age_boxplots.pdf", width=2, height=2)
+# uniq.v.age.p
+# dev.off()
+```
+
+## Versus diet
+
+```{r}
+(uniq.v.diet.across.ages.p <- agg.genus.uniq.bc.df %>% 
+   dplyr::filter(age.approx.months <= 40) %>% 
+   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+   ggplot(aes(x=Diet.5mo.as.AL, y=uniqueness, fill=Diet.5mo.as.AL)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
+   labs(x="Dietary group", y="Uniqueness", 
+        title="Taxonomic uniqueness") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none") +
+   scale_fill_manual(values=diet.palette)
+)
+```
+
+```{r}
+# pdf("../plots/tax_uniq_v_diet_boxplots.pdf", width=2, height=2)
+# uniq.v.diet.across.ages.p
+# dev.off()
+```
+
+## Versus age, facet by diet
+
+```{r}
+(uniq.v.age.split.by.diet.p <- agg.genus.uniq.bc.df %>% 
+   dplyr::filter(age.approx.months <= 40) %>% 
+   mutate(Diet=factor(Diet, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+   ggplot(aes(x=age.approx.months, y=uniqueness)) +
+   geom_vline(xintercept=6, lty=2) +
+   geom_smooth(method="lm", se=F, color=age.color) +
+   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
+                outlier.shape=16, outlier.size=0.5) +
+   labs(x="Age (months)", y="Uniqueness", 
+        title="Taxonomic uniqueness, split by dietary group") +
+   facet_wrap(~Diet, nrow=1) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none") 
+)
+```
+
+```{r}
+# pdf("../plots/tax_uniq_v_age_facet_by_diet_boxplots.pdf", height=2, width=6)
+# uniq.v.age.split.by.diet.p
+# dev.off()
+```
+
+## Versus age, equal number of mice per cage
+
+```{r}
+uniq.df.n.mice.per.cage <- foreach(n=c(4,5,6,7,8), .combine="rbind") %do% {
+  
+  this.n.per.cage.stool.IDs <- stool.meta.annot.df %>%
+    
+    # only keep cage-age combinations with at least n mice
+    group_by(Cage, age.approx.months) %>%
+    mutate(n.per.group=n()) %>% 
+    ungroup() %>% 
+    dplyr::filter(n.per.group >= n) %>% 
+    
+    # if more than n mice per cage, randomly select n mice
+    group_by(Cage, age.approx.months) %>%
+    slice_sample(n=n) %>%
+    pull(stool.ID)
+  
+  this.n.per.cage.dist <- agg.physeq.genus %>% 
+    prune_samples(samples=this.n.per.cage.stool.IDs) %>% 
+    transform_sample_counts(function(x) x/sum(x)) %>%
+    phyloseq::distance(method="bray")
+  
+  this.n.per.cage.dist.mat <- this.n.per.cage.dist %>% as.matrix()
+  diag(this.n.per.cage.dist.mat) <- NA
+  this.n.per.cage.uniq.df <- data.frame(
+    uniqueness=apply(this.n.per.cage.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)}),
+    stool.ID=rownames(this.n.per.cage.dist.mat)) %>% 
+    mutate(n.per.cage = n)
+  
+  return(this.n.per.cage.uniq.df)
+}
+
+uniq.annot.df.n.mice.per.cage <- uniq.df.n.mice.per.cage %>% 
+  merge(stool.meta.annot.df, by="stool.ID")
+```
+
+```{r}
+(uniq.v.age.fixed.n.per.cage.p <- uniq.annot.df.n.mice.per.cage %>%
+   dplyr::filter(age.approx.months <= 40) %>% 
+   ggplot(aes(x=age.approx.months, y=uniqueness)) +
+   geom_vline(xintercept=6, lty=2) +
+   geom_smooth(method="lm", se=F, color=age.color) +
+   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
+                outlier.shape=16, outlier.size=0.5) +
+   labs(x="Age (months)", y="Uniqueness", 
+        title="Taxonomic uniqueness, downsampled to n mice per cage") +
+   facet_wrap(~n.per.cage, nrow=1,
+              labeller=labeller(n.per.cage=function(x) {sprintf("n=%s", x)})) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none")
+)
+```
+
+```{r}
+# pdf("../plots/tax_uniq_v_age_fixed_n_per_cage.pdf", height=2, width=6)
+# uniq.v.age.fixed.n.per.cage.p
+# dev.off()
+```
+
+# Effect of age
+
+```{r}
+age.df <- fixef.df %>% 
+  dplyr::filter(fixef == "age.wks.scaled")
+```
+
+Adjust p-values.
+
+```{r}
+age.df <- age.df %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+```
+
+```{r}
+age.df %>% 
+  dplyr::count(is.sig)
+```
+
+```{r}
+78 / (78 + 29)
+```
+
+* Majority (73%) of taxonomic features are significantly associated with age
+
+```{r}
+age.df %>% 
+  ggplot(aes(Pr.chisq..con.)) +
+  geom_histogram(bins=20)
+```
+
+* p-value histogram makes sense
+
+## Barplot
+
+```{r}
+age.genera.to.label <- c(
+  "Bifidobacterium", "Turicibacter", "Alistipes", 
+  "uniq", "Shannon", "Simpson",
+  "ASF356", "UMGS268", "UBA9475"
+)
+```
+
+```{r}
+(age.effect.genera.p <- age.df %>% 
+   mutate(label = case_when(
+     feature %in% age.genera.to.label ~ feature,
+     TRUE ~ ""
+   )) %>% 
+   ggplot(aes(y=reorder(feature, solution), x=solution, 
+              xmin=solution-std.error, xmax=solution+std.error,
+              label=label)) +
+   geom_col(aes(fill=is.sig)) + 
+   geom_linerange() +
+   geom_vline(xintercept=0, lty=2) +
+   geom_text_repel(nudge_x=0.01, min.segment.length=0, size=0.36*6) +
+   labs(y="", x="Age effect", color="padj < 0.01?") +
+   theme_void(base_size=8) +
+   theme(axis.text.y=element_blank(),
+         legend.position="none") + 
+   scale_fill_manual(values=c(`TRUE`=age.color, `FALSE`="gray80"))
+)
+```
+
+```{r}
+# pdf("../plots/asreml_age_effect_genera_barplot.pdf", height=3.5, width=2)
+# age.effect.genera.p
+# dev.off()
+```
+
+# Effect of DR
+
+```{r}
+DR.df <- fixef.df %>% 
+  dplyr::filter(fixef == "Diet.5mo.as.AL") %>% 
+  dplyr::filter(fixef.value != "AL") # the AL row doesn't add anything
+
+dim(DR.df)
+n_distinct(DR.df$feature)
+```
+
+Adjust p-values. I think I could call `p.adjust` directly even though each p-value is repeated 4x, but to be safe, I'll compute adjusted p-values for just one diet and then merge them back in.
+
+```{r}
+DR.padj.df <- DR.df %>% 
+  dplyr::filter(fixef.value == "40") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  dplyr::select(feature, padj)
+
+DR.df <- DR.df %>% 
+  merge(DR.padj.df, by="feature") %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+dim(DR.df)
+```
+
+## Barplots
+
+Order based on 40% CR.
+
+```{r}
+DR.effects.feature.order.df <- DR.df %>% 
+  dplyr::filter(fixef.value == "40") %>%
+  arrange(solution) %>% 
+  mutate(feature.order = row_number()) %>% 
+  dplyr::select(feature, feature.order)
+```
+
+Instead of labeling genera, I will draw a gray line at the right locations and manually do the labels.
+
+```{r}
+DR.genera.to.highlight <- c(
+  
+  # increased by DR
+  "Lactobacillus", "Ligilactobacillus", "Limosilactobacillus",
+  "uniq", "Simpson", "Shannon",
+  
+  # uniquely affected by CR or fasting, or vice versa
+  "Roseburia", "Emergencia"
+  
+)
+
+DR.assoc.genera.to.highlight.ii <- DR.effects.feature.order.df %>% 
+  dplyr::filter(feature %in% DR.genera.to.highlight) %>% 
+  pull(feature.order)
+```
+
+```{r}
+(DR.effect.p <- DR.df %>% 
+   
+   # specify order based on 40% CR
+   merge(DR.effects.feature.order.df, by="feature") %>%
+   
+   # reorder diet
+   mutate(DR = factor(fixef.value, levels=c("1D", "2D", "20", "40"))) %>% 
+   
+   ggplot(aes(y=reorder(feature, feature.order), x=solution, 
+              xmin=solution-std.error, xmax=solution+std.error,
+              alpha=is.sig, fill=DR)) +
+   geom_col() + 
+   geom_linerange(linewidth=0.25) +
+   geom_vline(xintercept=0, lty=2) +
+   geom_hline(yintercept=DR.assoc.genera.to.highlight.ii, lty=2, color="gray50") +
+   facet_wrap(~DR, nrow=1) +
+   theme_void(base_size=8) +
+   theme(legend.position="none") + 
+   scale_fill_manual(values=diet.palette) +
+   scale_alpha_manual(values=c(`TRUE`=1, `FALSE`=0.2))
+)
+```
+
+```{r}
+pdf("../plots/asreml_DR_effect_genera_barplot.pdf", height=3.5, width=3)
+DR.effect.p
+dev.off()
+```
+
+
+## Magnitude of effects
+
+```{r}
+(DR.mean.abs.effect.df <- DR.df %>% 
+   dplyr::rename(DR = fixef.value) %>% 
+   group_by(DR) %>% 
+   summarise(mean = mean(abs(solution)),
+             median = median(abs(solution)), .groups="drop") %>% 
+   mutate(solution = sprintf("%.2f", mean)))
+```
+
+```{r}
+pd <- position_dodge2(width=0.1)
+
+(diet.effect.size.p <- DR.df %>% 
+    mutate(DR=factor(fixef.value, levels=c("1D", "2D", "20", "40"))) %>% 
+    ggplot(aes(x=DR, y=abs(solution))) +
+    geom_path(aes(group=feature), alpha=0.1, position=pd) +
+    geom_point(aes(color=DR), shape=16, position=pd) +
+    geom_text(aes(y=-0.1, label=solution, color=DR), data=DR.mean.abs.effect.df) +
+    stat_summary(aes(color=DR), fun="mean", geom="crossbar", width=0.5) +
+    scale_color_manual(values=diet.palette) +
+    stat_compare_means(method="t.test", label="p.signif", paired=T, comparisons=list(
+      c("1D", "2D"), c("1D", "20"), c("1D", "40"), 
+      c("2D", "20"), c("2D", "40"), c("20", "40"))) +
+    labs(y="Absolute DR coefficient") +
+    theme_classic(base_size=8) +
+    theme(legend.position = "none"))
+```
+
+40% > 20% = 2D > 1D
+
+```{r}
+# pdf("../plots/asreml_diet_overall_effect_genus_boxplots.pdf", height=2, width=2)
+# diet.effect.size.p
+# dev.off()
+```
+
+## Similarity of diet coefficients
+
+It will be useful to first pivot wider.
+
+```{r}
+DR.coef.df <- DR.df %>%
+  pivot_wider(id_cols=feature, names_from=fixef.value, values_from=solution)
+```
+
+```{r}
+DR.cor.df <- DR.coef.df %>% 
+  dplyr::select(-feature) %>% 
+  correlate() %>% 
+  shave() %>%
+  stretch(na.rm=T) %>% 
+  mutate(x = factor(x, levels=c("1D", "2D", "20", "40")),
+         y = factor(y, levels=c("1D", "2D", "20", "40")),
+         r.chr = sprintf("%.2f", r)) 
+```
+
+```{r}
+# make sure we use linear fit
+my_fn <- function(data, mapping, ...){
+  p <- ggplot(data = data, mapping = mapping) + 
+    geom_point(size=0.5) + 
+    geom_smooth(method="lm", color="mediumorchid", ...)
+  p
+}
+
+(cor.DR.effects.p <- DR.coef.df %>% 
+  dplyr::select(`1D`, `2D`, `20`, `40`) %>%  
+  ggpairs(lower = list(continuous = my_fn), 
+          diag = NULL,
+          progress = F) +
+  theme_classic(base_size=8) +
+  labs(x="DR coef", y="DR coef"))
+```
+
+```{r}
+# pdf("../plots/asreml_diet_similarity_genus_scatter.pdf", height=4, width=4)
+# cor.DR.effects.p
+# dev.off()
+```
+
+## Affected by CR but not fasting, and vice versa
+
+```{r}
+genus.CR.or.fasting.mean.coef.df <- DR.df %>%
+  mutate(CR.or.fasting = ifelse(fixef.value %in% c("20", "40"), "CR", "fasting")) %>% 
+  group_by(feature, CR.or.fasting) %>% 
+  summarise(solution = mean(solution), .groups="drop") %>% 
+  group_by(feature) %>% 
+  mutate(CR.and.fasting.in.diff.dir = sign(solution[CR.or.fasting == "CR"]) != sign(solution[CR.or.fasting == "fasting"])) %>% 
+  ungroup()
+
+genus.CR.or.fasting.mean.coef.order.df <- genus.CR.or.fasting.mean.coef.df %>% 
+  dplyr::filter(CR.or.fasting == "CR") %>% 
+  arrange(solution) %>%
+  mutate(ii = row_number()) %>% 
+  dplyr::select(feature, ii)
+  
+(genus.CR.v.fasting.mean.coef.p <- genus.CR.or.fasting.mean.coef.df %>% 
+    merge(genus.CR.or.fasting.mean.coef.order.df, by="feature") %>% 
+    mutate(label = ifelse(feature %in% c("Emergencia", "Roseburia"), feature, "")) %>% 
+    ggplot(aes(x=reorder(feature, ii), y=solution, color=CR.or.fasting, alpha=CR.and.fasting.in.diff.dir)) +
+    geom_hline(yintercept=0, lty=2) +
+    geom_line(aes(group=feature, color=NULL)) +
+    geom_point(shape=16, size=0.5) +
+    geom_text(aes(label=label)) +
+    scale_alpha_manual(values=c(`TRUE`=1, `FALSE`=0.2)) +
+    scale_color_manual(values=CR.v.fasting.palette) +
+    theme_classic(base_size=8) +
+    theme(axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="none") +
+    labs(x="Genus", y="Coefficient"))
+```
+
+```{r}
+# pdf("../plots/genus_CR_v_fasting_mean_coef.pdf", height=2, width=3)
+# genus.CR.v.fasting.mean.coef.p
+# dev.off()
+```
+
+# Heritability
+
+Adjust p-values.
+
+```{r}
+herit.df <- herit.df %>% 
+  mutate(padj = p.adjust(LRT.pval, method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+```
+
+```{r}
+herit.df %>% 
+  dplyr::filter(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))
+```
+
+* For the community features, only the PCoA coordinates are significantly heritable
+
+```{r}
+herit.df %>% 
+  dplyr::filter(!(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))) %>%
+  dplyr::count(is.sig) %>%
+  pull(n) %>% prop.table()
+
+herit.df %>% 
+  dplyr::count(is.sig) %>%
+  pull(n) %>% prop.table()
+```
+
+* 66% of genera are heritable
+* 64.5% of features are heritable (including the community features)
+
+```{r}
+# herit.df %>%
+#   dplyr::filter(!(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))) %>%
+#   dplyr::filter(is.sig) %>%
+#   summarise(mean = mean(herit)) %>%
+#   pull(mean)
+
+(mean.herit.for.heritable.feats <- herit.df %>% 
+   dplyr::filter(is.sig) %>% 
+   summarise(mean = mean(herit)) %>% 
+   pull(mean))
+```
+
+* Mean heritability (whether or not we keep community features is 11.1%)
+
+```{r}
+(genus.herit.p <- herit.df %>% 
+   ggplot(aes(x=herit, xmin=herit-herit.se, xmax=herit+herit.se,
+              y=reorder(feature, herit), fill=is.sig)) +
+   geom_col() +
+   geom_linerange(linewidth=0.25) +
+   geom_vline(xintercept = mean.herit.for.heritable.feats, 
+              color=genetics.color, lty=2) +
+   labs(x="Heritability", y="Genus", fill="padj < 0.01?") +
+   scale_fill_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none",
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank()))
+```
+
+```{r}
+# pdf("../plots/genus_heritability_barplot.pdf", height=3, width=1.5)
+# genus.herit.p
+# dev.off()
+```
+
+# All random effects
+
+```{r}
+ranef.df.all.ranef.model %>% 
+  group_by(term.clean) %>% 
+  summarise(PVE = mean(PVE)) %>% 
+  arrange(desc(PVE))
+```
+
+* 63% of variance remains unexplained
+* Genetics explain mean 7.5% of variance
+
+Adjust p-values within each experimental variable.
+
+```{r}
+ranef.df.all.ranef.model <- ranef.df.all.ranef.model %>% 
+  group_by(term.clean) %>% 
+  mutate(padj = p.adjust(LRT.pval, method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+```
+
+```{r}
+(genus.all.ranef.PVE.p <- ranef.df.all.ranef.model %>% 
+   dplyr::filter(term.clean != "Residual") %>% 
+   arrange(is.sig) %>% 
+   ggplot(aes(x=reorder(term.clean, -PVE), y=PVE, color=is.sig)) +
+   geom_jitter(width=0.2, shape=16) +
+   stat_summary(aes(color=NULL), fun="mean", geom="crossbar", width=0.75) +
+   labs(x="Experimental variable", y="Proportion of variance explained") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none") +
+   scale_color_manual(values=c(`TRUE`="gray20", `FALSE`="gray80")))
+```
+
+```{r}
+# pdf("../plots/PVE_all_ranef_genera.pdf", height=2, width=2)
+# genus.all.ranef.PVE.p
+# dev.off()
+```
+
+# Example plots
+
+## Bifidobacterium versus age
+
+```{r}
+(bifido.v.age.p <- agg.physeq.genus %>%
+   transform_sample_counts(function(x) x/sum(x)) %>% 
+   psmelt %>% 
+   mutate(log10relab=log10(Abundance)) %>% 
+   dplyr::filter(genus == "Bifidobacterium") %>% 
+   dplyr::filter(age.approx.months <= 40) %>%
+   ggplot(aes(x=age.approx.months, y=log10relab)) +
+   geom_smooth(method="lm", color=age.color, linewidth=0.5) +
+   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
+                outlier.shape=16, outlier.size=0.5) +
+   geom_vline(xintercept=6, lty=2) +
+   labs(x="Age (months)", y="log10(relab)", title="Bifidobacterium") +
+   theme_classic(base_size=8)
+)
+```
+
+```{r}
+# pdf("../plots/bifidobacterium_relab_v_age_boxplots_w_slope.pdf", width=2, height=2)
+# bifido.v.age.p
+# dev.off()
+```
+
+
+## Ligilactobacillus versus diet
+
+```{r}
+(ligilacto.v.diet.p <- agg.physeq.genus %>% 
+   transform_sample_counts(function(x) x/sum(x)) %>% 
+   psmelt %>% 
+   dplyr::filter(age.approx.months <= 40) %>% 
+   mutate(log10relab=log10(Abundance)) %>% 
+   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+   dplyr::filter(genus == "Ligilactobacillus") %>% 
+   ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
+   labs(x="", y="log10(relab)", title="Ligilactobacillus") +
+   scale_fill_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/ligilactobacillus_v_diet_boxplots.pdf", width=1.5, height=1.5)
+ligilacto.v.diet.p
+dev.off()
+```
+
+## Emergencia versus diet
+
+```{r}
+(emergencia.v.diet.p <- agg.physeq.genus %>% 
+   transform_sample_counts(function(x) x/sum(x)) %>% 
+   psmelt %>% 
+   dplyr::filter(age.approx.months <= 40) %>% 
+   dplyr::filter(genus == "Emergencia") %>% 
+   mutate(log10relab=log10(Abundance)) %>% 
+   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+   ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
+   labs(x="Diet", y="log10(relative abundance)", title="Emergencia") +
+   scale_fill_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/emergencia_v_diet_boxplots.pdf", width=2, height=2)
+# emergencia.v.diet.p
+# dev.off()
+```
+
+## Roseburia versus diet
+
+```{r}
+(roseburia.v.diet.p <- agg.physeq.genus %>% 
+   transform_sample_counts(function(x) x/sum(x)) %>% 
+   psmelt %>% 
+   dplyr::filter(age.approx.months <= 40) %>% 
+   dplyr::filter(genus == "Roseburia") %>% 
+   mutate(log10relab=log10(Abundance)) %>% 
+   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+   ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
+   labs(x="Diet", y="log10(relative abundance)", title="Roseburia") +
+   scale_fill_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/roseburia_v_diet_boxplots.pdf", width=2, height=2)
+# roseburia.v.diet.p
+# dev.off()
+```
