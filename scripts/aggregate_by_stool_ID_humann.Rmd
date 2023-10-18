@@ -1,0 +1,266 @@
+Aggregate HUMAnN outputs by `stool.ID`. I will average relabs and TPM values. I will exclude the control samples.
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+```
+
+# Import metadata
+
+```{r}
+seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", sep="\t", header=T)
+lib.meta.df <- read.table("../data/metadata/library_metadata_after_QC_n3213_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_230620.txt", sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+```
+
+```{r}
+seq.meta.annot.df <- seq.meta.df %>%
+  merge(lib.meta.df, by="lib.ID") %>%
+  merge(stool.meta.df, by="stool.ID") %>% 
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID", all.x=T)
+
+dim(seq.meta.df)
+dim(seq.meta.annot.df)
+```
+
+Exclude controls.
+
+```{r}
+seq.meta.annot.df.no.ctls <- seq.meta.annot.df %>% 
+  dplyr::filter(sample.type == "DO")
+
+dim(seq.meta.annot.df)
+dim(seq.meta.annot.df.no.ctls)
+```
+
+```{r}
+n_distinct(seq.meta.annot.df$stool.ID)
+n_distinct(seq.meta.annot.df.no.ctls$stool.ID)
+```
+
+* 3124 unique stool IDs, 2997 unique DO stool IDs
+
+# Import MetaPhlan data
+
+```{r}
+mpa.df <- read.table("../data/metaphlan.txt", sep="\t", header=T)
+dim(mpa.df)
+```
+
+Subset to genus-level relative abundances.
+
+```{r}
+genus.df <- mpa.df %>% 
+  
+  # subset to genera (this step excludes UNCLASSIFIED)
+  dplyr::filter(str_detect(clade_name, "g__")) %>% 
+  dplyr::filter(!str_detect(clade_name, "s__")) %>% 
+  
+  # create "genus" column and set as rownames
+  mutate(genus = str_extract(clade_name, "g__(.*)")) %>% 
+  mutate(genus = str_sub(genus, 4)) %>% # remove g__ prefix
+  dplyr::select(-clade_name) %>%
+  column_to_rownames("genus")
+```
+
+```{r}
+summary(rowSums(genus.df != 0))
+```
+
+* No genera are all 0s
+
+```{r}
+sum(rowSums(genus.df != 0) == 1)
+```
+
+* But 25 genera have just one non-zero value
+
+# Import pathway data
+
+```{r}
+path.rpk.df <- read.table(
+  "../data/pathabundance_unstratified.txt", 
+  sep="\t", header=T, quote="", row.names=1)
+dim(path.rpk.df)
+```
+
+* 529 pathways x 3473 samples
+
+# % unclassified
+
+Exclude controls.
+
+```{r}
+mpa.df %>% 
+  dplyr::select(clade_name, all_of(
+    seq.meta.annot.df.no.ctls %>% dplyr::filter(sample.type == "DO") %>% pull(seq.ID))) %>% 
+  dplyr::filter(clade_name == "UNCLASSIFIED") %>% 
+  dplyr::select(-clade_name) %>% 
+  as.numeric() %>% summary()
+```
+
+* DO samples: median 12.3%, mean 11.9%, min 0%, max 32.0%
+
+# % UNMAPPED & UNINTEGRATED
+
+```{r}
+(path.rpk.df["UNMAPPED", ] / colSums(path.rpk.df)) %>% 
+  t() %>% data.frame() %>% 
+  setNames(c("frac.unmapped")) %>% 
+  rownames_to_column("seq.ID") %>% 
+  merge(seq.meta.annot.df.no.ctls, by="seq.ID") %>% 
+  pull(frac.unmapped) %>% 
+  summary()
+```
+
+* DO samples: mean 54.6% UNMAPPED
+
+```{r}
+(path.rpk.df["UNINTEGRATED", ] / colSums(path.rpk.df)) %>% 
+  t() %>% data.frame() %>% 
+  setNames(c("frac.unmapped")) %>% 
+  rownames_to_column("seq.ID") %>% 
+  merge(seq.meta.annot.df.no.ctls, by="seq.ID") %>% 
+  pull(frac.unmapped) %>% 
+  summary()
+```
+
+* DO samples: mean 42.8% UNINTEGRATED
+
+# Aggregate
+
+## Genera
+
+Recompute relabs so all columns add to 100.
+
+```{r}
+genus.df.cols.add.to.100 <- 100 * sweep(genus.df, MARGIN=2, STATS=colSums(genus.df), FUN="/")
+```
+
+```{r}
+agg.genus.long.df <- genus.df.cols.add.to.100 %>% 
+  rownames_to_column("genus") %>% 
+  pivot_longer(-genus, names_to="seq.ID", values_to="relab") %>% 
+  merge(seq.meta.annot.df.no.ctls, by="seq.ID") %>% 
+  group_by(stool.ID, genus) %>% 
+  summarise(relab = mean(relab), .groups="drop")
+```
+
+```{r}
+agg.genus.df <- agg.genus.long.df %>% 
+  pivot_wider(id_cols=genus, names_from=stool.ID, values_from=relab) %>% 
+  column_to_rownames("genus")
+dim(agg.genus.df)
+```
+
+* 383 genera x 2997 stool IDs
+
+```{r}
+sum(rowSums(agg.genus.df != 0) == 0)
+```
+
+Remove 7 genera that are all zeros (after removing controls).
+
+```{r}
+agg.genus.filt.df <- agg.genus.df[rowSums(agg.genus.df != 0) > 0, ]
+
+dim(agg.genus.df)
+dim(agg.genus.filt.df)
+```
+
+* 383 --> 376 genera
+
+### Sanity-check: do samples with the same `stool.ID` look similar?
+
+```{r}
+# seq.meta.annot.df.no.ctls %>% 
+#   dplyr::count(stool.ID) %>% 
+#   arrange(desc(n))
+# 
+# genus.df.cols.add.to.100[, (
+#   seq.meta.annot.df.no.ctls %>% 
+#     dplyr::filter(stool.ID == "DO_2D_4047_069w") %>% 
+#     pull(seq.ID))]
+```
+
+## Pathways
+
+We have RPK values, but we'll need TPM to aggregate across samples. 
+
+**Remove UNMAPPED and UNCLASSIFIED before computing TPM.**
+
+```{r}
+path.tpm.df <- path.rpk.df %>%
+  rownames_to_column("pathway") %>% 
+  dplyr::filter(!(pathway %in% c("UNMAPPED", "UNINTEGRATED"))) %>% 
+  column_to_rownames("pathway")
+```
+
+```{r}
+path.tpm.df <- 1e6 * sweep(path.tpm.df, MARGIN=2, STATS=colSums(path.tpm.df), FUN="/")
+```
+
+```{r}
+summary(colSums(path.tpm.df))
+```
+
+The NAs are for the negative controls that have zero total pathway TPM abundances.
+
+```{r}
+agg.path.tpm.long.df <- path.tpm.df %>% 
+  rownames_to_column("Pathway") %>% 
+  pivot_longer(-Pathway, names_to="seq.ID", values_to="tpm") %>% 
+  merge(seq.meta.annot.df.no.ctls, by="seq.ID") %>% # this merge removes controls
+  group_by(stool.ID, Pathway) %>% 
+  summarise(tpm = mean(tpm), .groups="drop")
+```
+
+```{r}
+agg.path.tpm.df <- agg.path.tpm.long.df %>% 
+  pivot_wider(id_cols=Pathway, names_from=stool.ID, values_from=tpm) %>% 
+  column_to_rownames("Pathway")
+dim(agg.path.tpm.df)
+```
+
+```{r}
+sum(rowSums(agg.path.tpm.df != 0) == 0)
+```
+
+Remove 105 pathways that are all zeros (after removing controls).
+
+```{r}
+agg.path.tpm.filt.df <- agg.path.tpm.df[rowSums(agg.path.tpm.df != 0) > 0, ]
+
+dim(agg.path.tpm.df)
+dim(agg.path.tpm.filt.df)
+```
+
+* 527 --> 422 pathways
+
+```{r}
+summary(colSums(agg.path.tpm.filt.df))
+```
+
+* All samples add to 1 M
+
+# Export
+
+```{r}
+agg.genus.filt.df %>%
+  rownames_to_column("genus") %>% 
+  write.table(
+    sprintf("../data/metaphlan_genus_agg_by_stool_ID_n%ix%i.txt",
+            nrow(.), ncol(.)-1),
+    sep="\t", quote=F, row.names=F)
+```
+
+```{r}
+agg.path.tpm.filt.df %>%
+  rownames_to_column("Pathway") %>% 
+  write.table(
+    sprintf("../data/pathabundance_tpm_agg_by_stool_ID_n%ix%i.txt",
+            nrow(.), ncol(.)-1),
+    sep="\t", quote=F, row.names=F)
+```
