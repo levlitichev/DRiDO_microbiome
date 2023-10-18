@@ -1,0 +1,1045 @@
+Compare DO AL mice to B6 mice and human samples from `curatedMetagenomicData`.
+
+N.B. Human data is with MetaPhlAn3, mice data is with MetaPhlAn4. Functional results should be the same except for differences to the MetaCyc database (e.g. a slightly different name for a pathway ID).
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(broom) # tidy
+library(ggpubr) # stat_compare_means
+library(ggrepel) # geom_text_repel
+
+PADJ.THRESH <- 0.1
+
+study.palette <- c(
+  `DO AL` = "darkolivegreen",
+  B6 = "slateblue",
+  Human = "firebrick")
+
+age.color <- "seagreen"
+```
+
+# Import DO data
+
+## Metadata
+
+```{r}
+DO.stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+DO.mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv")
+
+DO.meta.df <- DO.stool.meta.df %>% 
+  merge(DO.mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+Subset to AL.
+
+```{r}
+DO.AL.meta.df <- DO.meta.df %>% dplyr::filter(Diet == "AL")
+```
+
+## Model input data
+
+```{r}
+DO.AL.genus.log2relab.w.comm.df <- read.table(
+  "../results/DO_AL_genus_log2relab_filt_w_comm_n253x573.txt", 
+  sep="\t", header=T, check.names=F)
+
+DO.AL.pathway.log2tpm.w.comm.df <- read.table(
+  "../results/DO_AL_pathway_log2tpm_filt_w_comm_n263x573.txt",
+  sep="\t", header=T, quote="", check.names=F)
+```
+
+## MaAsLin2 output
+
+Model was run on just AL samples. No genetics.
+
+Model: y_mb ~ age + (1|mouse.ID) + (1|Cohort) + (1|Cage) + (1|Batch)
+
+Age and microbiome features were scaled.
+
+```{r}
+DO.AL.genus.maaslin.df <- read.table(
+  "../results/maaslin2_DO_AL_genus/all_results.tsv",
+  sep="\t", header=T)
+
+DO.AL.pathway.maaslin.df <- read.table(
+  "../results/maaslin2_DO_AL_pathway/all_results.tsv",
+  sep="\t", header=T, quote="")
+```
+
+# Import B6 data
+
+```{r}
+B6.meta.df <- read.table(
+  "../data/metadata/B6_sample_metadata.txt", 
+  sep="\t", header=T)
+
+B6.genus.log2relab.w.comm.df <- read.table(
+  "../results/B6_genus_log2relab_filt_w_comm_n267x141.txt", 
+  sep="\t", header=T, check.names=F)
+
+B6.pathway.log2tpm.w.comm.df <- read.table(
+  "../results/B6_pathway_log2tpm_filt_w_comm_n234x141.txt",
+  sep="\t", header=T, quote="", check.names=F)
+```
+
+## MaAsLin2 output
+
+Model: y_mb ~ age + (1|cage)
+
+Age and microbiome features were scaled.
+
+```{r}
+B6.genus.maaslin.df <- read.table(
+  "../results/maaslin2_B6_genus/all_results.tsv",
+  sep="\t", header=T)
+
+B6.pathway.maaslin.df <- read.table(
+  "../results/maaslin2_B6_pathway/all_results.tsv",
+  sep="\t", header=T, quote="")
+```
+
+# Import human data
+
+```{r}
+human.meta.df <- read.table(
+  "../data/metadata/CMD_human_sample_metadata_n4101.txt", 
+  sep="\t", header=T)
+
+human.genus.log2relab.w.comm.df <- read.table(
+  "../results/CMD_human_genus_log2relab_filt_w_comm_n95x4101.txt", 
+  sep="\t", header=T, check.names=F)
+
+human.pathway.log2tpm.w.comm.df <- read.table(
+  "../results/CMD_human_pathway_log2tpm_filt_w_comm_n359x4101.txt",
+  sep="\t", header=T, quote="", check.names=F)
+```
+
+## MaAsLin2 output
+
+Model: y_mb ~ age + (1|study_name)
+
+Age and microbiome features were scaled.
+
+```{r}
+human.genus.maaslin.df <- read.table(
+  "../results/maaslin2_human_genus/all_results.tsv",
+  sep="\t", header=T)
+
+human.pathway.maaslin.df <- read.table(
+  "../results/maaslin2_human_pathway/all_results.tsv",
+  sep="\t", header=T, quote="")
+```
+
+# TODO: Import mapping between short and full pathway names
+
+```{r}
+pathway.names.df <- read.table(
+  "../data/metadata/humann_pathway_original_and_clean_names_n705.txt",
+  sep="\t", header=T, quote="")
+```
+
+# Proportion of age-associated taxa per dataset
+
+```{r}
+perc.feats.assoc.w.age.df <- data.frame(c(
+  `DO AL_genus` = prop.table(table(DO.AL.genus.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
+  B6_genus = prop.table(table(B6.genus.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
+  Human_genus = prop.table(table(human.genus.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
+  `DO AL_pathway` = prop.table(table(DO.AL.pathway.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
+  B6_pathway = prop.table(table(B6.pathway.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
+  Human_pathway = prop.table(table(human.pathway.maaslin.df$qval < PADJ.THRESH))[["TRUE"]]
+)) %>%
+  setNames("frac") %>%
+  mutate(perc = frac*100) %>%
+  rownames_to_column("study_tax.or.fxn") %>%
+  separate(study_tax.or.fxn, into=c("study", "tax.or.fxn"), sep="_") %>%
+  mutate(study = factor(study, levels=c("DO AL", "B6", "Human")))
+```
+
+```{r}
+(perc.feats.assoc.w.age.p <- perc.feats.assoc.w.age.df %>% 
+   ggplot(aes(x=study, y=perc, fill=study)) +
+   geom_col() +
+   facet_wrap(~tax.or.fxn, scales="free", ncol=1) +
+   labs(x="", y="% features associated with age") +
+   scale_fill_manual(values=study.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/perc_feats_associated_w_age_DO_v_B6_v_humans.pdf", width=1.5, height=3)
+# perc.feats.assoc.w.age.p
+# dev.off()
+```
+
+# Universal age-associated features
+
+## Genus
+
+```{r}
+DO.AL.v.B6.genus.maaslin.df <- merge(
+  DO.AL.genus.maaslin.df,
+  B6.genus.maaslin.df,
+  by="feature", suffixes=c(".DO_AL", ".B6"))
+
+DO.AL.v.human.genus.maaslin.df <- merge(
+  DO.AL.genus.maaslin.df,
+  human.genus.maaslin.df,
+  by="feature", suffixes=c(".DO_AL", ".human"))
+
+B6.v.human.genus.maaslin.df <- merge(
+  B6.genus.maaslin.df,
+  human.genus.maaslin.df,
+  by="feature", suffixes=c(".B6", ".human"))
+
+all.genus.maaslin.df <- DO.AL.v.B6.genus.maaslin.df %>% 
+  merge(human.genus.maaslin.df, by="feature")
+
+nrow(DO.AL.v.B6.genus.maaslin.df)
+nrow(DO.AL.v.human.genus.maaslin.df)
+nrow(B6.v.human.genus.maaslin.df)
+nrow(all.genus.maaslin.df)
+```
+
+* 196 genus-level features common to DO AL and B6
+* 23 common to DO AL and human
+* 24 common to B6 and human
+* 19 common to all 3
+
+Any features significant in all 3 datasets?
+
+```{r}
+all.genus.maaslin.df %>% 
+  dplyr::filter((qval.DO_AL < PADJ.THRESH) & (qval.B6 < PADJ.THRESH) & (qval < PADJ.THRESH)) %>% 
+  dplyr::filter((sign(coef.DO_AL) == sign(coef.B6)) & (sign(coef.DO_AL) == sign(coef))) %>% 
+  arrange(coef.DO_AL) %>% 
+  relocate(feature, starts_with("coef"), contains("qval"))
+```
+
+* 2 features significant in all 3 *in the same direction*:
+  * Uniqueness, which increases with age
+  * Blautia, which decreases with age
+
+### Pairwise comparisons
+
+```{r}
+# DO AL v. B6
+DO.AL.v.B6.genus.maaslin.df <- DO.AL.v.B6.genus.maaslin.df %>% 
+
+  # indicate significance
+  mutate(is.sig.DO_AL = qval.DO_AL < PADJ.THRESH,
+         is.sig.B6 = qval.B6 < PADJ.THRESH) %>% 
+  
+  # indicate if significant in both
+  rowwise() %>% 
+  mutate(both.sig.and.same.dir = factor(case_when(
+    (is.sig.DO_AL & is.sig.B6) & (sign(coef.DO_AL) == sign(coef.B6)) ~ T,
+    T ~ F))) %>% 
+  ungroup()
+
+# DO AL v. human
+DO.AL.v.human.genus.maaslin.df <- DO.AL.v.human.genus.maaslin.df %>% 
+
+  # indicate significance
+  mutate(is.sig.DO_AL = qval.DO_AL < PADJ.THRESH,
+         is.sig.human = qval.human < PADJ.THRESH) %>% 
+  
+  # indicate if significant
+  rowwise() %>% 
+  mutate(both.sig.and.same.dir = factor(case_when(
+    (is.sig.DO_AL & is.sig.human) & (sign(coef.DO_AL) == sign(coef.human)) ~ T,
+    T ~ F))) %>%
+  ungroup()
+
+# B6 v. human
+B6.v.human.genus.maaslin.df <- B6.v.human.genus.maaslin.df %>% 
+
+  # indicate significance
+  mutate(is.sig.B6 = qval.B6 < PADJ.THRESH,
+         is.sig.human = qval.human < PADJ.THRESH) %>% 
+  
+  # indicate if significant
+  rowwise() %>% 
+  mutate(both.sig.and.same.dir = factor(case_when(
+    (is.sig.B6 & is.sig.human) & (sign(coef.B6) == sign(coef.human)) ~ T,
+    T ~ F))) %>%
+  ungroup()
+```
+
+Are the age coefficients consistent? We can quantify with correlation.
+
+```{r}
+# DO AL v. B6
+DO.AL.v.B6.genus.age.coef.cor <- cor(
+  DO.AL.v.B6.genus.maaslin.df$coef.DO_AL, 
+  DO.AL.v.B6.genus.maaslin.df$coef.B6, 
+  method="pearson")
+DO.AL.v.B6.genus.age.coef.cor.pval <- cor.test(
+  DO.AL.v.B6.genus.maaslin.df$coef.DO_AL, 
+  DO.AL.v.B6.genus.maaslin.df$coef.B6, 
+  method="pearson")
+
+# DO AL v. human
+DO.AL.v.human.genus.age.coef.cor <- cor(
+  DO.AL.v.human.genus.maaslin.df$coef.DO_AL, 
+  DO.AL.v.human.genus.maaslin.df$coef.human, 
+  method="pearson")
+DO.AL.v.human.genus.age.coef.cor.pval <- cor.test(
+  DO.AL.v.human.genus.maaslin.df$coef.DO_AL, 
+  DO.AL.v.human.genus.maaslin.df$coef.human, 
+  method="pearson")
+
+# B6 v. human
+B6.v.human.genus.age.coef.cor <- cor(
+  B6.v.human.genus.maaslin.df$coef.B6, 
+  B6.v.human.genus.maaslin.df$coef.human, 
+  method="pearson")
+B6.v.human.genus.age.coef.cor.pval <- cor.test(
+  B6.v.human.genus.maaslin.df$coef.B6, 
+  B6.v.human.genus.maaslin.df$coef.human, 
+  method="pearson")
+```
+
+```{r}
+genus.feats.to.label <- c(
+  
+  # sig in all 3
+  "Uniqueness",
+  "Blautia",
+  
+  # alpha div
+  "Observed",
+  "Shannon",
+  "Simpson",
+  
+  # sig in mice
+  "Bifidobacterium",
+  "Paramuribaculum",
+  "Muribaculum",
+  "Adlercreutzia")
+```
+
+#### DO AL v. B6
+
+```{r}
+(DO.AL.v.B6.genus.maaslin.p <- DO.AL.v.B6.genus.maaslin.df %>% 
+   
+   arrange(desc(both.sig.and.same.dir)) %>% 
+   mutate(label = case_when(feature %in% genus.feats.to.label ~ feature, TRUE ~ "")) %>% 
+   
+   # too busy with error bars
+   ggplot(aes(x=coef.DO_AL, y=coef.B6,
+              label=label, color=both.sig.and.same.dir)) +
+   geom_point(shape=16, size=0.25) +
+   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   labs(x="DO AL age coefficient", y="B6 age coefficient", 
+        title=sprintf("Genus-level, correlation=%.2f, p-value=%.2f", 
+                      DO.AL.v.B6.genus.age.coef.cor, DO.AL.v.B6.genus.age.coef.cor.pval$p.value),
+        color="Significant and consistent in both DO and B6?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/DO_AL_v_B6_mpa_genus_age_coefficients.pdf", height=2, width=2)
+# DO.AL.v.B6.genus.maaslin.p
+# dev.off()
+```
+
+#### DO AL v. human
+
+```{r}
+(DO.AL.v.human.genus.maaslin.p <- DO.AL.v.human.genus.maaslin.df %>% 
+   
+   arrange(desc(both.sig.and.same.dir)) %>% 
+   mutate(label = case_when(feature %in% genus.feats.to.label ~ feature, TRUE ~ "")) %>% 
+   
+   # too busy with error bars
+   ggplot(aes(x=coef.DO_AL, y=coef.human,
+              label=label, color=both.sig.and.same.dir)) +
+   geom_point(shape=16, size=0.25) +
+   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   labs(x="DO AL age coefficient", y="Human age coefficient", 
+        title=sprintf("Genus-level, correlation=%.2f, p-value=%.2f", 
+                      DO.AL.v.human.genus.age.coef.cor, DO.AL.v.human.genus.age.coef.cor.pval$p.value),
+        color="Significant and consistent in both DO and humans?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/DO_AL_v_human_mpa_genus_age_coefficients.pdf", height=2, width=2)
+# DO.AL.v.human.genus.maaslin.p
+# dev.off()
+```
+
+#### B6 v. human
+
+```{r}
+(B6.v.human.genus.maaslin.p <- B6.v.human.genus.maaslin.df %>% 
+   
+   arrange(desc(both.sig.and.same.dir)) %>% 
+   mutate(label = case_when(feature %in% genus.feats.to.label ~ feature, TRUE ~ "")) %>% 
+   
+   # too busy with error bars
+   ggplot(aes(x=coef.B6, y=coef.human,
+              label=label, color=both.sig.and.same.dir)) +
+   geom_point(shape=16, size=0.25) +
+   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   labs(x="B6 age coefficient", y="Human age coefficient", 
+        title=sprintf("Genus-level, correlation=%.2f, p-value=%.2f", 
+                      B6.v.human.genus.age.coef.cor, B6.v.human.genus.age.coef.cor.pval$p.value),
+        color="Significant and consistent in both DO and humans?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/B6_v_human_mpa_genus_age_coefficients.pdf", height=2, width=2)
+# B6.v.human.genus.maaslin.p
+# dev.off()
+```
+
+## Pathways
+
+```{r}
+DO.AL.v.B6.pathway.maaslin.df <- merge(
+  DO.AL.pathway.maaslin.df,
+  B6.pathway.maaslin.df,
+  by="feature", suffixes=c(".DO_AL", ".B6"))
+
+DO.AL.v.human.pathway.maaslin.df <- merge(
+  DO.AL.pathway.maaslin.df,
+  human.pathway.maaslin.df,
+  by="feature", suffixes=c(".DO_AL", ".human"))
+
+B6.v.human.pathway.maaslin.df <- merge(
+  B6.pathway.maaslin.df,
+  human.pathway.maaslin.df,
+  by="feature", suffixes=c(".B6", ".human"))
+
+all.pathway.maaslin.df <- DO.AL.v.B6.pathway.maaslin.df %>% 
+  merge(human.pathway.maaslin.df, by="feature")
+
+nrow(DO.AL.pathway.maaslin.df)
+nrow(B6.pathway.maaslin.df)
+nrow(human.pathway.maaslin.df)
+
+nrow(DO.AL.v.B6.pathway.maaslin.df)
+nrow(DO.AL.v.human.pathway.maaslin.df)
+nrow(B6.v.human.pathway.maaslin.df)
+nrow(all.pathway.maaslin.df)
+```
+
+* 193 overlapping pathways in all 3
+
+Any pathways significant in all 3 datasets?
+
+```{r}
+all.pathway.maaslin.df %>% 
+  dplyr::filter((qval.DO_AL < PADJ.THRESH) & (qval.B6 < PADJ.THRESH) & (qval < PADJ.THRESH)) %>% 
+  dplyr::filter((sign(coef.DO_AL) == sign(coef.B6)) & (sign(coef.DO_AL) == sign(coef))) %>% 
+  arrange(coef.DO_AL) %>% 
+  relocate(feature, coef.DO_AL, coef.B6, coef)
+```
+
+6 "pathways":
+
+  * RIBOSYN2-PWY: flavin biosynthesis I (bacteria and plants)
+  * PWY-7237: myo-, chiro- and scyllo-inositol degradation
+  * PWY-7357: thiamine phosphate formation from pyrithiamine and oxythiamine (yeast)
+  * PWY-6897: thiamine diphosphate salvage II
+  * Uniqueness
+  * PWY-7234: inosine-5'-phosphate biosynthesis III
+
+### Pairwise comparisons
+
+```{r}
+# DO AL v. B6
+DO.AL.v.B6.pathway.maaslin.df <- DO.AL.v.B6.pathway.maaslin.df %>% 
+
+  # indicate significance
+  mutate(is.sig.DO_AL = qval.DO_AL < PADJ.THRESH,
+         is.sig.B6 = qval.B6 < PADJ.THRESH) %>% 
+  
+  # indicate if significant in both
+  rowwise() %>% 
+  mutate(both.sig.and.same.dir = factor(case_when(
+    (is.sig.DO_AL & is.sig.B6) & (sign(coef.DO_AL) == sign(coef.B6)) ~ T,
+    T ~ F))) %>% 
+  ungroup()
+
+# DO AL v. human
+DO.AL.v.human.pathway.maaslin.df <- DO.AL.v.human.pathway.maaslin.df %>% 
+
+  # indicate significance
+  mutate(is.sig.DO_AL = qval.DO_AL < PADJ.THRESH,
+         is.sig.human = qval.human < PADJ.THRESH) %>% 
+  
+  # indicate if significant
+  rowwise() %>% 
+  mutate(both.sig.and.same.dir = factor(case_when(
+    (is.sig.DO_AL & is.sig.human) & (sign(coef.DO_AL) == sign(coef.human)) ~ T,
+    T ~ F))) %>%
+  ungroup()
+
+# B6 v. human
+B6.v.human.pathway.maaslin.df <- B6.v.human.pathway.maaslin.df %>% 
+
+  # indicate significance
+  mutate(is.sig.B6 = qval.B6 < PADJ.THRESH,
+         is.sig.human = qval.human < PADJ.THRESH) %>% 
+  
+  # indicate if significant
+  rowwise() %>% 
+  mutate(both.sig.and.same.dir = factor(case_when(
+    (is.sig.B6 & is.sig.human) & (sign(coef.B6) == sign(coef.human)) ~ T,
+    T ~ F))) %>%
+  ungroup()
+```
+
+Quantify consistency with correlation.
+
+```{r}
+# DO AL v. B6
+DO.AL.v.B6.pathway.age.coef.cor <- cor(
+  DO.AL.v.B6.pathway.maaslin.df$coef.DO_AL, 
+  DO.AL.v.B6.pathway.maaslin.df$coef.B6, method="pearson")
+DO.AL.v.B6.pathway.age.coef.cor.pval <- cor.test(
+  DO.AL.v.B6.pathway.maaslin.df$coef.DO_AL, 
+  DO.AL.v.B6.pathway.maaslin.df$coef.B6, method="pearson")
+
+# DO AL v. human
+DO.AL.v.human.pathway.age.coef.cor <- cor(
+  DO.AL.v.human.pathway.maaslin.df$coef.DO_AL, 
+  DO.AL.v.human.pathway.maaslin.df$coef.human, 
+  method="pearson")
+DO.AL.v.human.pathway.age.coef.cor.pval <- cor.test(
+  DO.AL.v.human.pathway.maaslin.df$coef.DO_AL, 
+  DO.AL.v.human.pathway.maaslin.df$coef.human, 
+  method="pearson")
+
+# B6 v. human
+B6.v.human.pathway.age.coef.cor <- cor(
+  B6.v.human.pathway.maaslin.df$coef.B6, 
+  B6.v.human.pathway.maaslin.df$coef.human, 
+  method="pearson")
+B6.v.human.pathway.age.coef.cor.pval <- cor.test(
+  B6.v.human.pathway.maaslin.df$coef.B6, 
+  B6.v.human.pathway.maaslin.df$coef.human, 
+  method="pearson")
+```
+
+```{r}
+pathway.feats.to.label.df <- data.frame(label = c(
+  Uniqueness = "Uniqueness",
+  `PWY7234` = "IMP biosynthesis III",
+  `PWY7357` = "thiamine formation from pyrithiamine and oxythiamine",
+  `RIBOSYN2PWY` = "flavin biosynthesis I",
+  `PWY7237` = "inositol degradation",
+  `PWY6897` = "thiamine diphosphate salvage II")) %>% 
+  rownames_to_column("feature")
+```
+
+#### DO AL v. B6
+
+```{r}
+(DO.AL.v.B6.pathway.maaslin.p <- DO.AL.v.B6.pathway.maaslin.df %>% 
+   
+   arrange(desc(both.sig.and.same.dir)) %>% 
+   merge(pathway.feats.to.label.df, by="feature", all.x=T) %>% 
+   
+   # too busy with error bars
+   ggplot(aes(x=coef.DO_AL, y=coef.B6,
+              label=label, color=both.sig.and.same.dir)) +
+   geom_point(shape=16, size=0.25) +
+   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   labs(x="DO AL age coefficient", y="B6 age coefficient", 
+        title=sprintf("Pathway, correlation=%.2f, p-value=%.2f", 
+                      DO.AL.v.B6.pathway.age.coef.cor, DO.AL.v.B6.pathway.age.coef.cor.pval$p.value),
+        color="Significant and consistent in both DO and B6?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/DO_AL_v_B6_humann_pathway_age_coefficients.pdf", height=2, width=2)
+DO.AL.v.B6.pathway.maaslin.p
+dev.off()
+```
+
+#### DO AL v. human
+
+```{r}
+(DO.AL.v.human.pathway.maaslin.p <- DO.AL.v.human.pathway.maaslin.df %>% 
+   
+   arrange(desc(both.sig.and.same.dir)) %>% 
+   merge(pathway.feats.to.label.df, by="feature", all.x=T) %>% 
+   
+   # too busy with error bars
+   ggplot(aes(x=coef.DO_AL, y=coef.human,
+              label=label, color=both.sig.and.same.dir)) +
+   geom_point(shape=16, size=0.25) +
+   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   labs(x="DO AL age coefficient", y="Human age coefficient", 
+        title=sprintf("Pathways, correlation=%.2f, p-value=%.2f", 
+                      DO.AL.v.human.pathway.age.coef.cor, DO.AL.v.human.pathway.age.coef.cor.pval$p.value),
+        color="Significant and consistent in both DO AL mice and humans?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/DO_AL_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
+DO.AL.v.human.pathway.maaslin.p
+dev.off()
+```
+
+#### B6 v. human
+
+```{r}
+(B6.v.human.pathway.maaslin.p <- B6.v.human.pathway.maaslin.df %>% 
+   
+   arrange(desc(both.sig.and.same.dir)) %>% 
+   merge(pathway.feats.to.label.df, by="feature", all.x=T) %>%
+   
+   # too busy with error bars
+   ggplot(aes(x=coef.B6, y=coef.human,
+              label=label, color=both.sig.and.same.dir)) +
+   geom_point(shape=16, size=0.25) +
+   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   labs(x="B6 age coefficient", y="Human age coefficient", 
+        title=sprintf("Pathways, correlation=%.2f, p-value=%.2f", 
+                      B6.v.human.pathway.age.coef.cor, B6.v.human.pathway.age.coef.cor.pval$p.value),
+        color="Significant and consistent in both B6 and humans?") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/B6_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
+B6.v.human.pathway.maaslin.p
+dev.off()
+```
+
+# Uniqueness
+
+```{r}
+uniq.df <- rbind(
+  
+  # DO AL
+  DO.AL.genus.log2relab.w.comm.df %>% 
+    dplyr::filter(feature == "Uniqueness") %>%
+    column_to_rownames("feature") %>% 
+    t() %>% data.frame() %>% 
+    rownames_to_column("stool.ID") %>% 
+    merge(DO.AL.meta.df, by="stool.ID") %>% 
+    dplyr::select(stool.ID, age.approx.months, Uniqueness) %>% 
+    dplyr::rename(id = stool.ID, age = age.approx.months) %>% 
+    mutate(study="DO AL"),
+  
+  # B6
+  B6.genus.log2relab.w.comm.df %>% 
+    dplyr::filter(feature == "Uniqueness") %>%
+    column_to_rownames("feature") %>% 
+    t() %>% data.frame() %>% 
+    rownames_to_column("id") %>% 
+    merge(B6.meta.df, by="id") %>% 
+    dplyr::select(id, age.months, Uniqueness) %>% 
+    dplyr::rename(age = age.months) %>% 
+    mutate(study="B6"),
+  
+  # human
+  human.genus.log2relab.w.comm.df %>% 
+    dplyr::filter(feature == "Uniqueness") %>%
+    column_to_rownames("feature") %>% 
+    t() %>% data.frame() %>% 
+    rownames_to_column("sample_id") %>% 
+    merge(human.meta.df, by="sample_id") %>% 
+    dplyr::select(sample_id, age, Uniqueness) %>% 
+    dplyr::rename(id = sample_id) %>% 
+    mutate(study="Human")
+)
+```
+
+```{r}
+(DO.AL.B6.human.uniq.v.age.faceted.p <- uniq.df %>%
+   mutate(study = factor(study, levels=c("DO AL", "B6", "Human"))) %>% 
+   ggplot(aes(x=age, y=Uniqueness, color=study)) +
+   geom_point(shape=16, alpha=0.1) +
+   geom_smooth(method="lm", linewidth=0.5) +
+   facet_wrap(~study, scales="free") +
+   labs(x="Age", y="",
+        title="Taxonomic uniqueness (genus-level)") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none") +
+   scale_color_manual(values=study.palette))
+```
+
+```{r}
+# pdf("../plots/DO_AL_B6_human_mpa_genus_uniq_v_age_faceted.pdf", height=1.75, width=4)
+# DO.AL.B6.human.uniq.v.age.faceted.p
+# dev.off()
+```
+
+## Separately per human study
+
+```{r}
+human.uniq.df <- human.genus.log2relab.w.comm.df %>% 
+  dplyr::filter(feature == "Uniqueness") %>% 
+  dplyr::select(-feature) %>% 
+  t() %>% 
+  data.frame() %>% 
+  setNames("value") %>% 
+  rownames_to_column("sample_id") %>% 
+  merge(human.meta.df, by="sample_id")
+```
+
+```{r}
+human.uniq.lm.per.study.df <- human.uniq.df %>% 
+  group_by(study_name) %>% 
+  do(tidy(lm(value ~ age, data=.))) %>% 
+  ungroup() %>% 
+  dplyr::filter(term == "age")
+```
+
+Include n to show that uniqueness is significant in the big studies.
+
+```{r}
+n.per.human.study.df <- human.uniq.df %>% 
+  dplyr::count(study_name) %>% arrange(desc(n))
+```
+
+```{r}
+(uniq.coef.per.human.study.p <- human.uniq.lm.per.study.df %>% 
+   merge(n.per.human.study.df, by="study_name") %>% 
+   mutate(padj = p.adjust(p.value, method = "BH"),
+          is.sig = padj < PADJ.THRESH) %>% 
+   ggplot(aes(x=estimate, xmin=estimate-std.error, xmax=estimate+std.error,
+              y=reorder(study_name, estimate), color=is.sig)) +
+   geom_text(aes(label=paste0("n=", n), x=-0.004), hjust=0) +
+   geom_pointrange(shape=16, size=0.5) +
+   geom_vline(xintercept=0, lty=2) +
+   labs(x="Age coefficient\n(estimate ± standard error)",
+        y="Human study", color=sprintf("qval < %.1f?", PADJ.THRESH)) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/uniq_age_coef_per_human_study.pdf", height=3, width=2.5)
+# uniq.coef.per.human.study.p + theme(legend.position="none")
+# dev.off()
+```
+
+
+# Alpha diversity
+
+```{r}
+DO.AL.genus.alpha.div.long.df <- DO.AL.genus.log2relab.w.comm.df %>% 
+  dplyr::filter(feature %in% c("Observed", "Shannon", "Simpson", "InvSimpson")) %>% 
+  column_to_rownames("feature") %>% 
+  t() %>% data.frame() %>% 
+  rownames_to_column("stool.ID") %>% 
+  pivot_longer(-stool.ID, names_to="metric") %>% 
+  merge(DO.meta.df, by="stool.ID")
+
+B6.genus.alpha.div.long.df <- B6.genus.log2relab.w.comm.df %>% 
+  dplyr::filter(feature %in% c("Observed", "Shannon", "Simpson", "InvSimpson")) %>% 
+  column_to_rownames("feature") %>% 
+  t() %>% data.frame() %>% 
+  rownames_to_column("id") %>% 
+  pivot_longer(-id, names_to="metric") %>% 
+  merge(B6.meta.df, by="id")
+
+human.genus.alpha.div.long.df <- human.genus.log2relab.w.comm.df %>% 
+  dplyr::filter(feature %in% c("Observed", "Shannon", "Simpson", "InvSimpson")) %>% 
+  column_to_rownames("feature") %>% 
+  t() %>% data.frame() %>% 
+  rownames_to_column("sample_id") %>% 
+  pivot_longer(-sample_id, names_to="metric") %>% 
+  merge(human.meta.df, by="sample_id")
+```
+
+## Plot Shannon and Simpson in 3 datasets
+
+```{r}
+alpha.div.long.df <- rbind(
+  
+  # DO AL
+  DO.AL.genus.alpha.div.long.df %>% 
+    dplyr::select(stool.ID, metric, value, age.approx.months) %>% 
+    dplyr::rename(id = stool.ID, age = age.approx.months) %>% 
+    mutate(study = "DO AL"),
+  
+  # B6
+  B6.genus.alpha.div.long.df %>% 
+    dplyr::select(id, metric, value, age.months) %>% 
+    dplyr::rename(age = age.months) %>% 
+    mutate(study = "B6"),
+  
+  # human
+  human.genus.alpha.div.long.df %>% 
+    dplyr::select(sample_id, metric, value, age) %>% 
+    dplyr::rename(id = sample_id) %>% 
+    mutate(study = "Human")
+)
+```
+
+```{r}
+alpha.div.long.df %>%
+   dplyr::filter(metric %in% c("Shannon", "Simpson")) %>% 
+  mutate(study = factor(study, levels=c("DO AL", "B6", "Human"))) %>% 
+   ggplot(aes(x=age, y=value, color=study)) +
+   geom_point(shape=16, alpha=0.1) +
+   geom_smooth(method="lm", linewidth=0.5) +
+   facet_wrap(~metric + study, scales="free", ncol=3) +
+   labs(x="Age", y="", title="Alpha diversity") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none") +
+   scale_color_manual(values=study.palette)
+```
+
+* Alpha diversity appears to increase in B6 and humans, but not DO cohort
+
+## Separately per human study
+
+```{r}
+human.genus.alpha.div.lm.per.study.df <- human.genus.alpha.div.long.df %>% 
+  group_by(study_name, metric) %>% 
+  do(tidy(lm(value ~ age, data=.))) %>% 
+  ungroup() %>% 
+  dplyr::filter(term == "age")
+```
+
+Include n.
+
+```{r}
+n.per.human.study.df <- human.genus.alpha.div.long.df %>%
+  dplyr::filter(metric == "Observed") %>% 
+  dplyr::count(study_name) %>% arrange(desc(n))
+```
+
+```{r}
+(alpha.div.coef.per.human.study.p <- human.genus.alpha.div.lm.per.study.df %>% 
+   dplyr::filter(metric != "InvSimpson") %>% 
+   merge(n.per.human.study.df, by="study_name") %>% 
+   group_by(metric) %>% 
+   mutate(padj = p.adjust(p.value, method = "BH"),
+          is.sig = padj < PADJ.THRESH) %>% 
+   ungroup() %>% 
+   ggplot(aes(x=estimate, xmin=estimate-std.error, xmax=estimate+std.error,
+              y=reorder(study_name, estimate), color=is.sig)) +
+   geom_text(aes(label=paste0("n=", n), x=-0.004), hjust=0) +
+   geom_pointrange(shape=16, size=0.5) +
+   geom_vline(xintercept=0, lty=2) +
+   facet_wrap(~metric, nrow=1, scales="free_x") +
+   labs(x="Age coefficient\n(estimate ± standard error)",
+        y="Human study", color=sprintf("qval < %.1f?", PADJ.THRESH)) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/alpha_div_age_coef_per_human_study.pdf", height=3, width=5)
+# alpha.div.coef.per.human.study.p + theme(legend.position="none")
+# dev.off()
+```
+
+# Examples
+
+## Pathways
+
+```{r}
+get_one_pathway_feat_v_age_DO_B6_human <- function(this.pathway.feat.search.string) {
+  
+  DO.df <- DO.AL.pathway.log2tpm.w.comm.df %>% 
+    dplyr::filter(str_detect(feature, this.pathway.feat.search.string)) %>% 
+    dplyr::select(-feature) %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("value") %>% 
+    rownames_to_column("stool.ID") %>% 
+    merge(DO.AL.meta.df, by="stool.ID")
+  
+  B6.df <- B6.pathway.log2tpm.w.comm.df %>% 
+    dplyr::filter(str_detect(feature, this.pathway.feat.search.string)) %>% 
+    dplyr::select(-feature) %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("value") %>% 
+    rownames_to_column("id") %>% 
+    merge(B6.meta.df, by="id")
+  
+  human.df <- human.pathway.log2tpm.w.comm.df %>% 
+    dplyr::filter(str_detect(feature, this.pathway.feat.search.string)) %>% 
+    dplyr::select(-feature) %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("value") %>% 
+    rownames_to_column("sample_id") %>% 
+    merge(human.meta.df, by="sample_id")
+  
+  out.df <- rbind(
+    DO.df %>% dplyr::select(value, age.approx.months) %>% dplyr::rename(age=age.approx.months) %>% mutate(study="DO AL"),
+    B6.df %>% dplyr::select(value, age.months) %>% dplyr::rename(age=age.months) %>% mutate(study="B6"),
+    human.df %>% dplyr::select(value, age) %>% mutate(study="Human")
+  )
+  
+  return(out.df)
+
+}
+```
+
+### Flavin biosynthesis (RIBOSYN2-PWY)
+
+```{r}
+# use regex to avoid slight name discrepancy
+this.pathway.feat.search.string <- "RIBOSYN2PWY"
+
+(flavin.biosynth.v.age.faceted.p <- get_one_pathway_feat_v_age_DO_B6_human(this.pathway.feat.search.string) %>% 
+  mutate(study = factor(study, levels=c("DO AL", "B6", "Human"))) %>% 
+  ggplot(aes(x=age, y=value, color=study)) +
+  geom_point(shape=16, alpha=0.1) +
+  geom_smooth(method="lm", linewidth=0.5) +
+  facet_wrap(~study, scales="free") +
+  labs(x="Age", y="log2(TPM)",
+       title="Flavin biosynthesis") +
+  theme_classic(base_size=8) +
+  theme(legend.position="none") +
+  scale_color_manual(values=study.palette))
+```
+
+```{r}
+# pdf("../plots/DO_AL_B6_human_flavin_biosynth_v_age_faceted.pdf", height=1.75, width=4)
+# flavin.biosynth.v.age.faceted.p
+# dev.off()
+```
+
+## Genera
+
+```{r}
+get_one_genus_feat_v_age_DO_B6_human <- function(this.genus.feat) {
+  
+  DO.df <- DO.AL.genus.log2relab.w.comm.df %>% 
+    dplyr::filter(feature == this.genus.feat) %>% 
+    dplyr::select(-feature) %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("value") %>% 
+    rownames_to_column("stool.ID") %>% 
+    merge(DO.AL.meta.df, by="stool.ID")
+  
+  B6.df <- B6.genus.log2relab.w.comm.df %>% 
+    dplyr::filter(feature == this.genus.feat) %>% 
+    dplyr::select(-feature) %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("value") %>% 
+    rownames_to_column("id") %>% 
+    merge(B6.meta.df, by="id")
+  
+  human.df <- human.genus.log2relab.w.comm.df %>% 
+    dplyr::filter(feature == this.genus.feat) %>% 
+    dplyr::select(-feature) %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("value") %>% 
+    rownames_to_column("sample_id") %>% 
+    merge(human.meta.df, by="sample_id")
+  
+  out.df <- rbind(
+    DO.df %>% dplyr::select(value, age.approx.months) %>% dplyr::rename(age=age.approx.months) %>% mutate(study="DO AL"),
+    B6.df %>% dplyr::select(value, age.months) %>% dplyr::rename(age=age.months) %>% mutate(study="B6"),
+    human.df %>% dplyr::select(value, age) %>% mutate(study="Human")
+  )
+  
+  return(out.df)
+
+}
+```
+
+### Blautia
+
+```{r}
+this.genus.feat <- "Blautia"
+
+get_one_genus_feat_v_age_DO_B6_human(this.genus.feat) %>%
+  mutate(study = factor(study, levels=c("DO AL", "B6", "Human"))) %>% 
+  ggplot(aes(x=age, y=value, color=study)) +
+  geom_point(shape=16, alpha=0.1) +
+  geom_smooth(method="lm") +
+  facet_wrap(~study, scales="free") +
+  labs(x="Age", 
+       title="Blautia") +
+  theme_classic(base_size=8) +
+  theme(legend.position="none") +
+  scale_color_manual(values=study.palette)
+```
+
+#### Separately per human study
+
+```{r}
+human.blautia.log2relab.df <- human.genus.log2relab.w.comm.df %>% 
+  dplyr::filter(feature == "Blautia") %>% 
+  dplyr::select(-feature) %>% 
+  t() %>% 
+  data.frame() %>% 
+  setNames("value") %>% 
+  rownames_to_column("sample_id") %>% 
+  merge(human.meta.df, by="sample_id")
+```
+
+```{r}
+human.blautia.log2relab.df %>% 
+  ggplot(aes(x=age, y=value)) +
+  geom_point() +
+  geom_smooth(method="lm") +
+  facet_wrap(~study_name)
+```
+
+```{r}
+human.blautia.lm.per.study.df <- human.blautia.log2relab.df %>% 
+  group_by(study_name) %>% 
+  do(tidy(lm(value ~ age, data=.))) %>% 
+  ungroup() %>% 
+  dplyr::filter(term == "age")
+```
+
+```{r}
+(blautia.coef.per.human.study.p <- human.blautia.lm.per.study.df %>% 
+   mutate(padj = p.adjust(p.value, method = "BH"),
+          is.sig = padj < PADJ.THRESH) %>% 
+   ggplot(aes(x=estimate, xmin=estimate-std.error, xmax=estimate+std.error,
+              y=reorder(study_name, estimate), color=is.sig)) +
+   geom_pointrange(shape=16, size=0.5) +
+   geom_vline(xintercept=0, lty=2) +
+   labs(x="Age coefficient\n(estimate ± standard error)",
+        y="Study", color=sprintf("qval < %.1f?", PADJ.THRESH)) +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/blautia_age_coef_per_human_study.pdf", height=3, width=2)
+# blautia.coef.per.human.study.p + theme(legend.position="none")
+# dev.off()
+```
