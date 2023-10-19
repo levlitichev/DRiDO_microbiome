@@ -1,56 +1,43 @@
 # DRiDO Microbiome Study
 
-_Maintainer_: Lev Litichevskiy  
-_Last updated_: September 21, 2023  
-
-This repository contains code and data related to the DRiDO microbiome manuscript.
+_Author_: Lev Litichevskiy  
+_Last updated_: October 2023  
 
 bioRxiv: XXX
 
+This repository contains code and data related to the DRiDO microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results, not fastq files.
+
+## Data processing prior to this repository
+
+Quality control:
+
+- Sunbeam, including cutadapt to remove adapters, trimmomatic for quality-trimming, komplexity to remove highly repetitive sequences, and bowtie2 to remove host reads
+
+Taxonomic classification:
+
+- Kraken2 + MGBC
+- HUMAnN3 (MetaPhlAn4)
+
+Functional classification:
+
+- HUMAnN3
+
 ## Table of contents
 
-data/
-    DO_metaphlan.txt
-    DO_pathabundance.txt
-    DO_genus_agg_by_stool_ID_nAAxBB.txt
-    DO_species_agg_by_stool_ID_nAAxBB.txt
-    DO_pathabundance_tpm_agg_by_stool_ID_nAAxBB.txt
-    B6/
-        TODO
-    human/
-        TODO       
-    metadata/
-        TODO
-    AllData_20230731.csv
-    kinship.all_chroms_downloaded_from_wright22.csv
- 
-results/
-    DO_AL_species_log2relab_filt_w_comm_n292x573.txt
-    DO_AL_genus_log2relab_filt_w_comm_n240x573.txt
-    DO_AL_pathway_log2tpm_filt_w_comm_n103x573.txt
-    DO_species_log2relab_filt_w_comm_nAAxBB.txt
-    DO_genus_log2relab_filt_w_comm_nAAxBB.txt
-    DO_pathway_log2tpm_filt_w_comm_nAAxBB.txt
-    DO_all_features_nAAxBB.txt
-    asreml_TODO...
-    lme4_mb_pheno_assoc_TODO...
-    B6/
-        TODO
-    human/
-        TODO
+- `data/`
+    - `metadata/` 
+- `scripts/`: contains data processing scripts, a mix of .R and .Rmd files
+- `analysis/`: contains R notebooks used for making figures
 
-scripts/
-1. qc.Rmd (?) 
-2. aggregate_by_stool_ID.Rmd
-3. prepare_for_linear_modeling.Rmd
-4. run_asreml.R
-5. collate_asreml_results.R
-6. get_phenotype_value_closest_to_microbiome_sample.Rmd
-7. run_lme4_mb_pheno_assoc.R 
-8. collate_lme4_mb_pheno_assoc_results.R
-9. maaslin.Rmd
+## Quick start
 
-analysis/
-1. taxonomy_metaphlan.Rmd
-2. function_humann.Rmd
+The most useful data tables are probably the following:
+
+- `kraken_matrix_agg_by_stool_ID_n1303x2997.txt` with `kraken_taxonomy_n1303.txt`
+- `pathabundance_tpm_agg_by_stool_ID_n422x2997.txt`
+
+## Details
+
+Metadata stored separately. Note that sequencing metadata, library metadata, and stool metadata is stored separately. Multiple sequencing IDs (`seq.ID`) can correspond to the same library ID (`lib.ID`), and multiple library IDs can correspond to the same stool sample (`stool.ID`). Each mouse contributed multiple stool samples.
+
 
