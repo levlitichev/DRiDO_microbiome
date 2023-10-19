@@ -135,14 +135,6 @@ human.pathway.maaslin.df <- read.table(
   sep="\t", header=T, quote="")
 ```
 
-# TODO: Import mapping between short and full pathway names
-
-```{r}
-pathway.names.df <- read.table(
-  "../data/metadata/humann_pathway_original_and_clean_names_n705.txt",
-  sep="\t", header=T, quote="")
-```
-
 # Proportion of age-associated taxa per dataset
 
 ```{r}
