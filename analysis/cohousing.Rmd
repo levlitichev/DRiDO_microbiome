@@ -1,0 +1,395 @@
+---
+title: "Analysis of cohousing and separation experiment"
+---
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(phyloseq)
+library(speedyseq) # faster tax_glom
+library(randomForest)
+library(ggpubr) # stat_compare_means
+
+group.palette <- c(
+  Y = "skyblue",
+  O = "firebrick",
+  CY = "mediumpurple",
+  CO = "violetred",
+  exCY = "mediumpurple4",
+  exCO = "violetred4"
+)
+```
+
+# Import metadata
+
+```{r}
+meta.df <- read.table("../data/metadata/cohousing_metadata.txt", sep="\t", header=T)
+```
+
+Add columns.
+
+```{r}
+meta.df <- meta.df %>% 
+  
+  # indicate age
+  mutate(age = factor(case_when(
+    group %in% c("Y", "CY", "exCY") ~ "Y",
+    group %in% c("O", "CO", "exCO") ~ "O",
+    group == "NEG_EXT" ~ NA_character_),
+    levels = c("Y", "O"))) %>% 
+  
+  # convert timepoint.short to a factor
+  mutate(timepoint.short = factor(
+    timepoint.short, levels=c("B", "C", "S2", "S4", "S6", "S8"))) %>% 
+  
+  # create metadata that does not know about future treatment status
+  # (e.g. at baseline, exCY mice are just Y)
+  mutate(current.group = case_when(
+    timepoint.short == "B" & age == "Y" ~ "Y",
+    timepoint.short == "B" & age == "O" ~ "O",
+    timepoint.short == "C" & group == "exCY" ~ "CY",
+    timepoint.short == "C" & group == "exCO" ~ "CO",
+    TRUE ~ group))
+```
+
+# Import taxonomy
+
+```{r}
+tax.df <- read.table("../data/cohousing_taxonomy.tsv", sep="\t", header=T)
+
+# create new column for each taxonomy level
+tax.df <- tax.df %>% 
+  separate(Taxon, c("kingdom", "phylum", "class", "order", "family", "genus", "species"),
+           sep="; [[:alpha:]]__", remove=T, fill="right")
+```
+
+# Import counts
+
+```{r}
+counts.df <- read.table("../data/cohousing_feature_table.tsv", sep="\t", header=T, row.names=1)
+dim(counts.df)
+```
+
+* 3827 ASVs x 273 samples
+
+# Filter out samples with low sequencing depth
+
+Keep samples with at least 10k reads.
+
+```{r}
+sample.sum.df <- data.frame(sample.sum = colSums(counts.df)) %>% 
+  rownames_to_column("sample.id") %>% 
+  merge(meta.df, by="sample.id")
+```
+
+```{r}
+sample.ids.to.keep <- sample.sum.df %>% 
+  dplyr::filter(sample.sum > 1e4) %>% 
+  pull(sample.id)
+
+length(sample.ids.to.keep)
+```
+
+```{r}
+counts.filt.df <- counts.df %>% 
+  dplyr::select(all_of(sample.ids.to.keep))
+
+meta.filt.df <- meta.df %>% 
+  dplyr::filter(sample.id %in% sample.ids.to.keep)
+```
+
+# Create phyloseq object
+
+```{r}
+physeq <- phyloseq(
+  counts.filt.df %>% as.matrix() %>% otu_table(taxa_are_rows=T),
+  meta.filt.df %>% column_to_rownames("sample.id") %>% sample_data(),
+  tax.df %>% column_to_rownames("Feature.ID") %>% as.matrix() %>% tax_table(),
+  phylogeny %>% phy_tree()
+)
+```
+
+# Aggregate to genera
+
+```{r}
+physeq.genus <- physeq %>% tax_glom(taxrank="genus")
+ntaxa(physeq.genus)
+```
+
+* 125 genera
+
+# PCoA of baseline and cohousing
+
+```{r}
+pcoa.BC <- physeq.genus %>% 
+  
+  # subset to baseline and cohousing samples
+  subset_samples(timepoint.short %in% c("B", "C")) %>% 
+  
+  # compute relative abundance
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  
+  # perform PCoA using Bray-Curtis distance
+  ordinate(method="MDS", distance="bray")
+
+pcoa.BC.df <- plot_ordination(physeq.genus, pcoa.BC, type="samples", justDF=T)
+```
+
+Calculate centroids.
+
+```{r}
+pcoa.BC.centroids.df <- pcoa.BC.df %>% 
+  group_by(current.group, timepoint.short) %>% 
+  summarise(Axis.1 = mean(Axis.1),
+            Axis.2 = mean(Axis.2),
+            .groups="drop")
+```
+
+Plot.
+
+```{r}
+(pcoa.BC.p <- pcoa.BC.df %>% 
+   
+    mutate(current.group = factor(current.group, levels=c(
+      "Y", "O", "CY", "CO"))) %>% 
+    
+    ggplot(aes(x=Axis.1, y=Axis.2, color=current.group)) +
+    geom_point(shape=16, alpha=0.3) +
+    geom_point(data=pcoa.BC.centroids.df, size=5, shape="+") +
+    facet_wrap(~timepoint.short, nrow=1) +
+    theme_classic(base_size=8) +
+    labs(color="Group", title="Effect of cohousing",
+         x=sprintf("PCoA1 (%.0f%%)", 100*pcoa.BC$values$Relative_eig[1]),
+         y=sprintf("PCoA2 (%.0f%%)", 100*pcoa.BC$values$Relative_eig[2])) +
+    scale_color_manual(values=group.palette))
+```
+
+```{r}
+# pdf("../plots/cohousing_pcoa_just_baseline_and_cohousing.pdf", height=2, width=4)
+# pcoa.BC.p
+# dev.off()
+```
+
+# Distance to controls
+
+Bray-Curtis distance on genus-level relative abundances.
+
+```{r}
+genus.bc.dist <- physeq.genus %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+```
+
+```{r}
+# convert distance to matrix
+genus.bc.dist.mat <- as.matrix(genus.bc.dist)
+
+# set upper tri to NA
+genus.bc.dist.mat[upper.tri(genus.bc.dist.mat, diag=T)] <- NA
+
+# pivot longer
+genus.bc.dist.long.df <- data.frame(genus.bc.dist.mat) %>% 
+  rownames_to_column("x") %>% 
+  pivot_longer(-x, names_to="y", values_to="dist") %>% 
+  dplyr::filter(!is.na(dist))
+```
+
+```{r}
+genus.bc.dist.long.annot.df <- genus.bc.dist.long.df %>% 
+  merge(meta.df, by.x="x", by.y="sample.id") %>% 
+  merge(meta.df, by.x="y", by.y="sample.id", suffixes=c(".x", ".y")) %>% 
+  
+  # create both.groups column
+  rowwise() %>% 
+  mutate(both.groups = paste(sort(c(group.x, group.y)), collapse=" ")) %>% 
+  ungroup()
+```
+
+To uncohoused young and old samples (at the same timepoint).
+
+```{r}
+genus.bc.dist.to.uncohoused.df <- genus.bc.dist.long.annot.df %>%
+  
+  # only interested in distances between samples at the same timepoint
+  dplyr::filter(timepoint.x == timepoint.y) %>% 
+  
+  # subset to distances involving the separation groups (exCY, exCO)
+  dplyr::filter(str_detect(both.groups, "ex")) %>% 
+  
+  # subset to distances involving the uncohoused groups (Y, O)
+  mutate(dist.to = case_when(
+    both.groups == "exCY Y" ~ "Y",
+    both.groups == "exCO Y" ~ "Y",
+    both.groups == "exCY O" ~ "O",
+    both.groups == "exCO O" ~ "O")) %>% 
+  mutate(dist.from = case_when(
+    both.groups == "exCY Y" ~ "exCY",
+    both.groups == "exCO Y" ~ "exCO",
+    both.groups == "exCY O" ~ "exCY",
+    both.groups == "exCO O" ~ "exCO")) %>% 
+  
+  # exclude distances between exCY and exCO
+  dplyr::filter(!is.na(dist.to))
+```
+
+Plot just distance to age-matched controls.
+
+```{r}
+(dist.uncohoused.p <- genus.bc.dist.to.uncohoused.df %>% 
+   dplyr::filter((
+     (dist.to == "Y") & (dist.from == "exCY")) | (
+       (dist.to == "O") & (dist.from == "exCO"))) %>% 
+   mutate(dist.to = factor(dist.to, levels=c("Y", "O"))) %>% 
+   mutate(dist.from = factor(dist.from, levels=c("exCY", "exCO"))) %>% 
+   arrange(dist.to) %>% 
+   ggplot(aes(x=timepoint.short.x, y=dist, color=dist.to)) +
+   geom_jitter(shape=16, width=0.1) +
+   stat_summary(fun="mean", geom="crossbar") +
+   facet_wrap(~dist.from) +
+   labs(x="Timepoint", y="Bray-Curtis distance", color="Distance to",
+        title="Distance to uncohoused control") +
+   stat_compare_means(method="t.test", label="p.signif", comparisons=list(
+     c("B", "C"), c("B", "S2"), c("B", "S4"), c("B", "S6"), c("B", "S8"))) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)) +
+   scale_color_manual(values=group.palette))
+```
+
+```{r}
+# pdf("../plots/cohousing_dist_to_uncohoused_controls.pdf", height=2, width=3)
+# dist.uncohoused.p
+# dev.off()
+```
+
+
+# Uniqueness
+
+Bray-Curtis distance again.
+
+```{r}
+# convert distance to matrix
+genus.bc.dist.mat <- as.matrix(genus.bc.dist)
+
+# set diagonal to NA
+diag(genus.bc.dist.mat) <- NA
+
+genus.uniq.bc.df <- data.frame(
+  uniqueness=apply(genus.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("sample.id") %>% 
+  merge(meta.df, by="sample.id")
+```
+
+Plot by `current.group` (across timepoints).
+
+```{r}
+(uniq.by.group.p <- genus.uniq.bc.df %>% 
+    mutate(current.group = factor(current.group, levels=c(
+      "Y", "CY", "exCY", "O", "CO", "exCO"))) %>%
+    ggplot(aes(x=current.group, y=uniqueness, color=current.group)) +
+    geom_jitter(alpha=0.3, width=0.05, shape=16) +
+    stat_summary(fun="mean", geom="crossbar", width=0.5) +
+    labs(x="", y="Bray-Curtis uniqueness", title="Uniqueness across timepoints") +
+    stat_compare_means(method="t.test", label="p.signif", comparisons=list(
+      c("Y", "CY"), c("Y", "exCY"), c("Y", "O"), c("O", "CO"), c("O", "exCO"))) +
+    scale_color_manual(values=group.palette) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/cohousing_uniq_by_group.pdf", width=2, height=2)
+# uniq.by.group.p
+# dev.off()
+```
+
+# Random forest age prediction
+
+Train on baseline, predict on all other samples.
+
+Need to add order and family to the "uncultured" genera in order to have unique genus names.
+
+```{r}
+uniq.genera <- data.frame(tax_table(physeq.genus)) %>%
+  mutate(genus.uniq = case_when(
+    genus == "uncultured" ~ paste(order, family, genus, sep="_"),
+    TRUE ~ genus
+  )) %>% 
+  pull(genus.uniq)
+
+n_distinct(uniq.genera)
+```
+
+```{r}
+baseline.train.df <- physeq.genus %>% 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% 
+  subset_samples(timepoint.short == "B") %>% 
+  otu_table() %>% 
+  data.frame()
+
+not.baseline.test.df <- physeq.genus %>% 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% 
+  subset_samples(timepoint.short != "B") %>% 
+  otu_table() %>% 
+  data.frame()
+
+rownames(baseline.train.df) <- uniq.genera
+rownames(not.baseline.test.df) <- uniq.genera
+```
+
+```{r}
+tmp.meta.filt.df <- meta.filt.df %>% 
+  column_to_rownames("sample.id") 
+
+baseline.train.ages <- tmp.meta.filt.df[colnames(baseline.train.df), "age"]
+```
+
+```{r}
+set.seed(123)
+baseline.rf <- randomForest(
+  x=t(baseline.train.df),
+  y=baseline.train.ages, 
+  importance=T
+)
+```
+
+```{r}
+not.baseline.test.preds <- predict(baseline.rf, newdata=t(not.baseline.test.df))
+```
+
+```{r}
+pred.v.actual.trained.on.baseline.df <- data.frame(pred = not.baseline.test.preds) %>% 
+  rownames_to_column("sample.id") %>% 
+  merge(meta.filt.df, by="sample.id") %>% 
+  mutate(is.correct = pred == age)
+```
+
+```{r}
+accuracy.trained.on.baseline.df <- pred.v.actual.trained.on.baseline.df %>% 
+  group_by(age, group, timepoint.short) %>% 
+  summarise(num.correct = sum(is.correct),
+            n = n(),
+            accuracy = sum(is.correct) / n(),
+            .groups="drop")
+```
+
+```{r}
+(pred.v.actual.trained.on.baseline.p <- accuracy.trained.on.baseline.df %>% 
+   mutate(group = factor(group, levels=c("Y", "CY", "exCY", "O", "CO", "exCO"))) %>% 
+   ggplot(aes(x=timepoint.short, y=100*accuracy, label=n, fill=group)) +
+   geom_col() +
+   geom_point(shape=16) +
+   # geom_text(aes(y=120)) +
+   facet_wrap(~group, nrow=2) +
+   labs(x="Timepoint", y="Accuracy (%)", 
+        title=sprintf("Random forest classifier trained on baseline samples")) +
+   scale_fill_manual(values=group.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/cohousing_rf_accuracy_trained_on_baseline.pdf", height=2, width=2.5)
+# pred.v.actual.trained.on.baseline.p
+# dev.off()
+```

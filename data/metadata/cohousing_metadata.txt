@@ -1,0 +1,274 @@
+sample.id	timepoint	timepoint.short	group	cage	ear	mouse	run
+S2_337_N	2 weeks post separation	S2	Y	c337	N	337_N	2
+S2_337_R	2 weeks post separation	S2	Y	c337	R	337_R	2
+S2_337_L	2 weeks post separation	S2	Y	c337	L	337_L	2
+S2_337_B	2 weeks post separation	S2	Y	c337	B	337_B	2
+S2_337_2R	2 weeks post separation	S2	Y	c337	2R	337_2R	2
+S2_338_N	2 weeks post separation	S2	Y	c338	N	338_N	2
+S2_338_R	2 weeks post separation	S2	Y	c338	R	338_R	2
+S2_338_L	2 weeks post separation	S2	Y	c338	L	338_L	2
+S2_338_B	2 weeks post separation	S2	Y	c338	B	338_B	2
+S2_338_2R	2 weeks post separation	S2	Y	c338	2R	338_2R	2
+S2_169_N	2 weeks post separation	S2	O	c169	N	169_N	2
+S2_169_R	2 weeks post separation	S2	O	c169	R	169_R	2
+S2_169_L	2 weeks post separation	S2	O	c169	L	169_L	2
+S2_169_B	2 weeks post separation	S2	O	c169	B	169_B	2
+S2_169_2R	2 weeks post separation	S2	O	c169	2R	169_2R	2
+S2_767_N	2 weeks post separation	S2	O	c767	N	767_N	2
+S2_767_R	2 weeks post separation	S2	O	c767	R	767_R	2
+S2_767_L	2 weeks post separation	S2	O	c767	L	767_L	2
+S2_767_B	2 weeks post separation	S2	O	c767	B	767_B	2
+S2_767_2R	2 weeks post separation	S2	O	c767	2R	767_2R	2
+S2_166_N	2 weeks post separation	S2	CY	c166	N	166_N	2
+S2_166_R	2 weeks post separation	S2	CY	c166	R	166_R	2
+S2_166_L	2 weeks post separation	S2	CY	c166	L	166_L	2
+S2_166_B	2 weeks post separation	S2	CO	c166	B	166_B	2
+S2_166_2R	2 weeks post separation	S2	CO	c166	2R	166_2R	2
+S2_766_N	2 weeks post separation	S2	CY	c766	N	766_N	2
+S2_766_R	2 weeks post separation	S2	CY	c766	R	766_R	2
+S2_766_L	2 weeks post separation	S2	CY	c766	L	766_L	2
+S2_766_B	2 weeks post separation	S2	CO	c766	B	766_B	2
+S2_766_2R	2 weeks post separation	S2	CO	c766	2R	766_2R	2
+S2_334_N	2 weeks post separation	S2	exCY	c334	N	334_N	2
+S2_334_R	2 weeks post separation	S2	exCY	c334	R	334_R	2
+S2_334_L	2 weeks post separation	S2	exCY	c334	L	334_L	2
+S2_334_B	2 weeks post separation	S2	exCO	c334	B	334_B	2
+S2_334_2R	2 weeks post separation	S2	exCO	c334	2R	334_2R	2
+S2_335_N	2 weeks post separation	S2	exCY	c335	N	335_N	2
+S2_335_R	2 weeks post separation	S2	exCY	c335	R	335_R	2
+S2_335_L	2 weeks post separation	S2	exCY	c335	L	335_L	2
+S2_335_B	2 weeks post separation	S2	exCO	c335	B	335_B	2
+S2_335_2R	2 weeks post separation	S2	exCO	c335	2R	335_2R	2
+S2_336_N	2 weeks post separation	S2	exCY	c336	N	336_N	2
+S2_336_R	2 weeks post separation	S2	exCY	c336	R	336_R	2
+S2_336_L	2 weeks post separation	S2	exCY	c336	L	336_L	2
+S2_336_B	2 weeks post separation	S2	exCO	c336	B	336_B	2
+S2_336_2R	2 weeks post separation	S2	exCO	c336	2R	336_2R	2
+NEG_EXT_Apr21	NA	NA	NEG_EXT	NA	NA	NA	2
+S6_337_N	6 weeks post separation	S6	Y	c337	N	337_N	2
+S6_337_R	6 weeks post separation	S6	Y	c337	R	337_R	2
+S6_337_L	6 weeks post separation	S6	Y	c337	L	337_L	2
+S6_337_B	6 weeks post separation	S6	Y	c337	B	337_B	2
+S6_337_2R	6 weeks post separation	S6	Y	c337	2R	337_2R	2
+S6_338_N	6 weeks post separation	S6	Y	c338	N	338_N	2
+S6_338_R	6 weeks post separation	S6	Y	c338	R	338_R	2
+S6_338_L	6 weeks post separation	S6	Y	c338	L	338_L	2
+S6_338_B	6 weeks post separation	S6	Y	c338	B	338_B	2
+S6_338_2R	6 weeks post separation	S6	Y	c338	2R	338_2R	2
+S6_169_N	6 weeks post separation	S6	O	c169	N	169_N	2
+S6_169_R	6 weeks post separation	S6	O	c169	R	169_R	2
+S6_169_L	6 weeks post separation	S6	O	c169	L	169_L	2
+S6_169_B	6 weeks post separation	S6	O	c169	B	169_B	2
+S6_169_2R	6 weeks post separation	S6	O	c169	2R	169_2R	2
+S6_767_N	6 weeks post separation	S6	O	c767	N	767_N	2
+S6_767_R	6 weeks post separation	S6	O	c767	R	767_R	2
+S6_767_L	6 weeks post separation	S6	O	c767	L	767_L	2
+S6_767_B	6 weeks post separation	S6	O	c767	B	767_B	2
+S6_767_2R	6 weeks post separation	S6	O	c767	2R	767_2R	2
+S6_166_N	6 weeks post separation	S6	CY	c166	N	166_N	2
+S6_166_R	6 weeks post separation	S6	CY	c166	R	166_R	2
+S6_166_L	6 weeks post separation	S6	CY	c166	L	166_L	2
+S6_166_B	6 weeks post separation	S6	CO	c166	B	166_B	2
+S6_166_2R	6 weeks post separation	S6	CO	c166	2R	166_2R	2
+S6_766_N	6 weeks post separation	S6	CY	c766	N	766_N	2
+S6_766_R	6 weeks post separation	S6	CY	c766	R	766_R	2
+S6_766_L	6 weeks post separation	S6	CY	c766	L	766_L	2
+S6_766_B	6 weeks post separation	S6	CO	c766	B	766_B	2
+S6_766_2R	6 weeks post separation	S6	CO	c766	2R	766_2R	2
+S6_334_N	6 weeks post separation	S6	exCY	c334	N	334_N	2
+S6_334_R	6 weeks post separation	S6	exCY	c334	R	334_R	2
+S6_334_L	6 weeks post separation	S6	exCY	c334	L	334_L	2
+S6_334_B	6 weeks post separation	S6	exCO	c334	B	334_B	2
+S6_334_2R	6 weeks post separation	S6	exCO	c334	2R	334_2R	2
+S6_335_N	6 weeks post separation	S6	exCY	c335	N	335_N	2
+S6_335_R	6 weeks post separation	S6	exCY	c335	R	335_R	2
+S6_335_L	6 weeks post separation	S6	exCY	c335	L	335_L	2
+S6_335_B	6 weeks post separation	S6	exCO	c335	B	335_B	2
+S6_335_2R	6 weeks post separation	S6	exCO	c335	2R	335_2R	2
+S6_336_N	6 weeks post separation	S6	exCY	c336	N	336_N	2
+S6_336_R	6 weeks post separation	S6	exCY	c336	R	336_R	2
+S6_336_L	6 weeks post separation	S6	exCY	c336	L	336_L	2
+S6_336_B	6 weeks post separation	S6	exCO	c336	B	336_B	2
+S6_336_2R	6 weeks post separation	S6	exCO	c336	2R	336_2R	2
+NEG_EXT_Jun1	NA	NA	NEG_EXT	NA	NA	NA	2
+S8_337_N	8 weeks post separation	S8	Y	c337	N	337_N	2
+S8_337_R	8 weeks post separation	S8	Y	c337	R	337_R	2
+S8_337_L	8 weeks post separation	S8	Y	c337	L	337_L	2
+S8_337_B	8 weeks post separation	S8	Y	c337	B	337_B	2
+S8_337_2R	8 weeks post separation	S8	Y	c337	2R	337_2R	2
+S8_338_N	8 weeks post separation	S8	Y	c338	N	338_N	2
+S8_338_R	8 weeks post separation	S8	Y	c338	R	338_R	2
+S8_338_L	8 weeks post separation	S8	Y	c338	L	338_L	2
+S8_338_B	8 weeks post separation	S8	Y	c338	B	338_B	2
+S8_338_2R	8 weeks post separation	S8	Y	c338	2R	338_2R	2
+S8_169_N	8 weeks post separation	S8	O	c169	N	169_N	2
+S8_169_R	8 weeks post separation	S8	O	c169	R	169_R	2
+S8_169_L	8 weeks post separation	S8	O	c169	L	169_L	2
+S8_169_B	8 weeks post separation	S8	O	c169	B	169_B	2
+S8_169_2R	8 weeks post separation	S8	O	c169	2R	169_2R	2
+S8_767_N	8 weeks post separation	S8	O	c767	N	767_N	2
+S8_767_R	8 weeks post separation	S8	O	c767	R	767_R	2
+S8_767_L	8 weeks post separation	S8	O	c767	L	767_L	2
+S8_767_B	8 weeks post separation	S8	O	c767	B	767_B	2
+S8_767_2R	8 weeks post separation	S8	O	c767	2R	767_2R	2
+S8_166_N	8 weeks post separation	S8	CY	c166	N	166_N	2
+S8_166_R	8 weeks post separation	S8	CY	c166	R	166_R	2
+S8_166_L	8 weeks post separation	S8	CY	c166	L	166_L	2
+S8_166_B	8 weeks post separation	S8	CO	c166	B	166_B	2
+S8_166_2R	8 weeks post separation	S8	CO	c166	2R	166_2R	2
+S8_766_N	8 weeks post separation	S8	CY	c766	N	766_N	2
+S8_766_R	8 weeks post separation	S8	CY	c766	R	766_R	2
+S8_766_L	8 weeks post separation	S8	CY	c766	L	766_L	2
+S8_766_B	8 weeks post separation	S8	CO	c766	B	766_B	2
+S8_766_2R	8 weeks post separation	S8	CO	c766	2R	766_2R	2
+S8_334_N	8 weeks post separation	S8	exCY	c334	N	334_N	2
+S8_334_R	8 weeks post separation	S8	exCY	c334	R	334_R	2
+S8_334_L	8 weeks post separation	S8	exCY	c334	L	334_L	2
+S8_334_B	8 weeks post separation	S8	exCO	c334	B	334_B	2
+S8_334_2R	8 weeks post separation	S8	exCO	c334	2R	334_2R	2
+S8_335_N	8 weeks post separation	S8	exCY	c335	N	335_N	2
+S8_335_R	8 weeks post separation	S8	exCY	c335	R	335_R	2
+S8_335_L	8 weeks post separation	S8	exCY	c335	L	335_L	2
+S8_335_B	8 weeks post separation	S8	exCO	c335	B	335_B	2
+S8_335_2R	8 weeks post separation	S8	exCO	c335	2R	335_2R	2
+S8_336_N	8 weeks post separation	S8	exCY	c336	N	336_N	2
+S8_336_R	8 weeks post separation	S8	exCY	c336	R	336_R	2
+S8_336_L	8 weeks post separation	S8	exCY	c336	L	336_L	2
+S8_336_B	8 weeks post separation	S8	exCO	c336	B	336_B	2
+S8_336_2R	8 weeks post separation	S8	exCO	c336	2R	336_2R	2
+NEG_EXT_Jun5	NA	NA	NEG_EXT	NA	NA	NA	2
+S4_337_L	4 weeks post separation	S4	Y	337	L	337_L	1
+S4_337_B	4 weeks post separation	S4	Y	337	B	337_B	1
+S4_337_2R	4 weeks post separation	S4	Y	337	2R	337_2R	1
+S4_338_N	4 weeks post separation	S4	Y	338	N	338_N	1
+S4_337_R	4 weeks post separation	S4	Y	337	R	337_R	1
+S4_337_N	4 weeks post separation	S4	Y	337	N	337_N	1
+S4_166_R	4 weeks post separation	S4	CY	166	R	166_R	1
+S4_166_N	4 weeks post separation	S4	CY	166	N	166_N	1
+S4_766_2R	4 weeks post separation	S4	CO	766	2R	766_2R	1
+S4_766_B	4 weeks post separation	S4	CO	766	B	766_B	1
+S4_169_2R	4 weeks post separation	S4	O	169	2R	169_2R	1
+S4_169_B	4 weeks post separation	S4	O	169	B	169_B	1
+S4_169_R	4 weeks post separation	S4	O	169	R	169_R	1
+S4_169_N	4 weeks post separation	S4	O	169	N	169_N	1
+S4_767_2R	4 weeks post separation	S4	O	767	2R	767_2R	1
+S4_767_B	4 weeks post separation	S4	O	767	B	767_B	1
+S4_338_L	4 weeks post separation	S4	Y	338	L	338_L	1
+S4_338_R	4 weeks post separation	S4	Y	338	R	338_R	1
+S4_338_B	4 weeks post separation	S4	Y	338	B	338_B	1
+S4_338_2R	4 weeks post separation	S4	Y	338	2R	338_2R	1
+S4_767_L	4 weeks post separation	S4	O	767	L	767_L	1
+S4_767_R	4 weeks post separation	S4	O	767	R	767_R	1
+S4_767_N	4 weeks post separation	S4	O	767	N	767_N	1
+S4_166_B	4 weeks post separation	S4	CO	166	B	166_B	1
+S4_166_L	4 weeks post separation	S4	CY	166	L	166_L	1
+S4_169_L	4 weeks post separation	S4	O	169	L	169_L	1
+S4_334_R	4 weeks post separation	S4	exCY	334	R	334_R	1
+S4_766_N	4 weeks post separation	S4	CY	766	N	766_N	1
+S4_166_2R	4 weeks post separation	S4	CO	166	2R	166_2R	1
+S4_334_2R	4 weeks post separation	S4	exCO	334	2R	334_2R	1
+S4_334_B	4 weeks post separation	S4	exCO	334	B	334_B	1
+S4_335_2R	4 weeks post separation	S4	exCO	335	2R	335_2R	1
+S4_766_R	4 weeks post separation	S4	CY	766	R	766_R	1
+S4_766_L	4 weeks post separation	S4	CY	766	L	766_L	1
+S4_334_N	4 weeks post separation	S4	exCY	334	N	334_N	1
+S4_335_B	4 weeks post separation	S4	exCO	335	B	335_B	1
+S4_336_2R	4 weeks post separation	S4	exCO	336	2R	336_2R	1
+S4_336_B	4 weeks post separation	S4	exCO	336	B	336_B	1
+S4_335_L	4 weeks post separation	S4	exCY	335	L	335_L	1
+S4_335_N	4 weeks post separation	S4	exCY	335	N	335_N	1
+S4_336_L	4 weeks post separation	S4	exCY	336	L	336_L	1
+S4_335_R	4 weeks post separation	S4	exCY	335	R	335_R	1
+S4_336_R	4 weeks post separation	S4	exCY	336	R	336_R	1
+S4_336_N	4 weeks post separation	S4	exCY	336	N	336_N	1
+S4_334_L	4 weeks post separation	S4	exCY	334	L	334_L	1
+C_337_N	1st day separation	C	Y	337	N	337_N	1
+C_337_R	1st day separation	C	Y	337	R	337_R	1
+C_337_L	1st day separation	C	Y	337	L	337_L	1
+C_337_B	1st day separation	C	Y	337	B	337_B	1
+C_337_2R	1st day separation	C	Y	337	2R	337_2R	1
+C_338_N	1st day separation	C	Y	338	N	338_N	1
+C_338_R	1st day separation	C	Y	338	R	338_R	1
+C_338_L	1st day separation	C	Y	338	L	338_L	1
+C_338_B	1st day separation	C	Y	338	B	338_B	1
+C_338_2R	1st day separation	C	Y	338	2R	338_2R	1
+C_169_N	1st day separation	C	O	169	N	169_N	1
+C_169_R	1st day separation	C	O	169	R	169_R	1
+C_169_L	1st day separation	C	O	169	L	169_L	1
+C_169_B	1st day separation	C	O	169	B	169_B	1
+C_169_2R	1st day separation	C	O	169	2R	169_2R	1
+C_767_N	1st day separation	C	O	767	N	767_N	1
+C_767_R	1st day separation	C	O	767	R	767_R	1
+C_767_L	1st day separation	C	O	767	L	767_L	1
+C_767_B	1st day separation	C	O	767	B	767_B	1
+C_767_2R	1st day separation	C	O	767	2R	767_2R	1
+C_166_N	1st day separation	C	CY	166	N	166_N	1
+C_166_R	1st day separation	C	CY	166	R	166_R	1
+C_166_L	1st day separation	C	CY	166	L	166_L	1
+C_166_B	1st day separation	C	CO	166	B	166_B	1
+C_166_2R	1st day separation	C	CO	166	2R	166_2R	1
+C_766_N	1st day separation	C	CY	766	N	766_N	1
+C_766_R	1st day separation	C	CY	766	R	766_R	1
+C_766_L	1st day separation	C	CY	766	L	766_L	1
+C_766_B	1st day separation	C	CO	766	B	766_B	1
+C_766_2R	1st day separation	C	CO	766	2R	766_2R	1
+C_334_N	1st day separation	C	exCY	334	N	334_N	1
+C_334_R	1st day separation	C	exCY	334	R	334_R	1
+C_334_L	1st day separation	C	exCY	334	L	334_L	1
+C_334_B	1st day separation	C	exCO	334	B	334_B	1
+C_334_2R	1st day separation	C	exCO	334	2R	334_2R	1
+C_335_N	1st day separation	C	exCY	335	N	335_N	1
+C_335_R	1st day separation	C	exCY	335	R	335_R	1
+C_335_L	1st day separation	C	exCY	335	L	335_L	1
+C_335_B	1st day separation	C	exCO	335	B	335_B	1
+C_335_2R	1st day separation	C	exCO	335	2R	335_2R	1
+C_336_N	1st day separation	C	exCY	336	N	336_N	1
+C_336_R	1st day separation	C	exCY	336	R	336_R	1
+C_336_L	1st day separation	C	exCY	336	L	336_L	1
+C_336_B	1st day separation	C	exCO	336	B	336_B	1
+C_336_2R	1st day separation	C	exCO	336	2R	336_2R	1
+B_767_2R	baseline	B	O	767	2R	767_2R	1
+B_334_N	baseline	B	exCY	334	N	334_N	1
+B_767_N	baseline	B	O	767	N	767_N	1
+B_338_B	baseline	B	Y	338	B	338_B	1
+B_334_R	baseline	B	exCY	334	R	334_R	1
+B_338_L	baseline	B	Y	338	L	338_L	1
+B_335_R	baseline	B	exCY	335	R	335_R	1
+B_338_R	baseline	B	Y	338	R	338_R	1
+B_336_N	baseline	B	exCY	336	N	336_N	1
+B_335_L	baseline	B	exCY	335	L	335_L	1
+B_335_2R	baseline	B	exCO	335	2R	335_2R	1
+B_335_B	baseline	B	exCO	335	B	335_B	1
+B_337_2R	baseline	B	Y	337	2R	337_2R	1
+B_337_B	baseline	B	Y	337	B	337_B	1
+B_337_R	baseline	B	Y	337	R	337_R	1
+B_337_N	baseline	B	Y	337	N	337_N	1
+B_169_R	baseline	B	O	169	R	169_R	1
+B_169_B	baseline	B	O	169	B	169_B	1
+B_169_L	baseline	B	O	169	L	169_L	1
+B_169_2R	baseline	B	O	169	2R	169_2R	1
+B_169_N	baseline	B	O	169	N	169_N	1
+B_767_R	baseline	B	O	767	R	767_R	1
+B_767_L	baseline	B	O	767	L	767_L	1
+B_767_B	baseline	B	O	767	B	767_B	1
+B_334_L	baseline	B	exCY	334	L	334_L	1
+B_337_L	baseline	B	Y	337	L	337_L	1
+B_766_B	baseline	B	CO	766	B	766_B	1
+B_334_B	baseline	B	exCO	334	B	334_B	1
+B_336_R	baseline	B	exCY	336	R	336_R	1
+B_766_L	baseline	B	CY	766	L	766_L	1
+B_766_R	baseline	B	CY	766	R	766_R	1
+B_338_N	baseline	B	Y	338	N	338_N	1
+B_766_N	baseline	B	CY	766	N	766_N	1
+B_166_N	baseline	B	CY	166	N	166_N	1
+B_336_2R	baseline	B	exCO	336	2R	336_2R	1
+B_334_2R	baseline	B	exCO	334	2R	334_2R	1
+B_166_B	baseline	B	CO	166	B	166_B	1
+B_166_R	baseline	B	CY	166	R	166_R	1
+B_766_2R	baseline	B	CO	766	2R	766_2R	1
+B_166_2R	baseline	B	CO	166	2R	166_2R	1
+B_166_L	baseline	B	CY	166	L	166_L	1
+B_336_B	baseline	B	exCO	336	B	336_B	1
+B_335_N	baseline	B	exCY	335	N	335_N	1
+B_338_2R	baseline	B	Y	338	2R	338_2R	1
+B_336_L	baseline	B	exCY	336	L	336_L	1
