@@ -1,0 +1,39 @@
+```{r, warning=F, message=F}
+library(tidyverse)
+```
+
+```{r}
+(df <- read.table("../results/perc_heritable_taxa_by_study.txt", sep="\t", header=T))
+```
+
+Specify order of `category` and `study` columns for plotting purposes.
+
+```{r}
+df <- df %>% 
+  mutate(category = factor(category, levels=c("human", "agricultural", "mice")),
+         study = factor(study, levels=study))
+```
+
+```{r}
+mean.df <- df %>% 
+  group_by(category) %>% 
+  summarise(perc_taxa_significant = mean(perc_taxa_significant))
+```
+
+```{r}
+(perc.heritable.by.study.p <- df %>% 
+   ggplot(aes(x=perc_taxa_significant, y=fct_rev(study), 
+              fill=category, label=paste0("n=",n))) +
+   geom_col() +
+   geom_text(aes(x=1), hjust=0, size=6*0.36) +
+   labs(x="% taxa that are heritable", y="Study", 
+        fill="Animal") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/percent_heritable_taxa_by_study.pdf", height=2, width=2)
+perc.heritable.by.study.p + theme(legend.position="none")
+dev.off()
+```
+

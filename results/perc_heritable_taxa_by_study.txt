@@ -1,0 +1,11 @@
+study	category	animal	method	num_taxa_tested	num_taxa_significant	perc_taxa_significant	significance_metric	n	statistical_test	URL
+ThisStudy	mice	DO_mouse	LMM with kinship matrix	100.0	66.0	66.0	padj < 0.01	2,997	LMM, LRT	NA
+Schlamp2021	mice	DO_mouse	LMM with kinship matrix	75.0	23.0	30.7	p < 0.05	247	LMM, LRT	https://www.biorxiv.org/content/10.1101/722744v2
+Li2019	agricultural	cow	LMM with kinship matrix	174.0	59.0	33.9	h2 ≥ 0.15	709	LMM	https://link.springer.com/article/10.1186/s40168-019-0699-1
+Camarinha-Silva2017	agricultural	pig	LMM with kinship matrix	49.0	8.0	16.3	p < 0.05	207	LMM, LRT	https://academic.oup.com/genetics/article/206/3/1637/6064273
+Wallace2019	agricultural	cow	LMM with kinship matrix	512.0	39.0	7.6	95% confidence intervals not overlapping zero	650	LMM, FIESTA	https://www.science.org/doi/full/10.1126/sciadv.aav8391
+Kurilshikov2021	human	human	Twin study	159.0	19.0	11.9	p < 0.05	1,176	ACE model	https://www.nature.com/articles/s41588-020-00763-1
+Goodrich2016	human	human	Twin study	945.0	NA	8.5	h2 > 0.2 with 95% confidence intervals that did not overlap zero	1,126	ACE model	https://www.sciencedirect.com/science/article/pii/S1931312816301536
+Turpin2016	human	human	Pedigree	249.0	20.0	8.0	h2 > 0.25 and p < 0.05, then p-value correction	270	Pedigree	https://www.nature.com/articles/ng.3693
+Gacesa2022	human	human	LMM with kinship matrix	NA	17.0	6.6	padj < 0.1	8,208	LMM, permutation test	https://www.nature.com/articles/s41586-022-04567-7
+Goodrich2014	human	human	Twin study	909.0	NA	5.3	h2 > 0.2 with 95% confidence intervals that did not overlap zero	832	ACE model	https://www.sciencedirect.com/science/article/pii/S0092867414012410
