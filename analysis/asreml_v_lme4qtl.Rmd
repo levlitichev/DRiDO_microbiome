@@ -1,0 +1,56 @@
+Compare longitudinal heritability estimates obtained with ASReml and lme4qtl. Same model, same data.
+
+```{r, message=F, warning=F}
+library(tidyverse)
+```
+
+# Import lme4qtl
+
+```{r}
+lme4qtl.herit.df <- read.table(
+  "../results/lme4qtl_kraken_genus/herit.txt",
+  sep="\t", header=T)
+```
+
+# Import ASReml
+
+```{r}
+asreml.herit.df <- read.table(
+  "../results/asreml_kraken_genus/herit.txt",
+  sep="\t", header=T)
+```
+
+# Merge
+
+```{r}
+asreml.v.lme4qtl.herit.df <- merge(
+  
+  # ASReml
+  asreml.herit.df %>% 
+    dplyr::rename(asreml.herit = herit, asreml.LRT.pval = LRT.pval),
+  
+  # lme4qtl
+  lme4qtl.herit.df %>% 
+    dplyr::rename(lme4qtl.herit = prop, lme4qtl.LRT.pval = LRT.pval),
+  
+  by="feature"
+  
+)
+```
+
+# Plot
+
+```{r}
+(asreml.v.lme4qtl.herit.p <- asreml.v.lme4qtl.herit.df %>% 
+   ggplot(aes(x=asreml.herit, y=lme4qtl.herit)) +
+   geom_abline(slope=1, lty=2) +
+   geom_point(size=0.5) +
+   labs(x="Heritability, ASReml", y="Heritability, lme4qtl") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/lme4qtl_v_asreml_genus_heritability.pdf", height=2, width=2)
+# asreml.v.lme4qtl.herit.p
+# dev.off()
+```
