@@ -1,0 +1,113 @@
+LMM separately per age versus longitudinally.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+```
+
+# Import cross-sectional LMM results
+
+```{r}
+herit.df.cross <- read.table(
+  "../results/asreml_kraken_genus_per_age/herit.txt",
+  sep="\t", header=T)
+```
+
+# Import longitudinal LMM results
+
+```{r}
+herit.df.longitud <- read.table(
+  "../results/asreml_kraken_genus/herit.txt",
+  sep="\t", header=T)
+```
+
+# Import longitudinal, downsampled LMM results
+
+```{r}
+herit.df.longitud.downsamp <- read.table(
+  "../results/asreml_kraken_genus_downsampled/herit.txt",
+  sep="\t", header=T)
+```
+
+# Merge
+
+```{r}
+herit.df <- rbind(
+  
+  herit.df.cross %>%
+    separate(col=age.and.feature, into=c("age", "feature"), sep="_") %>% 
+    dplyr::select(feature, herit, LRT.pval, age),
+  
+  herit.df.longitud %>% 
+    dplyr::select(feature, herit, LRT.pval) %>% 
+    mutate(age = "longitudinal"),
+  
+  herit.df.longitud.downsamp %>% 
+    dplyr::select(feature, herit, LRT.pval) %>% 
+    mutate(age = "longitudinal_downsampled")
+)
+```
+
+# Adjust p-values separately per age
+
+```{r}
+herit.df <- herit.df %>% 
+  
+  # exclude community features
+  dplyr::filter(!(feature %in% c("PCoA1", "PCoA2", "PCoA3", "uniq", "Simpson", "Shannon", "Chao1"))) %>%
+  
+  group_by(age) %>% 
+  mutate(LRT.padj = p.adjust(LRT.pval, method="BH")) %>% 
+  ungroup() %>% 
+  mutate(is.sig = LRT.padj < 0.01)
+```
+
+# p-value histograms
+
+Indicate # samples and # mice at each timepoint (added these numbers manually).
+
+```{r}
+n.per.age.df <- data.frame(
+  n.samples = c(
+    M5 = 563, M10 = 509, M16 = 641, M22 = 519, M28 = 367,
+    longitudinal = 2974, longitudinal_downsampled = 516),
+  
+  n.mice = c(
+    M5 = 563, M10 = 509, M16 = 641, M22 = 519, M28 = 367,
+    longitudinal = 904, longitudinal_downsampled = 110))
+```
+
+```{r}
+(longitud.v.cross.sectional.herit.pval.hists <- herit.df %>% 
+   merge(n.per.age.df, by.x="age", by.y="row.names") %>% 
+   mutate(age = factor(age, levels=c("M5", "M10", "M16", "M22", "M28", "longitudinal", "longitudinal_downsampled"))) %>% 
+   mutate(is.sig = factor(is.sig, levels=c(T, F))) %>% 
+   ggplot(aes(LRT.pval, fill=is.sig)) +
+   geom_histogram(bins=20) +
+   facet_wrap(~age + n.mice + n.samples, labeller=labeller(
+     n.mice = function(x){paste0("# mice = ", x)},
+     n.samples = function(x){paste0("# samples = ", x)}), nrow=1) +
+   labs(x="p-value", y="# genera") +
+   scale_fill_manual(values=c(`TRUE`="royalblue", `FALSE`="gray80")) +
+   scale_x_continuous(breaks=c(0, 0.5, 1)) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/longitudinal_v_cross_sectional_heritability_genera_pval_histograms.pdf", height=2, width=6)
+longitud.v.cross.sectional.herit.pval.hists
+dev.off()
+```
+
+
+# % significantly heritable
+
+Exclude community features.
+
+```{r}
+herit.df %>% 
+  # dplyr::filter(is.sig) %>%
+  dplyr::count(age, is.sig)
+```
+
+* Very few heritable taxa with cross-sectional analysis
