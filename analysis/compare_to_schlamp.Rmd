@@ -1,0 +1,109 @@
+Compare my heritability results to those of Schlamp et al., bioRxiv, 2021 (247 male DO mice, 16S sequencing, housed at Penn).
+
+They estimated heritability differently:
+
+1) Microbial relative abundances were "rank z-score transformed" (https://rdrr.io/bioc/DOQTL/man/rankZ.html)
+2) They estimated heritability at different taxonomic levels
+3) They used 16S data
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(ggrepel)
+```
+
+# Import my heritability results
+
+```{r}
+herit.df <- read.table(
+  "../results/asreml_kraken_genus/herit.txt", sep="\t", header=T)
+```
+
+Adjust p-values.
+
+```{r}
+herit.df <- herit.df %>% 
+  mutate(LRT.padj = p.adjust(LRT.pval, method="BH"))
+```
+
+# Import Schlamp heritabilities
+
+```{r}
+schlamp.df <- read.table("../results/heritability_from_schlamp21_tableS3.txt", sep="\t", header=T)
+dim(schlamp.df)
+```
+
+Why so few taxa?
+
+* Table S2 has 347 rows. Based on the text, I assume these are OTUs.
+* 166 of these OTUs are at genus level.
+* They did not test all OTUs for heritability: they only kept OTUs present in >50% of samples. This is 75 OTUs.
+* Of these 68, 27 could be assigned to genus level.
+* Of these 27, 15 actually reported the genus. That is, there were a bunch of OTUs that just had "g__". Not sure what to do with these.
+
+```{r}
+schlamp.genus.df <- schlamp.df %>% 
+  dplyr::filter(str_detect(Taxon, "g__[:alnum:]")) %>% 
+  mutate(genus = str_extract(Taxon, "g__[[:alnum:]]+")) %>%
+  mutate(genus = str_replace(genus, "g__", ""))
+         
+sort(schlamp.genus.df$genus)
+```
+
+* 15 OTUs at genus-level with actual genus name
+
+# Compare genus names
+
+```{r}
+intersect(schlamp.genus.df$genus, herit.df$feature)
+```
+
+* Just 8 genera in common
+
+# Merge
+
+```{r}
+merged.df <- merge(
+  schlamp.genus.df,
+  herit.df,
+  by.x="genus", by.y="feature"
+)
+
+# rename columns for clarity
+merged.df <- merged.df %>% 
+  dplyr::rename(
+    h2.DRiDO = herit, h2.schlamp = h2,
+    se.schlamp = id.SE, se.DRiDO = herit.se, 
+    pval.DRiDO = LRT.pval, pval.schlamp = RLRT.pval,
+    padj.DRiDO = LRT.padj, padj.schlamp = adj.pval)
+
+# indicate significance (padj < 0.01 for DRiDO, pval < 0.05 for Schlamp)
+# nominal pval < 0.05 is what Schlamp et al. use in their paper
+merged.df <- merged.df %>% 
+  mutate(is.sig.DRiDO = padj.DRiDO < 0.01,
+         is.sig.schlamp = pval.schlamp < 0.05) %>% 
+  
+  rowwise() %>% 
+  mutate(sig.in.both = is.sig.DRiDO & is.sig.schlamp) %>% 
+  ungroup()
+```
+
+```{r}
+(schlamp.h2.comparison.p <- merged.df %>% 
+  ggplot(aes(x=h2.DRiDO, y=h2.schlamp, label=genus, color=sig.in.both)) +
+  geom_point(size=3) +
+  # geom_errorbarh(aes(xmin=h2.DRiDO-se.DRiDO, xmax=h2.DRiDO+se.DRiDO)) +
+  # geom_linerange(aes(ymin=h2.schlamp-se.schlamp, ymax=h2.schlamp+se.schlamp)) +
+  geom_abline(lty=2) +
+  geom_text_repel(size=0.36*6) +
+  scale_color_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
+  labs(x="h2, DRiDO", y="h2, Schlamp") +
+  theme_classic(base_size=8) +
+  theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/heritability_comparison_w_schlamp.pdf", height=2, width=2)
+schlamp.h2.comparison.p
+dev.off()
+```
+
