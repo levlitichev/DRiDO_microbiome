@@ -1,0 +1,117 @@
+For the top 6 age-specific QTL results, plot:
+
+1) Genome-wide LOD scores
+2) Allele effects across all ages
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(qtl2)
+
+manhattan.palette <- c(signif="firebrick", odd="skyblue", even="royalblue")
+
+# same as CCcolors from qtl2
+collab.cross.palette <- c(
+  `A/J`="#F0E442",
+  BL6="#555555",
+  `129S1`="#E69F00",
+  NOD="#0072B2",
+  NZO="#56B4E9",
+  CAST="#009E73",
+  PWK="#D55E00",
+  WSB="#CC79A7")
+```
+
+# Import genome-wide LOD scores
+
+```{r}
+LOD.df <- read.table(
+  "../results/genome_wide_LOD_top_6_QTLs.txt", 
+  sep="\t", header=T)
+```
+
+# Import allele effects across ages
+
+```{r}
+allele.effects.df <- read.table(
+  "../results/allele_effects_across_ages_top_6_QTLs.txt", 
+  sep="\t", header=T)
+```
+
+Specify order for age and founder strains.
+
+```{r}
+allele.effects.df <- allele.effects.df %>% 
+  
+  mutate(age.months = factor(age.months, levels=c("M5", "M10", "M16", "M22", "M28"))) %>% 
+  
+  mutate(founder = factor(founder, levels=c(
+    "A/J", "BL6", "129S1", "NOD",
+    "NZO", "CAST", "PWK", "WSB")))
+```
+
+# Plot genome-wide LOD scores
+
+Add a few columns prior to plotting.
+
+```{r}
+LOD.plot.df <- LOD.df %>%
+  
+  # create panel title by concatenating feature and age
+  mutate(panel.title = paste0(feature, " at ", age, " months")) %>% 
+  
+  # specify chromosome order
+  mutate(chr = factor(chr, levels=c(seq(19), "X"))) %>% 
+  
+  # for each marker, indicate if it had LOD > 7.5
+  # if not, indicate if chromosome is odd or even (for plotting purposes)
+  mutate(color = case_when(
+    LOD > 7.5 ~ "signif",
+    chr %in% seq(from=1, to=19, by=2) ~ "odd",
+    TRUE ~ "even"
+    ))
+```
+
+
+```{r}
+(qtl.p <- LOD.plot.df %>% 
+   ggplot(aes(x=pos.mb, y=LOD, color=color)) +
+   geom_point(shape=16, size=0.25) +
+   scale_color_manual(values=manhattan.palette) +
+   facet_grid(panel.title ~ chr, scales="free", space="free") +
+   ylim(0, 11) +
+   labs(x="Chromosome") +
+   theme_classic(base_size=8) +
+   theme(panel.spacing = unit(0,'lines')) +
+   theme(legend.position="none",
+         axis.text.x=element_blank(),
+         axis.ticks.x=element_blank()))
+```
+
+Save as png rather than PDF because this plot has too many points.
+
+```{r}
+png("../plots/genome_wide_LOD_top_six_QTLs.png", height=7, width=2.5, units="in", res=300)
+qtl.p
+dev.off()
+```
+
+# Plot allele effects
+
+```{r}
+(allele.effect.p <- allele.effects.df %>% 
+   arrange(age.months) %>% 
+   ggplot(aes(x=age.months, y=mean, ymin=mean-SEM, ymax=mean+SEM, color=founder, group=founder)) +
+   geom_pointrange(shape=16, size=0.25) +
+   geom_path() +
+   facet_wrap(~feature) +
+   scale_color_manual(values=collab.cross.palette) +
+   labs(x="Age", y="Allele effect (mean ± standard error)") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/allele_effects_top_six_QTLs.pdf", width=4, height=2.5)
+allele.effect.p
+dev.off()
+```
+
