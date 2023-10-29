@@ -509,7 +509,7 @@ agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients["age.appr
 ```
 
 ```{r}
-# pdf("../plots/tax_uniq_v_diet_boxplots.pdf", width=2, height=2)
+# pdf("../plots/tax_uniq_v_diet_boxplots.pdf", width=1.5, height=1.5)
 # uniq.v.diet.across.ages.p
 # dev.off()
 ```
