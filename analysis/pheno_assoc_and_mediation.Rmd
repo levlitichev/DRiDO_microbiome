@@ -1,0 +1,697 @@
+Microbiome-phenotype longitudinal association and mediation analysis.
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+
+# plotting
+library(tidytext) # reorder_within
+library(patchwork)
+
+PADJ.THRESH <- 0.01
+
+diet.palette <- c(AL="seashell4",
+                  `1D`="skyblue",
+                  `2D`="royalblue4",
+                  `20`="orange",
+                  `40`="firebrick")
+domain.colors <- c(
+  AS="aquamarine3", 
+  BW="royalblue", 
+  CBC="firebrick", 
+  Echo="brown",
+  FACS="tomato", 
+  Frailty="tan4", 
+  Glu="chocolate",
+  Grip="darkblue", 
+  MetCage="green4", 
+  PIXI="blueviolet", 
+  Rotarod="mediumblue", 
+  Void="pink", 
+  Wheel="gold"
+)
+```
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv")
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+
+# identify pre-randomization samples as AL
+stool.meta.annot.df <- stool.meta.annot.df %>%
+  mutate(Diet.5mo.as.AL=factor(case_when(
+    age.wks < 25 ~ "AL",
+    TRUE ~ as.character(Diet)),
+    levels=c("AL", "1D", "2D", "20", "40")))
+```
+
+# Import original data (to plot examples)
+
+```{r}
+genus.df <- read.table(
+  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt", 
+  sep="\t", header=T, row.names=1)
+pathway.df <- read.table(
+  "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
+  sep="\t", header=T, row.names=1)
+pheno.df <- read.table(
+  "../results/phenotype_values_closest_to_each_stool_ID_within_100_days_n2915x210_230811.txt", sep="\t", header=T)
+```
+
+Combine.
+
+```{r}
+full.df <- pheno.df %>%
+  merge(stool.meta.annot.df, by="stool.ID") %>%
+  merge(data.frame(t(genus.df)) %>% rownames_to_column("stool.ID"), by="stool.ID") %>%
+  merge(data.frame(t(pathway.df)) %>% rownames_to_column("stool.ID"), by="stool.ID")
+
+dim(full.df)
+```
+
+# Create better pathway names for plotting
+
+Import long pathway names.
+
+```{r}
+pathway.original.names <- read.table(
+  "../data/pathabundance_tpm_agg_by_stool_ID_n422x2997.txt", 
+  sep="\t", header=T, quote="", row.names=1) %>% rownames()
+```
+
+```{r}
+pathway.names.df <- data.frame(original = pathway.original.names) %>% 
+  
+  # extract the pathway ID (before the colon)
+  mutate(short = str_extract(original, "(.*):")) %>% 
+  mutate(short = str_sub(short, 1, nchar(short)-1)) %>% 
+  
+  # remove punctuation
+  mutate(short.clean = str_replace_all(short, "[:punct:]", "")) %>% 
+  
+  # for some reason, + not included in punct?
+  mutate(short.clean = str_replace_all(short.clean, "\\+", "")) %>%
+  
+  # prefix with X if it starts with a number
+  mutate(short.clean = case_when(
+    str_detect(short.clean, "^[:digit:]") ~ paste0("X", short.clean),
+    TRUE ~ short.clean)) %>% 
+  
+  arrange(short.clean) %>% 
+  relocate(short.clean) 
+```
+
+Add additional columns for plotting.
+
+```{r}
+pathway.names.df <- pathway.names.df %>% 
+  mutate(after.colon = str_sub(str_extract(original, "(?=:)(.*)"), 3)) %>% 
+  mutate(after.colon.short = ifelse(
+    nchar(after.colon) > 30, 
+    paste0(str_sub(after.colon, 1, 27), "..."),
+    after.colon)) %>% 
+  mutate(after.colon.short.w.ID = paste0(
+    after.colon.short, " (", short, ")")) %>% 
+  relocate(after.colon.short.w.ID)
+```
+
+We need `short.clean` and `after.colon.short.w.ID`.
+
+# Import association results
+
+```{r}
+tax.pheno.res.df <- read.table(
+  "../results/lme4_mb_pheno_assoc_n107_kraken_feats_n209_phenos.txt.gz",
+  sep="\t", header=T)
+
+fxn.pheno.res.df <- read.table(
+  "../results/lme4_mb_pheno_assoc_n273_pathways_n209_phenos.txt.gz",
+  sep="\t", header=T)
+
+dim(tax.pheno.res.df)
+dim(fxn.pheno.res.df)
+```
+
+## Remove phenos
+
+Ignore BWTest traits (because they were just pulled from the weekly bodyweight measurements) except MetCage_BWTest (which was measured independently).
+
+```{r}
+tax.pheno.res.df <- tax.pheno.res.df %>% 
+  dplyr::filter(!str_detect(pheno, "BWTest") | (pheno == "MetCage_BWTest"))
+
+fxn.pheno.res.df <- fxn.pheno.res.df %>% 
+  dplyr::filter(!str_detect(pheno, "BWTest") | (pheno == "MetCage_BWTest"))
+
+dim(tax.pheno.res.df)
+dim(fxn.pheno.res.df)
+```
+
+## Adjust p-values
+
+```{r}
+tax.pheno.res.df <- tax.pheno.res.df %>% 
+  mutate(assoc_padj = p.adjust(mb.pval, method="BH")) %>%
+  mutate(assoc_is_sig = assoc_padj < PADJ.THRESH)
+
+fxn.pheno.res.df <- fxn.pheno.res.df %>% 
+  mutate(assoc_padj = p.adjust(mb.pval, method="BH")) %>% 
+  mutate(assoc_is_sig = assoc_padj < PADJ.THRESH)
+```
+
+```{r}
+tax.pheno.res.df %>% 
+  dplyr::count(assoc_is_sig) %>% 
+  mutate(frac = n / sum(n))
+```
+
+```{r}
+fxn.pheno.res.df %>% 
+  dplyr::count(assoc_is_sig) %>% 
+  mutate(frac = n / sum(n))
+```
+
+* The fraction of significant associations is a little lower for pathways: 0.9% (tax) and 0.4% (fxn) of tests 
+* 185 taxonomic associations, 202 functional associations with padj < 0.01
+
+### p-value histograms
+
+```{r}
+(tax.mb.pheno.assoc.pval.hist <- tax.pheno.res.df %>% 
+   mutate(assoc_is_sig = factor(assoc_is_sig, levels=c(T,F))) %>% 
+   ggplot(aes(mb.pval, fill=assoc_is_sig)) +
+   geom_histogram(bins=100) +
+   labs(x="p-value", y="# associations", 
+        title="Genera", fill="padj < 0.01") +
+   scale_fill_manual(values=c(`TRUE`="royalblue", `FALSE`="gray")) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/mb_pheno_assoc_pval_histogram_tax.pdf", width=2, height=2)
+# tax.mb.pheno.assoc.pval.hist
+# dev.off()
+```
+
+```{r}
+(fxn.mb.pheno.assoc.pval.hist <- fxn.pheno.res.df %>% 
+   mutate(assoc_is_sig = factor(assoc_is_sig, levels=c(T,F))) %>% 
+   ggplot(aes(mb.pval, fill=assoc_is_sig)) +
+   geom_histogram(bins=100) +
+   labs(x="p-value", y="# associations", 
+        title="Pathways", fill="padj < 0.01") +
+   scale_fill_manual(values=c(`TRUE`="royalblue", `FALSE`="gray")) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/mb_pheno_assoc_pval_histogram_fxn.pdf", width=2, height=2)
+# fxn.mb.pheno.assoc.pval.hist
+# dev.off()
+```
+
+* Both functional and taxonomic features have very nice-looking p-value distributions
+
+# Import mediation results
+
+```{r}
+tax.mediation.df <- read.table(
+  "../results/mediation_n107_genus_feats_n209_phenos.txt.gz",
+  sep="\t", header=T)
+
+fxn.mediation.df <- read.table(
+  "../results/mediation_n273_humann_pathway_feats_n209_phenos.txt.gz",
+  sep="\t", header=T)
+
+dim(tax.mediation.df)
+dim(fxn.mediation.df)
+```
+
+# Record feature names
+
+```{r}
+all.genus.feats <- rownames(genus.df)
+all.pathway.feats <- rownames(pathway.df)
+```
+
+Make sure taxonomic uniqueness is always "uniq"
+
+```{r}
+tax.pheno.res.df <- tax.pheno.res.df %>% 
+  mutate(feature = case_match(feature, "uniq_genus" ~ "uniq", .default=feature))
+
+str_subset(all.genus.feats, "niq")
+str_subset(unique(tax.pheno.res.df$feature), "niq")
+str_subset(unique(tax.mediation.df$feature), "niq")
+```
+
+Make sure functional uniqueness is always "Uniqueness"
+
+```{r}
+str_subset(all.pathway.feats, "niq")
+str_subset(unique(fxn.pheno.res.df$feature), "niq")
+str_subset(unique(fxn.mediation.df$feature), "niq")
+```
+
+```{r}
+community.features <- c(
+  "Chao1", "Shannon", "Simpson", "PCoA1", "PCoA2", "PCoA3", "uniq",
+  "Uniqueness")
+```
+
+# Merge association and mediation results
+
+```{r}
+tax.assoc.mediation.merged.df <- merge(tax.pheno.res.df, tax.mediation.df, by=c("pheno", "feature"))
+fxn.assoc.mediation.merged.df <- merge(fxn.pheno.res.df, fxn.mediation.df, by=c("pheno", "feature"))
+```
+
+## Adjust metadata
+
+```{r}
+tax.assoc.mediation.merged.df <- tax.assoc.mediation.merged.df %>% 
+  separate(col=pheno, into=c("domain", "trait"), sep="_", remove=F)
+
+fxn.assoc.mediation.merged.df <- fxn.assoc.mediation.merged.df %>% 
+  separate(col=pheno, into=c("domain", "trait"), sep="_", remove=F)
+```
+
+Differentiate between individual and community features.
+
+```{r}
+tax.assoc.mediation.merged.df <- tax.assoc.mediation.merged.df %>% 
+  mutate(feature.type = ifelse(feature %in% community.features, "community", "individual"))
+
+fxn.assoc.mediation.merged.df <- fxn.assoc.mediation.merged.df %>% 
+  mutate(feature.type = ifelse(feature %in% community.features, "community", "individual"))
+```
+
+Make both of the glucose domains into "Glu" and change the traits to "GlucoseF" and "GlucoseNF".
+
+```{r}
+tax.assoc.mediation.merged.df <- tax.assoc.mediation.merged.df %>% 
+  mutate(trait = case_when(
+    domain == "Glu.F" & trait == "Glucose" ~ "GlucoseF",
+    domain == "Glu.NF" & trait == "Glucose" ~ "GlucoseNF",
+    TRUE ~ trait)) %>% 
+  mutate(domain = ifelse(domain %in% c("Glu.F", "Glu.NF"), "Glu", domain))
+
+fxn.assoc.mediation.merged.df <- fxn.assoc.mediation.merged.df %>% 
+  mutate(trait = case_when(
+    domain == "Glu.F" & trait == "Glucose" ~ "GlucoseF",
+    domain == "Glu.NF" & trait == "Glucose" ~ "GlucoseNF",
+    TRUE ~ trait)) %>% 
+  mutate(domain = ifelse(domain %in% c("Glu.F", "Glu.NF"), "Glu", domain))
+```
+
+## Adjust mediation p-values
+
+Separately within diet.
+
+```{r}
+tax.assoc.mediation.merged.df <- tax.assoc.mediation.merged.df %>% 
+  group_by(diet) %>% 
+  mutate(ACME_padj = p.adjust(ACME_p, method="BH")) %>% 
+  ungroup() %>% 
+  mutate(ACME_is_sig = ACME_padj < PADJ.THRESH)
+
+fxn.assoc.mediation.merged.df <- fxn.assoc.mediation.merged.df %>% 
+  group_by(diet) %>% 
+  mutate(ACME_padj = p.adjust(ACME_p, method="BH")) %>% 
+  ungroup() %>% 
+  mutate(ACME_is_sig = ACME_padj < PADJ.THRESH)
+```
+
+```{r}
+tax.assoc.mediation.merged.df %>% 
+  dplyr::count(diet, ACME_is_sig) %>% 
+  group_by(diet) %>% 
+  mutate(frac = n/sum(n)) %>% 
+  ungroup() %>% 
+  dplyr::filter(ACME_is_sig)
+```
+
+```{r}
+fxn.assoc.mediation.merged.df %>% 
+  dplyr::count(diet, ACME_is_sig) %>% 
+  group_by(diet) %>% 
+  mutate(frac = n/sum(n)) %>% 
+  ungroup() %>% 
+  dplyr::filter(ACME_is_sig)
+```
+
+* For 40% CR, 1.3% of taxonomic and 0.8% of functional associations are hits
+
+# Proportion mediated
+
+```{r}
+tax.assoc.mediation.merged.df %>%
+  
+  # subset to significant mediation pairs
+  dplyr::filter(ACME_is_sig) %>%
+  
+  # subset to pairs where direct and mediation effect are in the same direction
+  # https://stats.stackexchange.com/questions/504427/mediation-in-r-impossible-proportion-mediated-values-output-interpretation
+  dplyr::filter(sign(ACME_est) == sign(ADE_est)) %>% 
+  
+  pull(prop.med) %>% 
+  summary()
+```
+
+```{r}
+fxn.assoc.mediation.merged.df %>%
+  dplyr::filter(ACME_is_sig) %>%
+  dplyr::filter(sign(ACME_est) == sign(ADE_est)) %>% 
+  pull(prop.med) %>% 
+  summary()
+```
+
+* For both taxonomic and functional features, proportion mediated is mean 19%, median 14%
+
+# Overlap
+
+## Taxonomic
+
+```{r}
+num.sig.tax.assoc.p <- tax.assoc.mediation.merged.df %>% 
+  dplyr::filter(diet == "40") %>% 
+  dplyr::count(assoc_is_sig) %>% 
+  dplyr::filter(assoc_is_sig) %>% 
+  mutate(label="Association") %>% 
+  ggplot(aes(y=label, x=n, label=n)) +
+  geom_col(fill="skyblue") +
+  geom_text(size=6*0.36) +
+  scale_x_continuous(position="top", limits=c(0, 300)) + 
+  labs(y="", x="") +
+  theme_classic(base_size=8)
+```
+
+```{r}
+num.sig.tax.mediation.p <- tax.assoc.mediation.merged.df %>%
+  dplyr::filter(ACME_is_sig) %>% 
+  dplyr::count(diet, assoc_is_sig) %>% 
+  mutate(label=factor(
+    paste0("Mediation", diet),
+    levels=c("Mediation1D", "Mediation2D", "Mediation20", "Mediation40"))) %>% 
+  ggplot(aes(y=label, x=n, fill=assoc_is_sig, label=n)) +
+  geom_col(position="stack") +
+  geom_text(position="stack", size=6*0.36) +
+  labs(y="", x="# significant results", fill="Also significant association?") +
+  scale_fill_manual(values=c(`TRUE`="skyblue", `FALSE`="gray")) +
+  xlim(0, 300) +
+  theme_classic(base_size=8) +
+  theme(legend.position="none")
+
+assoc.v.mediation.tax.feats.barplot <- num.sig.tax.assoc.p + 
+  num.sig.tax.mediation.p + plot_layout(ncol=1, heights=c(1,4))
+```
+
+```{r}
+pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
+assoc.v.mediation.tax.feats.barplot
+dev.off()
+```
+
+## Functional
+
+```{r}
+num.sig.fxn.assoc.p <- fxn.assoc.mediation.merged.df %>% 
+  dplyr::filter(diet == "40") %>% 
+  dplyr::count(assoc_is_sig) %>% 
+  dplyr::filter(assoc_is_sig) %>% 
+  mutate(label="Association") %>% 
+  ggplot(aes(y=label, x=n, label=n)) +
+  geom_col(fill="skyblue") +
+  geom_text(size=6*0.36) +
+  scale_x_continuous(position="top", limits=c(0, 420)) + 
+  labs(y="", x="") +
+  theme_classic(base_size=8)
+```
+
+```{r}
+num.sig.fxn.mediation.p <- fxn.assoc.mediation.merged.df %>%
+  dplyr::filter(ACME_is_sig) %>% 
+  dplyr::count(diet, assoc_is_sig) %>% 
+  mutate(label=factor(
+    paste0("Mediation", diet),
+    levels=c("Mediation1D", "Mediation2D", "Mediation20", "Mediation40"))) %>% 
+  ggplot(aes(y=label, x=n, fill=assoc_is_sig, label=n)) +
+  geom_col(position="stack") +
+  geom_text(position="stack", size=6*0.36) +
+  labs(y="", x="# significant results", fill="Also significant association?") +
+  scale_fill_manual(values=c(`TRUE`="skyblue", `FALSE`="gray")) +
+  xlim(0, 420) +
+  theme_classic(base_size=8) +
+  theme(legend.position="none")
+
+assoc.v.mediation.fxn.feats.barplot <- num.sig.fxn.assoc.p + 
+  num.sig.fxn.mediation.p + plot_layout(ncol=1, heights=c(1,4))
+```
+
+```{r}
+pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
+assoc.v.mediation.fxn.feats.barplot
+dev.off()
+```
+
+# Domains with the most associations
+
+```{r}
+frac.hits.per.domain.df <- rbind(
+  
+  # genera
+  tax.assoc.mediation.merged.df %>% 
+    dplyr::filter(diet == "40") %>% # assoc results are same for all diets
+    mutate(assoc_is_sig = factor(assoc_is_sig)) %>% 
+    dplyr::count(domain, assoc_is_sig, .drop=F) %>% 
+    group_by(domain) %>% mutate(frac = n/sum(n)) %>% ungroup() %>% 
+    dplyr::filter(assoc_is_sig == T) %>% 
+    mutate(genera.or.pathways = "genera"),
+  
+  # pathways
+  fxn.assoc.mediation.merged.df %>% 
+    dplyr::filter(diet == "40") %>% # assoc results are same for all diets
+    mutate(assoc_is_sig = factor(assoc_is_sig)) %>% 
+    dplyr::count(domain, assoc_is_sig, .drop=F) %>% 
+    group_by(domain) %>% mutate(frac = n/sum(n)) %>% ungroup() %>% 
+    dplyr::filter(assoc_is_sig == T) %>% 
+    mutate(genera.or.pathways = "pathways")
+)
+```
+
+```{r}
+(frac.hits.per.domain.p <- frac.hits.per.domain.df %>% 
+   ggplot(aes(x=100*frac, y=reorder(domain, frac), fill=domain)) +
+   geom_col() +
+   labs(x=sprintf("%% microbiome-phenotype pairs with padj < %.2f", PADJ.THRESH), 
+        y="Domain") +
+   facet_wrap(~genera.or.pathways, scales="free_x") +
+   scale_fill_manual(values=domain.colors) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/mb_pheno_assoc_frac_hits_per_domain_barplot.pdf", height=2, width=3)
+# frac.hits.per.domain.p
+# dev.off()
+```
+
+# Heatmaps
+
+## Taxonomic bodyweight associations
+
+```{r}
+bw.traits <- c("BW", "BWTest", "TTM", "PercFat")
+bw.tax.feats <- c(
+  "Alistipes", "COE1", "Lachnospira", "Ligilactobacillus", # positive coefficient
+  "Angelakisella", "Bifidobacterium", # negative coefficient
+  "Dubosiella", "Paramuribaculum")
+```
+
+```{r}
+(tax.bw.assoc.heatmap <- tax.assoc.mediation.merged.df %>% 
+   dplyr::filter(diet == "40") %>% # assoc results are same for all diets
+   dplyr::filter(feature %in% bw.tax.feats) %>% 
+   dplyr::filter(trait %in% bw.traits) %>% 
+   mutate(trait = factor(case_when(
+     trait == "BW" ~ "Body weight",
+     trait == "BWTest" ~ "Body weight (Met cage)",
+     trait == "TTM" ~ "Total tissue mass (DEXA)",
+     trait == "PercFat" ~ "% fat (DEXA)"), levels=c(
+       "% fat (DEXA)", "Total tissue mass (DEXA)",
+       "Body weight (Met cage)", "Body weight"))) %>%
+   mutate(feature = factor(feature, levels=bw.tax.feats)) %>%
+   mutate(signif.symbol = case_when(
+    assoc_padj < PADJ.THRESH ~ "*",
+    TRUE ~ "")) %>% 
+   ggplot(aes(x=feature, y=trait, fill=mb.coef, label=signif.symbol)) +
+   geom_tile() +
+   geom_text() +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=45, hjust=1)) +
+   labs(x="Taxonomic feature", y="Phenotype", title="Body mass-related phenotypes", 
+        fill="Coefficient") +
+   scale_fill_gradient2(high="firebrick", low="dodgerblue"))
+```
+
+```{r}
+# pdf("../plots/mb_pheno_assoc_bw_select_tax_feats_heatmap.pdf", height=2, width=4)
+# tax.bw.assoc.heatmap
+# dev.off()
+```
+
+## Significant by both association and mediation (40% CR)
+
+Taxonomic and functional features together.
+
+```{r}
+traits.to.show.in.heatmap <- c(
+  "BW", "BWTest", "PercFat", "TTM", "Delta", # body composition
+  "EE", "VO2", "VCO2", # energy consumption
+  "Frailty", "CoatCondition", "DistendedAbdomen", # frailty
+  "Kyphosis", "TailStiffening", "VisionLoss", # more frailty
+  "Myeloid.PercViable", "Lymph.PercViable" # immune from FACS
+)
+length(traits.to.show.in.heatmap)
+
+tax.feats.for.heatmap <- c(
+  "Akkermansia", "Alistipes", "Angelakisella", "Bacteroides", "Bifidobacterium", 
+  "Clostridium", "COE1", "Desulfovibrio", "Dubosiella",
+  "Duncaniella", "Emergencia", "Escherichia", "Lachnospira", "Ligilactobacillus",
+  "Muribaculum", "MuribaculaceaeNOV", "Paramuribaculum", "Roseburia", 
+  "Turicibacter", "uniq")
+length(tax.feats.for.heatmap)
+
+fxn.feats.for.heatmap <- fxn.assoc.mediation.merged.df %>%
+  dplyr::filter(diet == "40") %>% 
+  dplyr::filter(trait %in% traits.to.show.in.heatmap) %>%
+  dplyr::filter(assoc_is_sig & ACME_is_sig) %>%
+  pull(feature) %>% unique()
+length(fxn.feats.for.heatmap)
+```
+
+Merge taxonomic and functional results prior to plotting.
+
+```{r}
+plot.df.for.tax.and.fxn.heatmap <- rbind(
+  
+  tax.assoc.mediation.merged.df %>% 
+    dplyr::filter(diet == "40") %>% 
+    dplyr::filter(trait %in% traits.to.show.in.heatmap) %>%
+    dplyr::filter(feature %in% tax.feats.for.heatmap) %>%
+    mutate(trait = factor(trait, levels=rev(traits.to.show.in.heatmap))) %>% 
+    dplyr::select(feature, trait, mb.coef, assoc_is_sig, ACME_is_sig) %>% 
+    mutate(tax.or.fxn = "genera"),
+  
+  fxn.assoc.mediation.merged.df %>% 
+    dplyr::filter(diet == "40") %>% 
+    dplyr::filter(trait %in% traits.to.show.in.heatmap) %>%
+    dplyr::filter(feature %in% fxn.feats.for.heatmap) %>%
+    merge(pathway.names.df, by.x="feature", by.y="short.clean") %>%
+    dplyr::mutate(feature = after.colon.short.w.ID) %>% # overwrite old feature column
+    dplyr::select(feature, trait, mb.coef, assoc_is_sig, ACME_is_sig) %>% 
+    mutate(tax.or.fxn = "pathways")
+  
+) %>% 
+  
+  # specify order of traits
+  mutate(trait = factor(trait, levels=rev(traits.to.show.in.heatmap))) %>% 
+  
+  # create symbol to indicate signif in assoc or both assoc and mediation
+  mutate(is.sig.symbol = case_when(
+     (assoc_is_sig & !ACME_is_sig) ~ "+", 
+     (assoc_is_sig & ACME_is_sig) ~ "++", 
+     TRUE ~ ""))
+```
+
+```{r}
+(tax.and.fxn.heatmap.tall <- plot.df.for.tax.and.fxn.heatmap %>% 
+   ggplot(aes(y=feature, x=trait, fill=mb.coef, label=is.sig.symbol)) +
+   geom_tile() +
+   geom_text(size=6*.36) +
+   facet_wrap(~tax.or.fxn, scales="free_y", ncol=1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=45, hjust=1),
+         legend.position="none") +
+   labs(y="Feature", x="Phenotype", 
+        fill="Coefficient") +
+   scale_fill_gradient2(high="firebrick", low="dodgerblue"))
+```
+
+```{r}
+pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
+tax.and.fxn.heatmap.tall
+dev.off()
+```
+
+# Examples
+
+## Paramuribaculum versus % fat
+
+```{r}
+(paramuribaculum.v.percfat.split.by.diet.p <- full.df %>% 
+   ggplot(aes(x=Paramuribaculum, y=PIXI_PercFat)) +
+   geom_point(aes(color=Diet.5mo.as.AL), shape=16, size=0.5) +
+   geom_smooth(method="lm", linewidth=0.5) +
+   facet_wrap(~Diet.5mo.as.AL, nrow=1) +
+   scale_color_manual(values=diet.palette) +
+   labs(x="Paramuribaculum (CLR)", y="% fat (DEXA)") +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/paramuribaculum_v_percfat_split_by_diet.pdf", height=1, width=4)
+# paramuribaculum.v.percfat.split.by.diet.p
+# dev.off()
+```
+
+## Akkermansia versus energy expenditure
+
+```{r}
+(akkermansia.v.MetCageEE.p <- full.df %>% 
+   ggplot(aes(x=Akkermansia, y=MetCage_EE)) +
+   geom_point(aes(color=Diet.5mo.as.AL), shape=16, size=0.5) +
+   geom_smooth(method="lm", linewidth=0.5) +
+   facet_wrap(~Diet.5mo.as.AL, nrow=1) +
+   scale_color_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   labs(x="CLR", y="Energy expenditure (metabolic cage)", title="Akkermansia") +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/akkermansia_v_EE.pdf", height=1.25, width=3.5)
+# akkermansia.v.MetCageEE.p
+# dev.off()
+```
+
+## Methionine pathway versus VCO2
+
+```{r}
+(PWY7977.v.MetCageVCO2.p <- full.df %>% 
+   ggplot(aes(x=PWY7977, y=MetCage_VCO2)) +
+   geom_point(aes(color=Diet.5mo.as.AL), shape=16, size=0.5) +
+   geom_smooth(method="lm", linewidth=0.5) +
+   facet_wrap(~Diet.5mo.as.AL, nrow=1) +
+   scale_color_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   labs(x="log2(TPM)", y="VCO2 (metabolic cage)", title="L-methionine biosynthesis IV (PWY-7977)") +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/PWY7977_v_MetCageVCO2.pdf", height=1.25, width=3.5)
+# PWY7977.v.MetCageVCO2.p
+# dev.off()
+```
