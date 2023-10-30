@@ -36,6 +36,12 @@ dim(seq.meta.annot.df)
 ```
 
 ```{r}
+seq.meta.annot.df %>% dplyr::count(sample.type)
+```
+
+* Of the 3473 sequencing samples, 3343 are DO samples, 71 are negative controls, and 59 are positive controls
+
+```{r}
 n_distinct(seq.meta.annot.df$stool.ID)
 
 seq.meta.annot.df %>% 
