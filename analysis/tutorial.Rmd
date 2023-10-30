@@ -386,7 +386,7 @@ agg.physeq.genus %>%
   # t-test
   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
   
-  labs(x="", y="log10(relab)", title="Ligilactobacillus") +
+  labs(x="", y="log10(relab)", title="Ligilactobacillus", fill="Diet") +
   scale_fill_manual(values=diet.palette) +
   theme_bw(base_size=10)
   theme(legend.position="none")

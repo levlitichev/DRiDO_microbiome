@@ -1,43 +1,33 @@
 # DRiDO Microbiome Study
 
 _Author_: Lev Litichevskiy  
-_Last updated_: October 2023  
+_Last updated_: October 30, 2023  
 
-bioRxiv: XXX
+This repository contains code and data that can be used to reproduce figures from the DRiDO microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results (not fastq files).
 
-This repository contains code and data related to the DRiDO microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results, not fastq files.
+## Data pre-processing
 
-## Data processing prior to this repository
+We used [Sunbeam](https://github.com/sunbeam-labs/sunbeam) for quality control of sequencing reads, specifically cutadapt to remove adapters, trimmomatic for quality-trimming, [komplexity](https://github.com/eclarke/komplexity) to remove highly repetitive sequences, and bowtie2 to remove host (mm10) reads. We performed taxonomic classification with Kraken2 against the  index available from the [Mouse Gastrointestinal Bacterial Catalogue (MGBC)](https://github.com/BenBeresfordJones/MGBC), and we performed functional classification using HUMAnN3.
 
-Quality control:
+## Repository organization
 
-- Sunbeam, including cutadapt to remove adapters, trimmomatic for quality-trimming, komplexity to remove highly repetitive sequences, and bowtie2 to remove host reads
+* `analysis` contains .Rmd notebooks used for generating figures
+* `scripts` contains a mix of .R and .Rmd files used for data processing and running linear models
+* `results` contains the output of `scripts`
+* `data` contains the inputs to `scripts` and `analysis`, including metadata
 
-Taxonomic classification:
-
-- Kraken2 + MGBC
-- HUMAnN3 (MetaPhlAn4)
-
-Functional classification:
-
-- HUMAnN3
-
-## Table of contents
-
-- `data/`
-    - `metadata/` 
-- `scripts/`: contains data processing scripts, a mix of .R and .Rmd files
-- `analysis/`: contains R notebooks used for making figures
+Note that there are multiple layers of metadata: sequencing metadata, library metadata, and stool metadata are stored separately. Multiple sequencing IDs (`seq.ID`) can correspond to the same library ID (`lib.ID`), and multiple library IDs can correspond to the same stool sample (`stool.ID`). Each mouse contributed multiple stool samples.
 
 ## Quick start
 
-The most useful data tables are probably the following:
+### Taxonomy and pathway tables
 
-- `kraken_matrix_agg_by_stool_ID_n1303x2997.txt` with `kraken_taxonomy_n1303.txt`
-- `pathabundance_tpm_agg_by_stool_ID_n422x2997.txt`
+- Taxonomy: `kraken_matrix_agg_by_stool_ID_n1303x2997.txt` with `kraken_taxonomy_n1303.txt`
+  - Absolute counts
+- Pathways: `pathabundance_tpm_agg_by_stool_ID_n422x2997.txt`
+  - TPM (transcripts-per-million) abundances
+  - That is, normalized for gene length and sequencing depth
 
-## Details
+### Tutorial
 
-Metadata stored separately. Note that sequencing metadata, library metadata, and stool metadata is stored separately. Multiple sequencing IDs (`seq.ID`) can correspond to the same library ID (`lib.ID`), and multiple library IDs can correspond to the same stool sample (`stool.ID`). Each mouse contributed multiple stool samples.
-
-
+This [tutorial](analysis/tutorial.html) demonstrates how to import taxonomic data and perform several basic analyses.
