@@ -8,4 +8,3 @@ Kurilshikov2021	human	human	Twin study	159.0	19.0	11.9	p < 0.05	1,176	ACE model	
 Goodrich2016	human	human	Twin study	945.0	NA	8.5	h2 > 0.2 with 95% confidence intervals that did not overlap zero	1,126	ACE model	https://www.sciencedirect.com/science/article/pii/S1931312816301536
 Turpin2016	human	human	Pedigree	249.0	20.0	8.0	h2 > 0.25 and p < 0.05, then p-value correction	270	Pedigree	https://www.nature.com/articles/ng.3693
 Gacesa2022	human	human	LMM with kinship matrix	NA	17.0	6.6	padj < 0.1	8,208	LMM, permutation test	https://www.nature.com/articles/s41586-022-04567-7
-Goodrich2014	human	human	Twin study	909.0	NA	5.3	h2 > 0.2 with 95% confidence intervals that did not overlap zero	832	ACE model	https://www.sciencedirect.com/science/article/pii/S0092867414012410
