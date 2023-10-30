@@ -16,6 +16,10 @@ In this tutorial, we import taxonomic classification results and perform several
 
 N.B. This tutorial is derived from `kraken.Rmd`.
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300,fig.width=7)
+```
+
 # Load libraries
 
 ```{r, warning=F, message=F}
