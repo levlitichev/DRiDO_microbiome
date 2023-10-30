@@ -6,10 +6,7 @@ Cross-sectional association analysis at the very end.
 
 ```{r, warning=F, message=F}
 library(tidyverse)
-
-# plotting
-library(tidytext) # reorder_within
-library(patchwork)
+library(patchwork) # plot_layout
 
 PADJ.THRESH <- 0.01
 
