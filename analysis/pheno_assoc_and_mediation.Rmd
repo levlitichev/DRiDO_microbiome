@@ -1,5 +1,7 @@
 Microbiome-phenotype longitudinal association and mediation analysis.
 
+Cross-sectional association analysis at the very end.
+
 # Load libraries
 
 ```{r, warning=F, message=F}
@@ -694,4 +696,124 @@ dev.off()
 # pdf("../plots/PWY7977_v_MetCageVCO2.pdf", height=1.25, width=3.5)
 # PWY7977.v.MetCageVCO2.p
 # dev.off()
+```
+
+# Cross-sectional microbiome-phenotype associations
+
+## Import linear model results
+
+Model at 5 months: y_pheno ~ y_mb
+Model at other ages: y_pheno ~ y_mb + DR
+
+```{r}
+tax.pheno.res.xs.df <- read.table(
+  "../results/lm_cross_sectional_mb_pheno_assoc_diet_covar_n107_kraken_feats.txt",
+  sep="\t", header=T)
+```
+
+```{r}
+fxn.pheno.res.xs.df <- read.table(
+  "../results/lm_cross_sectional_mb_pheno_assoc_diet_covar_n273_pathways.txt",
+  sep="\t", header=T)
+```
+
+## Exclude phenos
+
+Ignore BWTest traits except MetCage_BWTest.
+
+```{r}
+tax.pheno.res.xs.df <- tax.pheno.res.xs.df %>% 
+  dplyr::filter(!str_detect(pheno, "BWTest") | (pheno == "MetCage_BWTest"))
+
+fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>% 
+  dplyr::filter(!str_detect(pheno, "BWTest") | (pheno == "MetCage_BWTest"))
+
+dim(tax.pheno.res.xs.df)
+dim(fxn.pheno.res.xs.df)
+```
+
+Separate pheno into domain and trait.
+
+```{r}
+tax.pheno.res.xs.df <- tax.pheno.res.xs.df %>% 
+  mutate(pheno = case_match(pheno, "SurvDays" ~ "SurvDays_SurvDays", .default=pheno)) %>% 
+  separate(col=pheno, into=c("domain", "trait"), sep="_", remove=F)
+
+fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>% 
+  mutate(pheno = case_match(pheno, "SurvDays" ~ "SurvDays_SurvDays", .default=pheno)) %>% 
+  separate(col=pheno, into=c("domain", "trait"), sep="_", remove=F)
+```
+
+Make both of the glucose domains into "Glu" and change the traits to "GlucoseF" and "GlucoseNF".
+
+```{r}
+tax.pheno.res.xs.df <- tax.pheno.res.xs.df %>% 
+  mutate(trait = case_when(
+    domain == "Glu.F" & trait == "Glucose" ~ "GlucoseF",
+    domain == "Glu.NF" & trait == "Glucose" ~ "GlucoseNF",
+    TRUE ~ trait)) %>% 
+  mutate(domain = ifelse(domain %in% c("Glu.F", "Glu.NF"), "Glu", domain))
+
+fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>% 
+  mutate(trait = case_when(
+    domain == "Glu.F" & trait == "Glucose" ~ "GlucoseF",
+    domain == "Glu.NF" & trait == "Glucose" ~ "GlucoseNF",
+    TRUE ~ trait)) %>% 
+  mutate(domain = ifelse(domain %in% c("Glu.F", "Glu.NF"), "Glu", domain))
+```
+
+## Adjust p-values
+
+Separately within age.
+
+```{r}
+tax.pheno.res.xs.df <- tax.pheno.res.xs.df %>% 
+  group_by(age) %>% 
+  mutate(padj = p.adjust(pval, method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH) %>% 
+  ungroup()
+  
+fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>% 
+  group_by(age) %>% 
+  mutate(padj = p.adjust(pval, method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH) %>% 
+  ungroup()
+```
+
+## Domains with the most associations
+
+```{r}
+(frac.xs.hits.per.domain.barplots <- rbind(
+  
+  # tax
+  tax.pheno.res.xs.df %>% 
+    mutate(is.sig = factor(is.sig)) %>% 
+    dplyr::count(domain, is.sig, .drop=F) %>% 
+    group_by(domain) %>% mutate(frac = n/sum(n)) %>% ungroup() %>% 
+    dplyr::filter(is.sig == T) %>% 
+    mutate(genera.or.pathways = "genera"),
+  
+  # fxn
+  fxn.pheno.res.xs.df %>% 
+    mutate(is.sig = factor(is.sig)) %>% 
+    dplyr::count(domain, is.sig, .drop=F) %>% 
+    group_by(domain) %>% mutate(frac = n/sum(n)) %>% ungroup() %>% 
+    dplyr::filter(is.sig == T) %>% 
+    mutate(genera.or.pathways = "pathways")
+) %>% 
+  
+  ggplot(aes(x=100*frac, y=reorder(domain, frac), fill=domain)) +
+  geom_col() +
+  labs(x=sprintf("%% microbiome-phenotype pairs with padj < %.2f", PADJ.THRESH), 
+       y="Domain") +
+  scale_fill_manual(values=domain.colors) +
+  theme_classic(base_size=8) +
+  facet_wrap(~genera.or.pathways, scales="free_x") +
+  theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
+frac.xs.hits.per.domain.barplots
+dev.off()
 ```

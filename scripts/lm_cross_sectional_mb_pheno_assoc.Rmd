@@ -1,0 +1,436 @@
+I prefer running longitudinal associations (to keep power high) but we can't do longitudinal association for lifespan. So I need to run cross-sectional associations.
+
+Model at 5 months: y_pheno ~ y_mb
+Model at other ages: y_pheno ~ y_mb + DR
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(foreach)
+library(doParallel)
+```
+
+```{r}
+# minimum number of observations required to do a microbiome-phenotype association
+MIN.N <- 200
+```
+
+# Set up cluster
+
+```{r}
+cl <- makeCluster(6)
+registerDoParallel(cl)
+```
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv")
+
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+# Import microbiome data
+
+## Genera
+
+```{r}
+mb.df.feats.in.rows <- read.table(
+  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
+  sep="\t", header=T, row.names=1)
+
+# we need stool IDs in rows
+mb.df <- mb.df.feats.in.rows %>% t() %>% data.frame()
+
+dim(mb.df)
+```
+
+* 2997 stool samples x 107 taxonomic features
+
+## Pathways
+
+```{r}
+# mb.df.feats.in.rows <- read.table(
+#   "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
+#   sep="\t", header=T, row.names=1)
+# 
+# # we need stool IDs in rows
+# mb.df <- mb.df.feats.in.rows %>% t() %>% data.frame()
+# 
+# dim(mb.df)
+```
+
+* 2997 stool samples x 273 pathways
+
+# Import phenotype data
+
+```{r}
+pheno.wide.df <- read.csv(
+  "../results/phenotype_values_closest_to_each_stool_ID_within_100_days_n2915x210_230811.txt", 
+  sep="\t", header=T, row.names=1)
+dim(pheno.wide.df)
+```
+
+* 2915 stool IDs x 210 phenotypes
+
+# Combine microbiome and phenotype data
+
+```{r}
+mb.feats <- colnames(mb.df)
+length(mb.feats)
+
+phenos <- colnames(pheno.wide.df)
+length(phenos)
+```
+
+```{r}
+pheno.and.mb.df <- pheno.wide.df %>%
+  merge(mb.df, by="row.names") %>% 
+  dplyr::rename(stool.ID = Row.names) %>% 
+  merge(stool.meta.annot.df %>% dplyr::select(-SurvDays), by="stool.ID")
+
+dim(pheno.and.mb.df)
+```
+
+* 2915 stool IDs
+
+# Run linear model for each phenotype
+
+```{r}
+run_lm_one_pheno <- function(this.pheno, this.age.df, reduced.formula, full.formula, mb.feats) {
+
+  cat(this.pheno, "\n")
+  
+  # make sure phenotype name is correct
+  stopifnot(this.pheno %in% colnames(this.age.df))
+  
+  this.age.filt.df <- this.age.df %>% 
+    
+    # remove missing phenotype values
+    dplyr::filter(!is.na(.data[[this.pheno]]))
+  
+  this.n <- nrow(this.age.filt.df)
+  
+  # scale phenotype
+  this.age.filt.df[["pheno.scaled"]] <- as.numeric(scale(this.age.filt.df[[this.pheno]]))
+  
+  # model without microbiome (this step can be run just once per pheno)
+  reduced.model <- lm(reduced.formula, data=this.age.filt.df)
+  
+  # iterate over microbiome features
+  this.pheno.res <- sapply(
+    mb.feats, FUN=run_lm_one_pheno_one_mb_feat,
+    this.pheno=this.pheno, this.df=this.age.filt.df, 
+    full.formula=full.formula, 
+    reduced.model=reduced.model)
+    
+  # transpose, convert to df, unnest
+  this.pheno.res.df <- this.pheno.res %>% 
+    t() %>% data.frame() %>% unnest(everything())
+  
+  # convert first 2 columns to numeric
+  this.pheno.res.df[, 1:2] <- sapply(this.pheno.res.df[, 1:2], as.numeric)
+  
+  # include n
+  this.pheno.res.df$n <- this.n
+  
+  return(this.pheno.res.df)
+  
+}
+
+run_lm_one_pheno_one_mb_feat <- function(this.pheno, this.mb.feat, this.df,
+                                         full.formula, reduced.model) {
+  
+  # scale microbiome feature
+  this.df[["mb.scaled"]] <- as.numeric(scale(this.df[[this.mb.feat]]))
+  
+  # full model
+  full.model <- lm(full.formula, data=this.df)
+  
+  # LRT
+  this.anova.res <- anova(full.model, reduced.model)
+  
+  # export desired outputs
+  out.vec <- c(
+    coef = coef(full.model)["mb.scaled"],
+    pval = this.anova.res$`Pr(>F)`[2],
+    feature = this.mb.feat,
+    pheno = this.pheno)
+  
+  return(out.vec)
+}
+```
+
+## 5 months
+
+We'll do 5, 10, 16, 22, and 28 months.
+
+```{r}
+this.age <- 5
+
+# subset to this age
+this.age.pheno.and.mb.df <- pheno.and.mb.df %>% 
+  dplyr::filter(age.approx.months == this.age)
+
+# only include phenotypes with enough observations at this age
+this.age.n.per.pheno.df <- data.frame(
+  n.non.na = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {length(x[!is.na(x)])}),
+  n.uniq = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {n_distinct(x[!is.na(x)])})) %>% 
+  rownames_to_column("pheno") 
+
+this.age.phenos <- this.age.n.per.pheno.df %>% 
+  dplyr::filter(n.non.na > MIN.N) %>% 
+  dplyr::filter(n.uniq > 1) %>% 
+  pull(pheno)
+
+length(this.age.phenos)
+```
+
+```{r}
+# survdays.5mo.res.df <- run_lm_one_pheno(
+#   this.pheno="SurvDays", this.age.df=this.age.pheno.and.mb.df,
+#   reduced.formula=reduced.formula.5mo, full.formula=full.formula.5mo,
+#   mb.feats=mb.feats)
+```
+
+```{r}
+pheno.res.df.5mo <- foreach(
+  this.pheno = this.age.phenos, 
+  .combine="rbind",
+  .packages = c("tidyverse")) %dopar% {
+    
+    .GlobalEnv$this.age.pheno.and.mb.df <- this.age.pheno.and.mb.df
+    .GlobalEnv$mb.feats <- mb.feats
+    
+    run_lm_one_pheno(
+      this.pheno = this.pheno, 
+      this.age.df = this.age.pheno.and.mb.df,
+      reduced.formula = as.formula("pheno.scaled ~ 1"), 
+      full.formula = as.formula("pheno.scaled ~ mb.scaled"),
+      mb.feats = mb.feats) %>% 
+      
+      # add age to output df
+      mutate(age = 5)
+    
+  }
+```
+
+## 10 months
+
+```{r}
+this.age <- 10
+
+# subset to this age
+this.age.pheno.and.mb.df <- pheno.and.mb.df %>% 
+  dplyr::filter(age.approx.months == this.age) %>% 
+  mutate(Diet = factor(Diet, levels=c("AL", "1D", "2D", "20", "40")))
+
+# only include phenotypes with enough observations at this age
+this.age.n.per.pheno.df <- data.frame(
+  n.non.na = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {length(x[!is.na(x)])}),
+  n.uniq = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {n_distinct(x[!is.na(x)])})) %>% 
+  rownames_to_column("pheno") 
+
+this.age.phenos <- this.age.n.per.pheno.df %>% 
+  dplyr::filter(n.non.na > MIN.N) %>% 
+  dplyr::filter(n.uniq > 1) %>% 
+  pull(pheno)
+
+length(this.age.phenos)
+```
+
+```{r}
+pheno.res.df.10mo <- foreach(
+  this.pheno = this.age.phenos, 
+  .combine="rbind",
+  .packages = c("tidyverse")) %dopar% {
+    
+    .GlobalEnv$this.age.pheno.and.mb.df <- this.age.pheno.and.mb.df
+    .GlobalEnv$mb.feats <- mb.feats
+    
+    run_lm_one_pheno(
+      this.pheno = this.pheno, 
+      this.age.df = this.age.pheno.and.mb.df,
+      reduced.formula = as.formula("pheno.scaled ~ Diet"), 
+      full.formula = as.formula("pheno.scaled ~ mb.scaled + Diet"),
+      mb.feats = mb.feats) %>% 
+      
+      # add age to output df
+      mutate(age = 10)
+    
+  }
+```
+
+## 16 months
+
+```{r}
+this.age <- 16
+
+# subset to this age
+this.age.pheno.and.mb.df <- pheno.and.mb.df %>% 
+  dplyr::filter(age.approx.months == this.age) %>% 
+  mutate(Diet = factor(Diet, levels=c("AL", "1D", "2D", "20", "40")))
+
+# only include phenotypes with enough observations at this age
+this.age.n.per.pheno.df <- data.frame(
+  n.non.na = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {length(x[!is.na(x)])}),
+  n.uniq = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {n_distinct(x[!is.na(x)])})) %>% 
+  rownames_to_column("pheno") 
+
+this.age.phenos <- this.age.n.per.pheno.df %>% 
+  dplyr::filter(n.non.na > MIN.N) %>% 
+  dplyr::filter(n.uniq > 1) %>% 
+  pull(pheno)
+
+length(this.age.phenos)
+```
+
+```{r}
+pheno.res.df.16mo <- foreach(
+  this.pheno = this.age.phenos, 
+  .combine="rbind",
+  .packages = c("tidyverse")) %dopar% {
+    
+    .GlobalEnv$this.age.pheno.and.mb.df <- this.age.pheno.and.mb.df
+    .GlobalEnv$mb.feats <- mb.feats
+    
+    run_lm_one_pheno(
+      this.pheno = this.pheno, 
+      this.age.df = this.age.pheno.and.mb.df,
+      reduced.formula = as.formula("pheno.scaled ~ Diet"), 
+      full.formula = as.formula("pheno.scaled ~ mb.scaled + Diet"),
+      mb.feats = mb.feats) %>% 
+      
+      # add age to output df
+      mutate(age = 16)
+    
+  }
+```
+
+
+## 22 months
+
+```{r}
+this.age <- 22
+
+# subset to this age
+this.age.pheno.and.mb.df <- pheno.and.mb.df %>% 
+  dplyr::filter(age.approx.months == this.age) %>% 
+  mutate(Diet = factor(Diet, levels=c("AL", "1D", "2D", "20", "40")))
+
+# only include phenotypes with enough observations at this age
+this.age.n.per.pheno.df <- data.frame(
+  n.non.na = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {length(x[!is.na(x)])}),
+  n.uniq = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {n_distinct(x[!is.na(x)])})) %>% 
+  rownames_to_column("pheno") 
+
+this.age.phenos <- this.age.n.per.pheno.df %>% 
+  dplyr::filter(n.non.na > MIN.N) %>% 
+  dplyr::filter(n.uniq > 1) %>% 
+  pull(pheno)
+
+length(this.age.phenos)
+```
+
+```{r}
+pheno.res.df.22mo <- foreach(
+  this.pheno = this.age.phenos, 
+  .combine="rbind",
+  .packages = c("tidyverse")) %dopar% {
+    
+    .GlobalEnv$this.age.pheno.and.mb.df <- this.age.pheno.and.mb.df
+    .GlobalEnv$mb.feats <- mb.feats
+    
+    run_lm_one_pheno(
+      this.pheno = this.pheno, 
+      this.age.df = this.age.pheno.and.mb.df,
+      reduced.formula = as.formula("pheno.scaled ~ Diet"), 
+      full.formula = as.formula("pheno.scaled ~ mb.scaled + Diet"),
+      mb.feats = mb.feats) %>% 
+      
+      # add age to output df
+      mutate(age = 22)
+    
+  }
+```
+
+## 28 months
+
+```{r}
+this.age <- 28
+
+# subset to this age
+this.age.pheno.and.mb.df <- pheno.and.mb.df %>% 
+  dplyr::filter(age.approx.months == this.age) %>% 
+  mutate(Diet = factor(Diet, levels=c("AL", "1D", "2D", "20", "40")))
+
+# only include phenotypes with enough observations at this age
+this.age.n.per.pheno.df <- data.frame(
+  n.non.na = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {length(x[!is.na(x)])}),
+  n.uniq = sapply(this.age.pheno.and.mb.df[phenos], FUN=function(x) {n_distinct(x[!is.na(x)])})) %>% 
+  rownames_to_column("pheno") 
+
+this.age.phenos <- this.age.n.per.pheno.df %>% 
+  dplyr::filter(n.non.na > MIN.N) %>% 
+  dplyr::filter(n.uniq > 1) %>% 
+  pull(pheno)
+
+length(this.age.phenos)
+```
+
+```{r}
+pheno.res.df.28mo <- foreach(
+  this.pheno = this.age.phenos, 
+  .combine="rbind",
+  .packages = c("tidyverse")) %dopar% {
+    
+    .GlobalEnv$this.age.pheno.and.mb.df <- this.age.pheno.and.mb.df
+    .GlobalEnv$mb.feats <- mb.feats
+    
+    run_lm_one_pheno(
+      this.pheno = this.pheno, 
+      this.age.df = this.age.pheno.and.mb.df,
+      reduced.formula = as.formula("pheno.scaled ~ Diet"), 
+      full.formula = as.formula("pheno.scaled ~ mb.scaled + Diet"),
+      mb.feats = mb.feats) %>% 
+      
+      # add age to output df
+      mutate(age = 28)
+    
+  }
+```
+
+## Combine outputs
+
+```{r}
+pheno.res.df <- rbind(
+  pheno.res.df.5mo,
+  pheno.res.df.10mo,
+  pheno.res.df.16mo,
+  pheno.res.df.22mo,
+  pheno.res.df.28mo)
+```
+
+```{r}
+nrow(pheno.res.df)
+n_distinct(pheno.res.df$pheno)
+n_distinct(pheno.res.df$feature)
+unique(pheno.res.df$age)
+```
+
+# Export
+
+```{r}
+pheno.res.df %>%
+  write.table(
+    sprintf("../results/lm_cross_sectional_mb_pheno_assoc_diet_covar_n%i_kraken_feats.txt", length(mb.feats)),
+    # sprintf("../results/lm_cross_sectional_mb_pheno_assoc_diet_covar_n%i_pathways.txt", length(mb.feats)),
+    sep="\t", row.names=F, quote=F)
+```
+
