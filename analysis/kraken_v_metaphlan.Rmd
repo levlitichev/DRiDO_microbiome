@@ -1,0 +1,223 @@
+Will compare MetaPhlAn4 versus Kraken2 + MGBC taxonomic results.
+
+* % unclassified
+* Mean difference in relative abundance across all samples
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(phyloseq)
+library(speedyseq) # faster tax_glom
+library(foreach)
+```
+
+# Import metadata
+
+```{r}
+seq.meta.df <- read.table(
+  "../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", 
+  sep="\t", header=T)
+lib.meta.df <- read.table(
+  "../data/metadata/library_metadata_after_QC_n3213_230620.txt",
+  sep="\t", header=T)
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_n3124_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
+```
+
+```{r}
+seq.meta.annot.df <- seq.meta.df %>%
+  merge(lib.meta.df, by="lib.ID") %>%
+  merge(stool.meta.df, by="stool.ID") %>% 
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID", all.x=T)
+
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+# Import data
+
+## MetaPhlAn
+
+Need MetaPhlAn output prior to aggregation in order to get % unclassified, but we'll use aggregated data for relative abundance comparison.
+
+```{r}
+mpa.df <- read.table(
+  "../data/metaphlan.txt",
+  sep="\t", header=T)
+
+mpa.genus.df <- read.table(
+  "../data/metaphlan_genus_agg_by_stool_ID_n376x2997.txt",
+  sep="\t", header=T) %>% 
+  column_to_rownames("genus")
+
+dim(mpa.genus.df)
+```
+
+* 376 genera x 2997 samples
+
+## Kraken
+
+% unclassified stored separately.
+
+```{r}
+kraken.perc.unclass.df <- read.table(
+  "../results/percent_kraken_unclassified_n4352_221102.txt",
+  sep="\t", header=T)
+```
+
+Use phyloseq to create genus-level Kraken relative abundances.
+
+```{r}
+# import. data
+agg.kraken.df <- read.table(
+  "../data/kraken_matrix_agg_by_stool_ID_n1303x2997.txt", 
+  sep="\t", header=T, row.names=1)
+
+# import taxonomy
+kraken.tax.df <- read.table(
+  "../data/kraken_taxonomy_n1303.txt", 
+  sep="\t", header=T, quote="", row.names=1)
+
+# create phyloseq object
+agg.physeq <- phyloseq(
+  agg.kraken.df %>% as.matrix %>% otu_table(taxa_are_rows=T),
+  stool.meta.annot.df %>% column_to_rownames("stool.ID") %>% sample_data,
+  kraken.tax.df %>% as.matrix %>% tax_table)
+
+# aggregate to genera
+agg.physeq.genus <- agg.physeq %>% tax_glom(taxrank="genus")
+
+# convert to relative abundances
+agg.physeq.genus.relab <- agg.physeq.genus %>% 
+  transform_sample_counts(function(x) 100*x/sum(x))
+
+# convert to dataframe
+kraken.genus.df <- agg.physeq.genus.relab %>% 
+  otu_table() %>% data.frame()
+rownames(kraken.genus.df) <- data.frame(tax_table(agg.physeq.genus.relab))$genus
+
+dim(kraken.genus.df)
+```
+
+* 252 genera x 2997 samples
+
+# % unclassified
+
+```{r}
+perc.unclass.df <- rbind(
+  
+  # mpa
+  mpa.df %>% 
+    dplyr::filter(clade_name == "UNCLASSIFIED") %>% 
+    dplyr::select(-clade_name) %>% 
+    t() %>% data.frame() %>% setNames("perc.unclass") %>% 
+    rownames_to_column("seq.ID") %>% 
+    mutate(method = "MetaPhlAn4"),
+  
+  # kraken
+  kraken.perc.unclass.df %>% 
+    dplyr::rename(perc.unclass = perc.unclass.kraken) %>% 
+    mutate(method = "Kraken2")
+)
+```
+
+```{r}
+perc.unclass.df %>% 
+  dplyr::count(method)
+```
+
+* 4352 Kraken results but only 3473 MetaPhlAn results -- we'll subset to these 3473
+* We should also subset to non-control samples
+
+```{r}
+seq.IDs.to.keep <- seq.meta.annot.df %>% 
+  dplyr::filter(sample.type == "DO") %>% 
+  dplyr::filter(seq.ID %in% colnames(mpa.df)) %>% 
+  pull(seq.ID)
+length(seq.IDs.to.keep)
+
+perc.unclass.filt.df <- perc.unclass.df %>% 
+  dplyr::filter(seq.ID %in% seq.IDs.to.keep)
+dim(perc.unclass.filt.df)
+```
+
+```{r}
+(mean.perc.unclass.df <- perc.unclass.filt.df %>% 
+   group_by(method) %>% 
+   summarise(perc.unclass = mean(perc.unclass), .groups="drop") %>% 
+   mutate(perc.class.chr = sprintf("%.1f%%", 100-perc.unclass)))
+```
+
+* Mean % classified: 95.7% for Kraken2, 88.0% for MetaPhlAn4
+
+```{r}
+(perc.classifed.p <- perc.unclass.filt.df %>% 
+   ggplot(aes(x=method, y=100-perc.unclass)) +
+   stat_summary(fun="mean", geom="col", width=0.5) +
+   geom_point(shape=16) +
+   geom_path(aes(group=seq.ID), alpha=0.01) +
+   geom_text(aes(y=5, label=perc.class.chr), 
+             color="white", data=mean.perc.unclass.df) +
+   labs(x="", y="% classified",
+        title="DO samples prior to stool.ID aggregation") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/percent_classified_kraken_mgbc_v_mpa4.pdf", width=1.5, height=1.75)
+# perc.classifed.p
+# dev.off()
+```
+
+# Per-sample relabs
+
+```{r}
+mpa.v.kraken.genus.relab.df <- merge(
+  
+  # mpa
+  mpa.genus.df %>% 
+    rownames_to_column("genus") %>% 
+    pivot_longer(-genus, names_to="seq.ID", values_to="mpa"),
+  
+  # kraken
+  kraken.genus.df %>% 
+    rownames_to_column("genus") %>% 
+    pivot_longer(-genus, names_to="seq.ID", values_to="kraken"),
+  
+  by=c("genus", "seq.ID")
+)
+```
+
+```{r}
+n_distinct(mpa.v.kraken.genus.relab.df$genus)
+```
+
+* 41 genera in common
+
+```{r}
+mpa.v.kraken.mean.relab.diff.df <- mpa.v.kraken.genus.relab.df %>% 
+  mutate(kraken.minus.mpa = kraken - mpa) %>% 
+  group_by(genus) %>% 
+  summarise(mean = mean(kraken.minus.mpa),
+            sd = sd(kraken.minus.mpa),
+            se = sd(kraken.minus.mpa) / sqrt(n()),
+            .groups="drop")
+```
+
+```{r}
+(mpa.v.kraken.relab.diff.p <- mpa.v.kraken.mean.relab.diff.df %>% 
+   ggplot(aes(x=mean, xmin=mean-sd, xmax=mean+sd, y=reorder(genus, mean))) +
+   geom_pointrange(size=0.1) +
+   geom_vline(xintercept=0, lty=2) +
+   labs(x="Kraken minus MetaPhlAn relab (mean ± standard deviation)", y="Genus") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+# pdf("../plots/mpa_v_kraken_relab_diffs.pdf", height=4, width=2)
+# mpa.v.kraken.relab.diff.p
+# dev.off()
+```
