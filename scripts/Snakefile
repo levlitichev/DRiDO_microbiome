@@ -1,0 +1,31 @@
+# This is the Snakefile for mediation analysis.
+
+phenos=open("input/phenos_n209.txt").read().splitlines()
+diets=["1D", "2D", "20", "40"]
+
+rule all:
+    input:
+        expand("output/{diet}/{pheno}.Rds", diet=diets, pheno=phenos)
+
+rule mediation:
+    input:
+        mb="../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
+        # mb="../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
+        pheno="../results/phenotype_values_closest_to_each_stool_ID_within_100_days_n2915x210_230811.txt",
+        stool_meta="../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt",
+        mouse_meta="../data/metadata/AnimalData_Processed_20230712.csv"
+    output:
+        "output/{diet}/{pheno}.Rds"
+    log:
+        "logs/{diet}_{pheno}.log"
+    params:
+        diet="{diet}",
+        pheno="{pheno}"
+    resources:
+        mem_mb=32768
+    threads: 32 
+    envmodules:
+        "R/4.0.2"
+    script:
+        "run_mediation_one_diet_one_pheno.R"
+
