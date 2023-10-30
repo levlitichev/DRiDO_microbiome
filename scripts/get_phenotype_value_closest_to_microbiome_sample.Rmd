@@ -1,0 +1,281 @@
+Identify the phenotype value closest in time to each microbiome sample. Exclude microbiome-phenotype pairs more than 100 days apart.
+
+```{r, message=F, warning=F}
+library(tidyverse)
+library(foreach)
+```
+
+```{r}
+# see below for how I arrived at this number
+days.bw.mb.and.pheno <- 100
+```
+
+# Import microbiome metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv")
+
+stool.meta.annot.df <- stool.meta.df %>%
+  merge(mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
+```
+
+# Import phenotypes
+
+```{r}
+pheno.wide.df <- read.csv("../data/AllData_20230731.csv")
+```
+
+For each timepoint-domain combination, record the age of the mouse when the phenotype was collected.
+
+```{r}
+timepoint.domain.to.age.df <- pheno.wide.df %>% 
+  dplyr::select(MouseID, contains("_AgeInDays")) %>% 
+  pivot_longer(-MouseID, names_to="timepoint.domain.pheno", values_to="age.days") %>% 
+  separate(timepoint.domain.pheno, into=c("timepoint", "domain", "pheno"),
+           sep="_", fill="left", extra="merge", remove=T) %>% 
+  dplyr::select(-pheno) %>% 
+  dplyr::filter(!is.na(age.days))
+```
+
+```{r}
+n_distinct(timepoint.domain.to.age.df$domain)
+sort(unique(timepoint.domain.to.age.df$domain))
+```
+
+* 14 domains (Glucose counted twice)
+
+# Merge microbiome and phenotype age information
+
+For each mouse, create a long dataframe with all combinations of microbiome ages and phenotype ages.
+
+```{r}
+mult.pheno.ages.per.mb.age.df <- merge(
+  
+  # microbiome
+  stool.meta.annot.df %>%
+    mutate(age.days.mb = age.wks * 7) %>% 
+    dplyr::select(mouse.ID, stool.ID, age.days.mb),
+  
+  # phenotypes
+  timepoint.domain.to.age.df %>% 
+    dplyr::rename(mouse.ID = MouseID, age.days.pheno = age.days),
+  
+  by="mouse.ID"
+)
+```
+
+# Find the closest phenotype
+
+For each stool-domain combination, find the closest phenotype age for that domain.
+
+```{r}
+age.df <- mult.pheno.ages.per.mb.age.df %>% 
+  group_by(mouse.ID, domain, stool.ID, age.days.mb) %>% 
+  summarise(age.days.pheno = age.days.pheno[which.min(abs(age.days.mb-age.days.pheno))], .groups="drop") %>%
+  mutate(mb.minus.pheno = age.days.mb - age.days.pheno)
+```
+
+# How close are microbiome and phenotype ages?
+
+```{r}
+age.df %>% 
+  ggplot(aes(mb.minus.pheno)) +
+  geom_histogram(bins=100) +
+  labs(x="Microbiome sample age in days minus corresponding phenotype age in days")
+```
+
+```{r}
+summary(age.df$mb.minus.pheno)
+```
+
+
+* Most microbiome-phenotype pairs are very close to each other (± 50 days), but plenty of outliers
+
+# Select a cutoff for how far away a stool sample and phenotype can be
+
+```{r}
+age.df %>% 
+  mutate(abs.mb.minus.pheno = abs(mb.minus.pheno)) %>% 
+  dplyr::filter(abs.mb.minus.pheno < 250) %>% # zoom in
+  dplyr::count(abs.mb.minus.pheno) %>% 
+  ggplot(aes(x=abs.mb.minus.pheno, y=n)) +
+  geom_col() +
+  geom_vline(xintercept=c(51, 100, 206), lty=2)
+```
+
+* Strictest: 51 would be the strictest
+* Most lenient: 206 would allow me to keep the second bump
+* 100 is a good compromise
+
+# Apply cutoff
+
+```{r}
+age.filt.df <- age.df %>% 
+  mutate(abs.mb.minus.pheno = abs(mb.minus.pheno)) %>% 
+  dplyr::filter(abs.mb.minus.pheno <= days.bw.mb.and.pheno)
+
+dim(age.df)
+dim(age.filt.df)
+```
+
+* 41k to 24k microbiome-phenotype combos
+
+# Make sure microbiome and phenotype are both pre-DR or both post-DR
+
+```{r}
+age.filt2.df <- age.filt.df %>%
+  
+  dplyr::filter(!xor(
+    (age.days.mb > 180), (age.days.pheno > 180)))
+
+dim(age.filt.df)
+dim(age.filt2.df)
+nrow(age.filt.df) - nrow(age.filt2.df)
+```
+
+* If within 100 days, then we remove 828 combos where microbiome is prior to diet randomization and phenotype is after (or vice versa)
+
+# Pivot phenotypes longer
+
+```{r}
+phenos <- colnames(pheno.wide.df) %>% 
+  str_subset("_AgeInDays", negate=T) %>% 
+  str_subset("^Y")
+
+pheno.long.df <- pheno.wide.df %>% 
+  
+  # remove AgeInDays columns
+  dplyr::select(-ends_with("AgeInDays")) %>% 
+  
+  # pivot longer
+  pivot_longer(cols = all_of(c(phenos, "SurvDays")), 
+               names_to="timepoint.domain.pheno") %>% 
+  
+  # separate the full phenotype into chunks
+  separate(timepoint.domain.pheno, into=c("timepoint", "domain", "trait"),
+           sep="_", fill="left", extra="merge", remove=F)
+```
+
+# Figure out which mouse-domain-timepoint combinations to keep
+
+```{r}
+age.filt2.df.w.timepoint <- age.filt2.df %>% 
+  dplyr::rename(age.days = age.days.pheno,
+                MouseID = mouse.ID) %>% 
+  merge(timepoint.domain.to.age.df, by=c("MouseID", "domain", "age.days"))
+                
+mouse.domain.timepoints.to.keep <- age.filt2.df.w.timepoint %>% 
+  distinct(MouseID, domain, timepoint) %>% 
+  mutate(mouse.domain.timepoint = paste(MouseID, domain, timepoint, sep="_")) %>% 
+  pull(mouse.domain.timepoint)
+
+timepoint.domain.to.age.df %>% 
+  distinct(MouseID, domain, timepoint) %>% 
+  nrow
+
+length(mouse.domain.timepoints.to.keep)
+```
+
+* We subset from 37k to 22k mouse-domain-ages
+
+```{r}
+pheno.long.filt.df <- pheno.long.df %>% 
+  mutate(mouse.domain.timepoint = paste(MouseID, domain, timepoint, sep="_")) %>% 
+  dplyr::filter(mouse.domain.timepoint %in% mouse.domain.timepoints.to.keep)
+
+nrow(pheno.long.df)
+nrow(pheno.long.filt.df)
+```
+
+* We subset from 688k to 333k individual phenotype values
+
+# Merge phenotype data with stool IDs
+
+```{r}
+pheno.long.filt.df.w.stool.ID <- pheno.long.filt.df %>% 
+  dplyr::select(MouseID, timepoint, domain, trait, value) %>% 
+  merge(age.filt2.df.w.timepoint %>% dplyr::select(MouseID, timepoint, domain, stool.ID), 
+        by=c("MouseID", "timepoint", "domain"))
+
+nrow(pheno.long.filt.df)
+nrow(pheno.long.filt.df.w.stool.ID)
+```
+
+* 333k -> 355k individual phenotype values
+* This number grew in size because a few phenotype values correspond to multiple stool IDs, i.e. some stool samples share the same corresponding phenotype
+
+# Make sure each phenotype has data from each dietary group
+
+```{r}
+pheno.long.filt.df.w.stool.ID %>% 
+  merge(stool.meta.annot.df, by="stool.ID") %>% 
+  dplyr::filter(!is.na(value)) %>% 
+  distinct(trait, Diet) %>% 
+  dplyr::count(trait) %>% 
+  arrange(n) %>% head()
+```
+
+* PhenoDelta doesn't include all 5 diets
+* Omit this phenotype
+
+```{r}
+pheno.long.filt.df.w.stool.ID <- pheno.long.filt.df.w.stool.ID %>% 
+  dplyr::filter(trait != "PhenoDelta")
+```
+
+# Pivot wider
+
+```{r}
+pheno.wide.df.stool.ID.in.rows <- pheno.long.filt.df.w.stool.ID %>% 
+  mutate(pheno = paste(domain, trait, sep="_")) %>% 
+  pivot_wider(id_cols=stool.ID, names_from=pheno, values_from=value)
+
+dim(pheno.wide.df.stool.ID.in.rows)
+```
+
+* 2915 stool samples x 210 phenotypes
+
+```{r}
+pheno.wide.df.stool.ID.in.rows[1:6, 1:6]
+```
+
+# How much data is missing?
+
+```{r}
+num.na.per.pheno.df <- pheno.wide.df.stool.ID.in.rows %>% 
+  dplyr::select(-stool.ID) %>% 
+  lapply(FUN=function(x) {sum(is.na(x))}) %>% 
+  data.frame() %>% t() %>% data.frame() %>% 
+  setNames("num.na") %>% 
+  rownames_to_column("pheno") %>% 
+  mutate(frac.na = num.na / nrow(pheno.wide.df.stool.ID.in.rows))
+
+num.na.per.pheno.df %>% 
+  ggplot(aes(frac.na)) +
+  geom_histogram()
+```
+
+* Most phenotypes are >40% missing
+* Ton of missing values in this df, but we're always comparing the microbiome against one phenotype at a time, so that's okay
+
+# Add back lifespan
+
+```{r}
+pheno.wide.df.stool.ID.in.rows.w.lifespan <- pheno.wide.df.stool.ID.in.rows %>% 
+  merge(stool.meta.annot.df %>% dplyr::select(stool.ID, SurvDays), by="stool.ID")
+dim(pheno.wide.df.stool.ID.in.rows.w.lifespan)
+```
+
+# Export
+
+```{r}
+# pheno.wide.df.stool.ID.in.rows.w.lifespan %>%
+#   write.table(sprintf(
+#     "../results/phenotype_values_closest_to_each_stool_ID_within_%i_days_n%ix%i_230811.txt",
+#     days.bw.mb.and.pheno, nrow(.), ncol(.)-1),
+#     sep="\t", quote=F, row.names=F)
+```
