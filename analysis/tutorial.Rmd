@@ -1,11 +1,10 @@
 ---
 title: "Analysis of taxonomic data from DRiDO microbiome study"
-output: rmarkdown::github_document
+output: github_document
 ---
 
-_Author:_ Lev Litichevskiy
-
-_Date:_ October 30, 2023
+_Author:_ Lev Litichevskiy<br>
+_Date:_ October 31, 2023
 
 In this tutorial, we import taxonomic classification results and perform several basic analyses:
 
@@ -17,7 +16,7 @@ In this tutorial, we import taxonomic classification results and perform several
 N.B. This tutorial is derived from `kraken.Rmd`.
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dpi=300,fig.width=7)
+knitr::opts_chunk$set(dpi=300, fig.align="center")
 ```
 
 # Load libraries
@@ -165,7 +164,7 @@ alpha.div.long.df.genus <- alpha.div.df.genus %>%
 
 ## Versus age
 
-```{r}
+```{r, fig.height=3}
 alpha.div.long.df.genus %>% 
   
   # omit the few 46 month samples
@@ -188,7 +187,7 @@ alpha.div.long.df.genus %>%
 
 ## Versus diet
 
-```{r}
+```{r, fig.height=3.5}
 alpha.div.long.df.genus %>% 
   
   # omit the few 46 month samples for consistency with the versus age plot
@@ -238,7 +237,7 @@ agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients[
   "age.approx.months", "Estimate"]
 ```
 
-```{r}
+```{r, out.width="75%"}
 agg.genus.uniq.bc.df %>% 
   
   # omit few 46 month samples
@@ -263,7 +262,7 @@ agg.genus.uniq.bc.df %>%
 
 ## Versus diet
 
-```{r}
+```{r, out.width="60%"}
 agg.genus.uniq.bc.df %>% 
   
   # omit the few 46 month samples for consistency with the versus age plot
@@ -288,13 +287,13 @@ agg.genus.uniq.bc.df %>%
 We'll make a principal coordinates analysis (PCoA) plot to look for the overall influence of age and DR in this dataset.
 
 ```{r}
-agg.pcoa.genus.bc <- agg.genus.bc.dist %>% 
+agg.pcoa.genus.bc <- agg.genus.bc.dist %>%
   cmdscale(eig=T, k=3)
 
 agg.pcoa.genus.bc.df <- merge(
   data.frame(agg.pcoa.genus.bc$points) %>% setNames(c("PCoA1", "PCoA2", "PCoA3")),
   kraken.sample.meta.df,
-  by="row.names") %>% 
+  by="row.names") %>%
   mutate(Diet=factor(Diet, levels=c("AL", "1D", "2D", "20", "40")),
          Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40")))
 ```
@@ -307,19 +306,19 @@ frac.var.explained.by.pcos[1:3]
 PCoA1 and PCoA2 explain 35% and 8% of overall variance, respectively
 
 ```{r}
-agg.pcoa.genus.bc.df %>% 
-  
+agg.pcoa.genus.bc.df %>%
+
   # color by diet, size by age
   ggplot(aes(x=PCoA1, y=PCoA2, color=Diet.5mo.as.AL, size=age.approx.months)) +
-  
+
   # slight transparency
   geom_point(alpha=0.8) +
-  
+
   scale_color_manual(values=diet.palette) +
-  
+
   # customize the legend for size
   scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2)) +
-  
+
   labs(color="Diet", size="Age (months)") +
   theme_bw(base_size=10)
 ```
@@ -332,7 +331,7 @@ We can sort of see a color gradient (red mostly at the top) and a size gradient 
 
 Bifidobacterium is the genus that increases the most with age.
 
-```{r}
+```{r, out.width="50%"}
 agg.physeq.genus %>%
   
   # convert to relative abundances
@@ -365,7 +364,7 @@ agg.physeq.genus %>%
 
 Ligilactobacillus is strongly increased by DR
 
-```{r}
+```{r, out.width="60%"}
 agg.physeq.genus %>% 
   
   # convert to relative abundances
@@ -394,7 +393,7 @@ agg.physeq.genus %>%
   
   labs(x="", y="log10(relab)", title="Ligilactobacillus", fill="Diet") +
   scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10)
+  theme_bw(base_size=10) +
   theme(legend.position="none")
 ```
 

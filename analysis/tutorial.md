@@ -1,9 +1,7 @@
 Analysis of taxonomic data from DRiDO microbiome study
 ================
 
-*Author:* Lev Litichevskiy
-
-*Date:* October 30, 2023
+*Author:* Lev Litichevskiy<br> *Date:* October 31, 2023
 
 In this tutorial, we import taxonomic classification results and perform
 several basic analyses:
@@ -234,7 +232,7 @@ alpha.div.long.df.genus %>%
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](tutorial_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+<img src="tutorial_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
 
 ## Versus diet
 
@@ -260,7 +258,7 @@ alpha.div.long.df.genus %>%
   theme(legend.position="none")
 ```
 
-![](tutorial_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+<img src="tutorial_files/figure-gfm/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
 # Uniqueness
 
@@ -317,7 +315,7 @@ agg.genus.uniq.bc.df %>%
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](tutorial_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+<img src="tutorial_files/figure-gfm/unnamed-chunk-19-1.png" width="75%" style="display: block; margin: auto;" />
 
 ## Versus diet
 
@@ -341,7 +339,7 @@ agg.genus.uniq.bc.df %>%
   theme(legend.position="none")
 ```
 
-![](tutorial_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+<img src="tutorial_files/figure-gfm/unnamed-chunk-20-1.png" width="60%" style="display: block; margin: auto;" />
 
 # PCoA
 
@@ -349,13 +347,13 @@ We’ll make a principal coordinates analysis (PCoA) plot to look for the
 overall influence of age and DR in this dataset.
 
 ``` r
-agg.pcoa.genus.bc <- agg.genus.bc.dist %>% 
+agg.pcoa.genus.bc <- agg.genus.bc.dist %>%
   cmdscale(eig=T, k=3)
 
 agg.pcoa.genus.bc.df <- merge(
   data.frame(agg.pcoa.genus.bc$points) %>% setNames(c("PCoA1", "PCoA2", "PCoA3")),
   kraken.sample.meta.df,
-  by="row.names") %>% 
+  by="row.names") %>%
   mutate(Diet=factor(Diet, levels=c("AL", "1D", "2D", "20", "40")),
          Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40")))
 ```
@@ -370,24 +368,24 @@ frac.var.explained.by.pcos[1:3]
 PCoA1 and PCoA2 explain 35% and 8% of overall variance, respectively
 
 ``` r
-agg.pcoa.genus.bc.df %>% 
-  
+agg.pcoa.genus.bc.df %>%
+
   # color by diet, size by age
   ggplot(aes(x=PCoA1, y=PCoA2, color=Diet.5mo.as.AL, size=age.approx.months)) +
-  
+
   # slight transparency
   geom_point(alpha=0.8) +
-  
+
   scale_color_manual(values=diet.palette) +
-  
+
   # customize the legend for size
   scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2)) +
-  
+
   labs(color="Diet", size="Age (months)") +
   theme_bw(base_size=10)
 ```
 
-![](tutorial_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+<img src="tutorial_files/figure-gfm/unnamed-chunk-23-1.png" style="display: block; margin: auto;" />
 
 We can sort of see a color gradient (red mostly at the top) and a size
 gradient (smaller dots at the bottom)
@@ -429,7 +427,7 @@ agg.physeq.genus %>%
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](tutorial_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+<img src="tutorial_files/figure-gfm/unnamed-chunk-24-1.png" width="50%" style="display: block; margin: auto;" />
 
 ## Ligilactobacillus versus diet
 
@@ -464,20 +462,11 @@ agg.physeq.genus %>%
   
   labs(x="", y="log10(relab)", title="Ligilactobacillus", fill="Diet") +
   scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10)
-```
-
-![](tutorial_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
-
-``` r
+  theme_bw(base_size=10) +
   theme(legend.position="none")
 ```
 
-    ## List of 1
-    ##  $ legend.position: chr "none"
-    ##  - attr(*, "class")= chr [1:2] "theme" "gg"
-    ##  - attr(*, "complete")= logi FALSE
-    ##  - attr(*, "validate")= logi TRUE
+<img src="tutorial_files/figure-gfm/unnamed-chunk-25-1.png" width="60%" style="display: block; margin: auto;" />
 
 # sessionInfo
 
