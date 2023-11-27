@@ -415,9 +415,9 @@ assoc.v.mediation.tax.feats.barplot <- num.sig.tax.assoc.p +
 ```
 
 ```{r}
-pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
-assoc.v.mediation.tax.feats.barplot
-dev.off()
+# pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
+# assoc.v.mediation.tax.feats.barplot
+# dev.off()
 ```
 
 ## Functional
@@ -457,9 +457,9 @@ assoc.v.mediation.fxn.feats.barplot <- num.sig.fxn.assoc.p +
 ```
 
 ```{r}
-pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
-assoc.v.mediation.fxn.feats.barplot
-dev.off()
+# pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
+# assoc.v.mediation.fxn.feats.barplot
+# dev.off()
 ```
 
 # Domains with the most associations
@@ -628,9 +628,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
-tax.and.fxn.heatmap.tall
-dev.off()
+# pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
+# tax.and.fxn.heatmap.tall
+# dev.off()
 ```
 
 # Examples
@@ -810,7 +810,7 @@ fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>%
 ```
 
 ```{r}
-pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
-frac.xs.hits.per.domain.barplots
-dev.off()
+# pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
+# frac.xs.hits.per.domain.barplots
+# dev.off()
 ```
