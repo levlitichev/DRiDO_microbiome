@@ -1,0 +1,96 @@
+Plot lifespan as boxplots. Compute statistical significance using log-rank tests.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(survival)
+library(survminer)
+
+diet.palette <- c(AL="seashell4",
+                  `1D`="skyblue",
+                  `2D`="royalblue4",
+                  `20`="orange",
+                  `40`="firebrick")
+```
+
+# Import data
+
+```{r}
+df <- read.csv("~/Documents/phd/calico_aging/DRiDO_microbiome_github/data/metadata/AnimalData_Processed_20230712.csv")
+```
+
+```{r}
+filt.df <- df %>% 
+  
+  # exclude mice that died prior to start of DR
+  dplyr::filter(SurvDays > 179) 
+
+nrow(df)
+nrow(filt.df)
+```
+
+* 960 -> 937 mice
+
+```{r}
+table(filt.df$Died)
+```
+
+* We will deal with n=13 mice that died accidentally via censoring
+
+# Make survival curves
+
+```{r}
+(surv.fit <- survfit(Surv(SurvDays, Died) ~ Diet, data= filt.df))
+```
+
+* 40% CR leads to 36% increase in median lifespan, compared to AL (765 -> 1043 days)
+
+```{r}
+median.df <- data.frame(quantile(surv.fit, probs=0.5)$quantile) %>% 
+  setNames("median") %>%
+  rownames_to_column("Diet") %>% 
+  mutate(Diet = str_sub(Diet, 6, 7)) %>% 
+  mutate(Diet = factor(Diet, levels=c("AL", "1D", "2D", "20", "40")))
+```
+
+# Perform pairwise log-rank tests
+
+```{r}
+(pairwise.logrank.res <- pairwise_survdiff(Surv(SurvDays, Died) ~ Diet, data= filt.df))
+```
+```{r}
+(pairwise.logrank.pval.df <- pairwise.logrank.res$p.value["AL", ] %>% 
+  data.frame() %>% 
+  setNames("pval") %>% 
+  rownames_to_column("Diet") %>% 
+  mutate(pval.symbol = case_when(
+    pval < 0.0001 ~ "****",
+    pval < 0.001 ~ "***",
+    pval < 0.01 ~ "**",
+    pval < 0.05 ~ "*",
+    TRUE ~ "ns")))
+```
+
+# Plot
+
+```{r}
+(lifespan.boxplots <- filt.df %>% 
+   dplyr::filter(Died) %>%
+   mutate(Diet = factor(Diet, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+   ggplot(aes(x=Diet, y=SurvDays)) +
+   geom_boxplot(aes(fill=Diet), outlier.shape=NA) +
+   geom_jitter(aes(fill=Diet), shape=21, color="black", 
+               width=0.1, stroke=0.1, size=1) +
+   geom_text(aes(y=1700, label=pval.symbol), data=pairwise.logrank.pval.df) +
+   labs(x="", y="Lifespan (days)") +
+   theme_classic(base_size=8) +
+   scale_color_manual(values=diet.palette) +
+   scale_fill_manual(values=diet.palette) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/lifespan_boxplots.pdf", height=2, width=2)
+# lifespan.boxplots
+# dev.off()
+```
+
