@@ -105,8 +105,7 @@ meta.filt.df <- meta.df %>%
 physeq <- phyloseq(
   counts.filt.df %>% as.matrix() %>% otu_table(taxa_are_rows=T),
   meta.filt.df %>% column_to_rownames("sample.id") %>% sample_data(),
-  tax.df %>% column_to_rownames("Feature.ID") %>% as.matrix() %>% tax_table(),
-  phylogeny %>% phy_tree()
+  tax.df %>% column_to_rownames("Feature.ID") %>% as.matrix() %>% tax_table()
 )
 ```
 
