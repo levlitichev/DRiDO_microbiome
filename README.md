@@ -3,7 +3,7 @@
 _Author_: Lev Litichevskiy  
 _Last updated_: November 27, 2023  
 
-This repository contains code and data that can be used to reproduce figures from the DRiDO microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results (not fastq files).
+This repository contains code and data that can be used to reproduce figures from the Dietary Restriction in Diversity Outbred mice (DRiDO) microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results (not fastq files).
 
 ## Pre-processing of DO metagenomic sequencing data
 
