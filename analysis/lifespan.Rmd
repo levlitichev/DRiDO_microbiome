@@ -15,7 +15,7 @@ diet.palette <- c(AL="seashell4",
 # Import data
 
 ```{r}
-df <- read.csv("~/Documents/phd/calico_aging/DRiDO_microbiome_github/data/metadata/AnimalData_Processed_20230712.csv")
+df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 ```
 
 ```{r}
