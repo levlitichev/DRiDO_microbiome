@@ -1,30 +1,31 @@
 #!/usr/bin/env Rscript
 
-suppressMessages(library(nlme))
 suppressMessages(library(qtl2))
 suppressMessages(library(qtl2convert))
-suppressMessages(library(ggplot2))
-suppressMessages(library(grid))
-suppressMessages(library(gridExtra))
 suppressMessages(library(stringr))
 suppressMessages(library(tidyr))
 suppressMessages(library(dplyr))
 
-#######Import Focal Chrm
-args = commandArgs(trailingOnly=TRUE)
-print(args)
+####################################################################
+###### set inputs and working directory
 
-geno_probability_file <- c(args[1])      #probs.8state.Rdata'
-map_file <- c(args[2])  # pmap.csv
-query_variants_file <- c(args[3])   #cc_variants, sqlite
-query_genes_file <- c(args[4])   #mouse_ref_genes, sqlite
+setwd("~/DRiDO_microbiome_github/")
 
-pheno_data_file <- c(args[5]) 
-focal_phenotype <- c(args[6]) #focal phenotype: advia blood : hdw.12
-meta_data_file  <- c(args[7])
+geno_probability_file <- c('../data/prob.8state.allele.qtl2_200131.Rdata')     #probs.8state.Rdata'
 
-output_base <- c(args[11])
+map_file <- c('../data/gm_uwisc_v1_filter_200129.pmap.csv')  #from https://github.com/kbroman/MUGAarrays/tree/main/UWisc
 
+query_variants_file <- c('../data/cc_variants.sqlite') #from: https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229   
+
+query_genes_file <- c('../data/mouse_genes_mgi.sqlite')   #from: https://figshare.com/articles/dataset/SQLite_database_with_MGI_mouse_gene_annotations_from_Mouse_Genome_Informatics_MGI_at_The_Jackson_Laboratory/5286019
+
+pheno_data_file <- c('../data/all_genus_features_clr_mice_in_rows_n910x535_230816.edit.txt')
+
+meta_data_file  <- c('../data/jax_cr_genwave_191122.csv')
+
+###### user to edit
+focal_phenotype <- c('Roseburia') #user to edit 
+output_base <- paste("../results/rqtl2/",focal_phenotype,sep="")
 
 ####################################################################
 ## initialize varaibles 
@@ -266,11 +267,9 @@ save(list = c('allele_effects'), file = allele_effects_file)
 snpscan_effects_file <- paste(output_base,'.sig_loci.snpscan_effects.Rdata',sep='')
 query_variants <- create_variant_query_func(dbfile = query_variants_file)
 query_genes <- create_gene_query_func(dbfile = query_genes_file)
-Mb_margin <- 5
-print("plot snp zoom")
+Mb_margin <- 5  #set fine mapping window - determines the number of imputed SNPs to test. 
 
 snp_scan_data <- list()
-
 
 print('calc snp_scan additive model')
 i <-  1
