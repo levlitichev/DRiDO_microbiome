@@ -35,3 +35,15 @@ Note that there are multiple layers of metadata: sequencing metadata, library me
 ### Tutorial
 
 This [tutorial](analysis/tutorial.md) demonstrates how to import taxonomic data and perform several basic analyses.
+
+
+### rQTL2 genetic analysis
+
+Karl Broman's rQTL2 was written specifically to handle multi-parent QTL mapping crosses such as DO mice. Tutorials can be found here: https://kbroman.org/qtl2/
+
+All genetic data was processed as described here: Zhang et al. 2022 Genetics. https://academic.oup.com/genetics/article/220/1/iyab157/6375446#325919017
+
+Input files not included in this repo 
+
+  -cc_variants.sqlite  #imputed variants from DO founders. Obtain from: https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229 
+  -prob.8state.allele.qtl2_200131.Rdata #8 state allele probabilities for DRiDO mice. Obtain from FigShare XXX
