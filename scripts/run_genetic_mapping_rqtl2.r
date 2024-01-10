@@ -11,7 +11,7 @@ suppressMessages(library(dplyr))
 
 setwd("~/DRiDO_microbiome_github/")
 
-geno_probability_file <- c('../data/prob.8state.allele.qtl2_200131.Rdata')     #probs.8state.Rdata'
+geno_probability_file <- c('../data/prob.8state.allele.qtl2_200131.Rdata')     #obtain from FigShare XXXX
 
 map_file <- c('../data/gm_uwisc_v1_filter_200129.pmap.csv')  #from https://github.com/kbroman/MUGAarrays/tree/main/UWisc
 
@@ -24,7 +24,7 @@ pheno_data_file <- c('../data/all_genus_features_clr_mice_in_rows_n910x535_23081
 meta_data_file  <- c('../data/jax_cr_genwave_191122.csv')
 
 ###### user to edit
-focal_phenotype <- c('Roseburia') #user to edit 
+focal_phenotype <- c('M10_Roseburia') #user to edit 
 output_base <- paste("../results/rqtl2/",focal_phenotype,sep="")
 
 ####################################################################
@@ -105,7 +105,7 @@ print(pmap[[n]][1:3])
 
 print('load pheno_data')
 pheno_data <- read.csv(pheno_data_file, sep = ",", strip.white = TRUE)
-print(head(pheno_data))
+#print(head(pheno_data))
        
 ### create pheno_data data frame
 pheno_data_df <- pheno_data %>%
