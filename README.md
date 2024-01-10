@@ -45,5 +45,8 @@ All genetic data was processed as described here: Zhang et al. 2022 Genetics. ht
 
 Input files not included in this repo 
 
-  -cc_variants.sqlite  #imputed variants from DO founders. Obtain from: https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229 
-  -prob.8state.allele.qtl2_200131.Rdata #8 state allele probabilities for DRiDO mice. Obtain from FigShare XXX
+1. cc_variants.sqlite  #imputed variants from DO founders.
+   -Obtain from: https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229
+  
+2. prob.8state.allele.qtl2_200131.Rdata #8 state allele probabilities for DRiDO mice.
+   -Obtain from FigShare XXX
