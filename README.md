@@ -1,7 +1,7 @@
 # DRiDO Microbiome Study
 
 _Author_: Lev Litichevskiy  
-_Last updated_: December 1, 2023  
+_Last updated_: January 10, 2024  
 
 This repository contains code and data that can be used to reproduce figures from the Dietary Restriction in Diversity Outbred mice (DRiDO) microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results (not fastq files).
 
@@ -50,3 +50,10 @@ Input files not included in this repo
   
 2. prob.8state.allele.qtl2_200131.Rdata #8 state allele probabilities for DRiDO mice.
    -Obtain from FigShare XXX
+
+
+## System requirements
+
+This code was run on macOS Big Sur using R v4.2.2. All R packages are available from CRAN or Bioconductor — except for ASReml, which requires a license. ASReml was used for estimating heritability and running linear mixed models. Identical results can be produced using the lme4qtl package (see [run_lme4qtl.R](scripts/run_lme4qtl.R) for an example).
+
+All analyses except for mediation and QTL mapping were run on a laptop. Mediation analysis was performed on a cluster using [Snakemake](https://snakemake.github.io/) ([Snakefile_mediation](scripts/Snakefile_mediation), [run_mediation_one_diet_one_pheno.R](scripts/run_mediation_one_diet_one_pheno.R)), and QTL mapping was performed on a cluster using rQTL2 ([run_genetic_mapping_rqtl2.R](scripts/run_genetic_mapping_rqtl2.r)).
