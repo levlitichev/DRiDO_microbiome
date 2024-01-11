@@ -36,24 +36,20 @@ Note that there are multiple layers of metadata: sequencing metadata, library me
 
 This [tutorial](analysis/tutorial.md) demonstrates how to import taxonomic data and perform several basic analyses.
 
-
-### rQTL2 genetic analysis
-
-Karl Broman's rQTL2 was written specifically to handle multi-parent QTL mapping crosses such as DO mice. Tutorials can be found here: https://kbroman.org/qtl2/
-
-All genetic data was processed as described here: Zhang et al. 2022 Genetics. https://academic.oup.com/genetics/article/220/1/iyab157/6375446#325919017
-
-Input files not included in this repo 
-
-1. cc_variants.sqlite  #imputed variants from DO founders.
-   -Obtain from: https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229
-  
-2. prob.8state.allele.qtl2_200131.Rdata #8 state allele probabilities for DRiDO mice.
-   -Obtain from FigShare XXX
-
-
 ## System requirements
 
 This code was run on macOS Big Sur using R v4.2.2. All R packages are available from CRAN or Bioconductor — except for ASReml, which requires a license. ASReml was used for estimating heritability and running linear mixed models. Identical results can be produced using the lme4qtl package (see [run_lme4qtl.R](scripts/run_lme4qtl.R) for an example).
 
-All analyses except for mediation and QTL mapping were run on a laptop. Mediation analysis was performed on a cluster using [Snakemake](https://snakemake.github.io/) ([Snakefile_mediation](scripts/Snakefile_mediation), [run_mediation_one_diet_one_pheno.R](scripts/run_mediation_one_diet_one_pheno.R)), and QTL mapping was performed on a cluster using rQTL2 ([run_genetic_mapping_rqtl2.R](scripts/run_genetic_mapping_rqtl2.r)).
+All analyses except for mediation and QTL mapping were run on a laptop. Mediation analysis was performed on a cluster using [Snakemake](https://snakemake.github.io/) ([Snakefile_mediation](scripts/Snakefile_mediation), [run_mediation_one_diet_one_pheno.R](scripts/run_mediation_one_diet_one_pheno.R)), and QTL mapping was performed on a cluster using R/qtl2 ([run_genetic_mapping_rqtl2.R](scripts/run_genetic_mapping_rqtl2.r)).
+
+## QTL mapping
+
+Karl Broman's [R/qtl2](https://kbroman.org/qtl2/) was written specifically to handle multi-parent QTL mapping crosses such as DO mice.
+
+QTL mapping was performed as described in [Zhang et al., *Genetics*, 2022](https://academic.oup.com/genetics/article/220/1/iyab157/6375446#325918956) ("Genetic linkage analysis").
+
+Input files not included in this repo:
+
+1. `cc_variants.sqlite`: Imputed variants from DO founders. Download [here](https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229).
+  
+2. `prob.8state.allele.qtl2_200131.Rdata`: 8 state allele probabilities for DRiDO mice. *Will be made available shortly.*
