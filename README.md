@@ -1,7 +1,7 @@
 # DRiDO Microbiome Study
 
 _Author_: Lev Litichevskiy  
-_Last updated_: January 10, 2024  
+_Last updated_: January 25, 2024  
 
 This repository contains code and data that can be used to reproduce figures from the Dietary Restriction in Diversity Outbred mice (DRiDO) microbiome manuscript. The starting point for this repository is summarized tables of taxonomic and functional classification results (not fastq files).
 
@@ -52,4 +52,4 @@ Input files not included in this repo:
 
 1. `cc_variants.sqlite`: Imputed variants from DO founders. Download [here](https://figshare.com/articles/dataset/SQLite_database_of_variants_in_Collaborative_Cross_founder_mouse_strains/5280229).
   
-2. `prob.8state.allele.qtl2_200131.Rdata`: 8 state allele probabilities for DRiDO mice. *Will be made available shortly.*
+2. `prob.8state.allele.qtl2_200131.Rdata`: 8 state allele probabilities for DRiDO mice. Download [here](https://figshare.com/articles/dataset/Supplementary_files_associated_with_the_DRiDO_microbiome_manuscript/25043753).
