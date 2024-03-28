@@ -205,7 +205,7 @@ length(stool.IDs.w.multiple.libraries)
 ```{r}
 (pcoa.same.DNA.p <- pcoa.genus.bc.df %>% 
    ggplot(aes(x=PCoA1, y=PCoA2)) +
-   geom_point(shape=16, size=0.5, alpha=0.1) +
+   geom_point(shape=16, size=0.05) +
    geom_path(aes(color=stool.ID, group=stool.ID), linewidth=0.5, data=(
      pcoa.genus.bc.df %>% dplyr::filter(stool.ID %in% stool.IDs.w.multiple.libraries))) +
    labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1.no.ctls),
@@ -217,7 +217,7 @@ length(stool.IDs.w.multiple.libraries)
 ```
 
 ```{r}
-# pdf("../plots/pcoa_same_DNA_multiple_libs.pdf", width=2, height=2)
+# pdf("../plots/pcoa_same_DNA_multiple_libs.pdf", width=2.5, height=2.5)
 # pcoa.same.DNA.p
 # dev.off()
 ```
@@ -239,7 +239,7 @@ length(lib.IDs.seqd.more.than.once)
 ```{r}
 (pcoa.same.lib.p <- pcoa.genus.bc.df %>% 
    ggplot(aes(x=PCoA1, y=PCoA2)) +
-   geom_point(shape=16, size=0.5, alpha=0.1) +
+   geom_point(shape=16, size=0.05) +
    geom_path(aes(color=lib.ID, group=lib.ID), linewidth=0.5, data=(
      pcoa.genus.bc.df %>% dplyr::filter(lib.ID %in% lib.IDs.seqd.more.than.once))) +
    labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1.no.ctls),
@@ -253,7 +253,7 @@ length(lib.IDs.seqd.more.than.once)
 * Pretty similar
 
 ```{r}
-# pdf("../plots/pcoa_same_lib.pdf", width=2, height=2)
+# pdf("../plots/pcoa_same_lib.pdf", width=2.5, height=2.5)
 # pcoa.same.lib.p
 # dev.off()
 ```
