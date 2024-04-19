@@ -30,7 +30,7 @@ library(readxl)
 ```{r}
 seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_mbmix_n3577_230620.txt", sep="\t", header=T)
 lib.meta.df <- read.table("../data/metadata/library_metadata_after_mbmix_n3294_230620.txt", sep="\t", header=T)
-stool.meta.df <- read.table("../data/metadata/stool_metadata_after_mbmix_n3200_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_mbmix_n3200_240418.txt", sep="\t", header=T)
 mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 ```
 
@@ -397,7 +397,7 @@ dim(stool.meta.df.post.qc)
 ```{r}
 # stool.meta.df.post.qc %>%
 #   write.table(
-#     sprintf("../data/metadata/stool_metadata_after_QC_n%i_230620.txt", nrow(.)),
+#     sprintf("../data/metadata/stool_metadata_after_QC_n%i_240418.txt", nrow(.)),
 #     sep="\t", quote=F, row.names=F)
 ```
 
@@ -418,7 +418,7 @@ dim(DO.stool.meta.df.post.qc)
 ```{r}
 # DO.stool.meta.df.post.qc %>%
 #   write.table(
-#     sprintf("../data/metadata/stool_metadata_after_QC_no_controls_n%i_230620.txt", nrow(.)),
+#     sprintf("../data/metadata/stool_metadata_after_QC_no_controls_n%i_240418.txt", nrow(.)),
 #     sep="\t", quote=F, row.names=F)
 ```
 
