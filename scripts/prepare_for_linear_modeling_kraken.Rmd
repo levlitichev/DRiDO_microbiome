@@ -1,5 +1,9 @@
-Input: genus relabs (n=252)
-Output: genus CLR (n=100) plus 7 community features: Chao1, Shannon, Simpson, uniqueness, PCoA1-3
+2024-03-20: Also exporting species-level relabs.
+
+Outputs:
+* Relabs for top 100 genera (of 252)
+* Relabs for top 200 species (of 1093)
+* CLR-transformed abundances for top 100 genera plus 7 community features: Chao1, Shannon, Simpson, uniqueness, PCoA1-3
 
 # Load libraries
 
@@ -56,13 +60,23 @@ nsamples(agg.physeq)
 
 * 2997 samples
 
-# Aggregate to genera
+# Aggregate
+
+## Genera
 
 ```{r}
 agg.physeq.genus <- agg.physeq %>% tax_glom(taxrank="genus")
 ```
 
-# Identify top 100 genera
+## Species
+
+```{r}
+agg.physeq.species <- agg.physeq %>% tax_glom(taxrank="species")
+```
+
+# Identify top N taxa
+
+## Genera
 
 ```{r}
 N.GENERA <- 100
@@ -75,16 +89,38 @@ TOP.N.GENERA.no.special <- str_replace_all(TOP.N.GENERA, "[[:punct:]]", "")
 TOP.N.GENERA.CLEAN <- as.character(sapply(
   TOP.N.GENERA.no.special, function(x) {
     ifelse(str_detect(x, "^[:digit:]"), paste0("X", x), x)}))
+names(TOP.N.GENERA.CLEAN) <- TOP.N.GENERA.IDs
 ```
+
+## Species
 
 ```{r}
-top.n.genera.df <- data.frame(
-  genus = TOP.N.GENERA,
-  clean = TOP.N.GENERA.CLEAN)
-rownames(top.n.genera.df) <- TOP.N.GENERA.IDs
+N.SPECIES <- 200
+TOP.N.SPECIES.IDs <- names(sort(taxa_sums(agg.physeq.species), decreasing=T))[1:N.SPECIES]
+
+# use concatenation of genus and species
+species.tax.df <- data.frame(tax_table(agg.physeq.species)) %>%
+  
+  # remove special characters from genus and species
+  mutate(genus.clean = str_replace_all(genus, "[[:punct:]]", ""),
+         species.clean = str_replace_all(species, "[[:punct:]]", "")) %>% 
+  
+  # concatenate genus and species
+  mutate(genus.and.species = paste0(genus.clean, "_", species.clean))
+
+TOP.N.SPECIES <- species.tax.df[TOP.N.SPECIES.IDs, "genus.and.species"]
+
+# if genus starts with a number, prefix with X
+# this helps avoid problems down the line, like providing the genus name within a lm formula
+TOP.N.SPECIES.CLEAN <- as.character(sapply(
+  TOP.N.SPECIES, function(x) {
+    ifelse(str_detect(x, "^[:digit:]"), paste0("X", x), x)}))
+names(TOP.N.SPECIES.CLEAN) <- TOP.N.SPECIES.IDs
 ```
 
-# Export relab for top 100 genera
+# Export relab
+
+## Genera
 
 We use this in `prediction.Rmd`, but not in linear modeling.
 
@@ -94,7 +130,8 @@ genus.relab.df <- agg.physeq.genus %>%
   prune_taxa(taxa = TOP.N.GENERA.IDs) %>% 
   otu_table() %>% data.frame()
 
-rownames(genus.relab.df) <- top.n.genera.df[rownames(genus.relab.df), "clean"]
+# rename rownames from genus IDs to clean genus names
+rownames(genus.relab.df) <- TOP.N.GENERA.CLEAN[rownames(genus.relab.df)]
 ```
 
 ```{r}
@@ -102,6 +139,29 @@ rownames(genus.relab.df) <- top.n.genera.df[rownames(genus.relab.df), "clean"]
 #   rownames_to_column("genus") %>%
 #   write.table(sprintf(
 #     "../data/kraken_genus_relab_n%ix%i.txt",
+#     nrow(.), ncol(.)-1),
+#     sep="\t", row.names=F, quote=F)
+```
+
+## Species
+
+We use this in `prediction.Rmd`, but not in linear modeling.
+
+```{r}
+species.relab.df <- agg.physeq.species %>%
+  transform_sample_counts(function(x) {100 * x/sum(x)}) %>% 
+  prune_taxa(taxa = TOP.N.SPECIES.IDs) %>% 
+  otu_table() %>% data.frame()
+
+# rename rownames from species IDs to clean species names
+rownames(species.relab.df) <- TOP.N.SPECIES.CLEAN[rownames(species.relab.df)]
+```
+
+```{r}
+# species.relab.df %>%
+#   rownames_to_column("species") %>%
+#   write.table(sprintf(
+#     "../data/kraken_species_relab_n%ix%i.txt",
 #     nrow(.), ncol(.)-1),
 #     sep="\t", row.names=F, quote=F)
 ```
