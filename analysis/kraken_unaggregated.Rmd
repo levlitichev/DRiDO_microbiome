@@ -203,16 +203,39 @@ length(stool.IDs.w.multiple.libraries)
 * 89 stool samples where a library was made twice from the same DNA
 
 ```{r}
-(pcoa.same.DNA.p <- pcoa.genus.bc.df %>% 
+(pcoa.no.ctls.p <- pcoa.genus.bc.df %>% 
    ggplot(aes(x=PCoA1, y=PCoA2)) +
-   geom_point(shape=16, size=0.05) +
-   geom_path(aes(color=stool.ID, group=stool.ID), linewidth=0.5, data=(
-     pcoa.genus.bc.df %>% dplyr::filter(stool.ID %in% stool.IDs.w.multiple.libraries))) +
+   geom_point(shape=16, size=0.25) +
    labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1.no.ctls),
         y=sprintf("PCoA2 (%.0f%%)", 100*frac.expl.by.pcoa2.no.ctls),
-        title=sprintf("Same DNA, different libraries\nn=%i stool samples",
-                      length(stool.IDs.w.multiple.libraries))) +
+        title="PCoA, no controls\n") +
    theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/pcoa_no_controls.pdf", width=2.5, height=2.5)
+# pcoa.no.ctls.p
+# dev.off()
+```
+
+Get axis limits from the PCoA without controls.
+
+```{r}
+pcoa1.no.ctls.lims <- layer_scales(pcoa.no.ctls.p, 1, 1)$x$range$range
+pcoa2.no.ctls.lims <- layer_scales(pcoa.no.ctls.p, 1, 1)$y$range$range
+```
+
+```{r}
+(pcoa.same.DNA.p <- pcoa.genus.bc.df %>% 
+   dplyr::filter(stool.ID %in% stool.IDs.w.multiple.libraries) %>% 
+   ggplot(aes(x=PCoA1, y=PCoA2, color=stool.ID, group=stool.ID)) +
+   geom_path(linewidth=0.5) +
+   theme_classic(base_size=8) +
+   labs(title=sprintf("Same DNA, different libraries\nn=%i stool samples",
+                      length(stool.IDs.w.multiple.libraries))) +
+   scale_x_continuous(limits=pcoa1.no.ctls.lims) +
+   scale_y_continuous(limits=pcoa2.no.ctls.lims) +
    theme(legend.position="none"))
 ```
 
@@ -238,15 +261,14 @@ length(lib.IDs.seqd.more.than.once)
 
 ```{r}
 (pcoa.same.lib.p <- pcoa.genus.bc.df %>% 
-   ggplot(aes(x=PCoA1, y=PCoA2)) +
-   geom_point(shape=16, size=0.05) +
-   geom_path(aes(color=lib.ID, group=lib.ID), linewidth=0.5, data=(
-     pcoa.genus.bc.df %>% dplyr::filter(lib.ID %in% lib.IDs.seqd.more.than.once))) +
-   labs(x=sprintf("PCoA1 (%.0f%%)", 100*frac.expl.by.pcoa1.no.ctls),
-        y=sprintf("PCoA2 (%.0f%%)", 100*frac.expl.by.pcoa2.no.ctls),
-        title=sprintf("Same library, sequenced twice\nn=%i",
-                      length(lib.IDs.seqd.more.than.once))) +
+   dplyr::filter(lib.ID %in% lib.IDs.seqd.more.than.once) %>% 
+   ggplot(aes(x=PCoA1, y=PCoA2, color=lib.ID, group=lib.ID)) +
+   geom_path(linewidth=0.5) +
    theme_classic(base_size=8) +
+   labs(title=sprintf("Same library, sequenced twice\nn=%i",
+                      length(lib.IDs.seqd.more.than.once))) +
+   scale_x_continuous(limits=pcoa1.no.ctls.lims) +
+   scale_y_continuous(limits=pcoa2.no.ctls.lims) +
    theme(legend.position="none"))
 ```
 
