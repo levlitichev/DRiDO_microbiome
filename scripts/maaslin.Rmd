@@ -1,3 +1,5 @@
+**2024-04-18: Added chronological time to DO model.**
+
 Already prepared matrices of features that I want to test, including community features.
 
 No prevalence filter, no transformation, no normalization. The only thing I need to do before running the LMMs is scale all features so the coefficients for the community features are on the same as those for the individual features.
@@ -5,6 +7,7 @@ No prevalence filter, no transformation, no normalization. The only thing I need
 ```{r, warning=F, message=F}
 library(tidyverse)
 library(Maaslin2)
+library(lubridate) # to deal with date of stool collection
 ```
 
 # Import metadata
@@ -13,11 +16,26 @@ DO.
 
 ```{r}
 DO.stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 DO.mouse.meta.df <- read.csv(
   "../data/metadata/AnimalData_Processed_20230712.csv")
+```
 
+Calculate days since first stool collection.
+
+```{r}
+DO.stool.meta.df <- DO.stool.meta.df %>% 
+  
+  # convert to date type
+  mutate(date.stool.collection.approx = lubridate::ymd(date.stool.collection.approx)) %>% 
+  
+  # calculate days since first overall stool collection
+  mutate(days.from.first.stool.collection = time_length(
+    date.stool.collection.approx - min(date.stool.collection.approx), unit="day"))
+```
+
+```{r}
 DO.meta.df <- DO.stool.meta.df %>% 
   merge(DO.mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
 ```
@@ -35,6 +53,7 @@ DO.AL.meta.df <- DO.meta.df %>%
 
   # rename so the names show up nicely in the model output
   mutate(Age = age.approx.months) %>% 
+  mutate(Time = days.from.first.stool.collection) %>% 
   mutate(Cage = paste0("c", HID)) %>% 
   mutate(Batch = ext.batch)
 ```
@@ -68,7 +87,7 @@ human.meta.df <- read.table(
 
 # DO AL
 
-Model: y_mb ~ age + (1|mouse.ID) + (1|Cohort) + (1|Cage) + (1|Batch)
+Model: y_mb ~ age + time + (1|mouse.ID) + (1|Cohort) + (1|Cage) + (1|Batch)
 
 ## Genus
 
