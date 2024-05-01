@@ -63,7 +63,7 @@ agg.kraken.df[1:5, 1:4]
 
 ``` r
 stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 stool.meta.annot.df <- stool.meta.df %>%
