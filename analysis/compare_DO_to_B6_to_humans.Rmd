@@ -1,3 +1,5 @@
+**2024-04-18: Switched from Pearson to Spearman correlation, removed lines of best fit, and plotted uniqueness with shared y-axis.**
+
 Compare DO AL mice to B6 mice and human samples from `curatedMetagenomicData`.
 
 N.B. Human data is with MetaPhlAn3, mice data is with MetaPhlAn4. Functional results should be the same except for differences to the MetaCyc database (e.g. a slightly different name for a pathway ID).
@@ -26,7 +28,7 @@ age.color <- "seagreen"
 
 ```{r}
 DO.stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 DO.mouse.meta.df <- read.csv(
   "../data/metadata/AnimalData_Processed_20230712.csv")
@@ -271,31 +273,31 @@ Are the age coefficients consistent? We can quantify with correlation.
 DO.AL.v.B6.genus.age.coef.cor <- cor(
   DO.AL.v.B6.genus.maaslin.df$coef.DO_AL, 
   DO.AL.v.B6.genus.maaslin.df$coef.B6, 
-  method="pearson")
+  method="spearman")
 DO.AL.v.B6.genus.age.coef.cor.pval <- cor.test(
   DO.AL.v.B6.genus.maaslin.df$coef.DO_AL, 
   DO.AL.v.B6.genus.maaslin.df$coef.B6, 
-  method="pearson")
+  method="spearman")
 
 # DO AL v. human
 DO.AL.v.human.genus.age.coef.cor <- cor(
   DO.AL.v.human.genus.maaslin.df$coef.DO_AL, 
   DO.AL.v.human.genus.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 DO.AL.v.human.genus.age.coef.cor.pval <- cor.test(
   DO.AL.v.human.genus.maaslin.df$coef.DO_AL, 
   DO.AL.v.human.genus.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 
 # B6 v. human
 B6.v.human.genus.age.coef.cor <- cor(
   B6.v.human.genus.maaslin.df$coef.B6, 
   B6.v.human.genus.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 B6.v.human.genus.age.coef.cor.pval <- cor.test(
   B6.v.human.genus.maaslin.df$coef.B6, 
   B6.v.human.genus.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 ```
 
 ```{r}
@@ -325,15 +327,16 @@ genus.feats.to.label <- c(
    arrange(desc(both.sig.and.same.dir)) %>% 
    mutate(label = case_when(feature %in% genus.feats.to.label ~ feature, TRUE ~ "")) %>% 
    
-   # too busy with error bars
    ggplot(aes(x=coef.DO_AL, y=coef.B6,
               label=label, color=both.sig.and.same.dir)) +
    geom_point(shape=16, size=0.25) +
-   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   # geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_hline(yintercept=0, lty=2) + 
+   geom_vline(xintercept=0, lty=2) + 
    geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
    scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    labs(x="DO AL age coefficient", y="B6 age coefficient", 
-        title=sprintf("Genus-level, correlation=%.2f, p-value=%.2f", 
+        title=sprintf("rho=%.2f, p-value=%.2f", 
                       DO.AL.v.B6.genus.age.coef.cor, DO.AL.v.B6.genus.age.coef.cor.pval$p.value),
         color="Significant and consistent in both DO and B6?") +
    theme_classic(base_size=8) +
@@ -358,11 +361,13 @@ genus.feats.to.label <- c(
    ggplot(aes(x=coef.DO_AL, y=coef.human,
               label=label, color=both.sig.and.same.dir)) +
    geom_point(shape=16, size=0.25) +
-   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   # geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_hline(yintercept=0, lty=2) + 
+   geom_vline(xintercept=0, lty=2) + 
    geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
    scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    labs(x="DO AL age coefficient", y="Human age coefficient", 
-        title=sprintf("Genus-level, correlation=%.2f, p-value=%.2f", 
+        title=sprintf("rho=%.2f, p-value=%.2f", 
                       DO.AL.v.human.genus.age.coef.cor, DO.AL.v.human.genus.age.coef.cor.pval$p.value),
         color="Significant and consistent in both DO and humans?") +
    theme_classic(base_size=8) +
@@ -387,11 +392,13 @@ genus.feats.to.label <- c(
    ggplot(aes(x=coef.B6, y=coef.human,
               label=label, color=both.sig.and.same.dir)) +
    geom_point(shape=16, size=0.25) +
-   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   # geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_hline(yintercept=0, lty=2) + 
+   geom_vline(xintercept=0, lty=2) + 
    geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
    scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    labs(x="B6 age coefficient", y="Human age coefficient", 
-        title=sprintf("Genus-level, correlation=%.2f, p-value=%.2f", 
+        title=sprintf("rho=%.2f, p-value=%.2f", 
                       B6.v.human.genus.age.coef.cor, B6.v.human.genus.age.coef.cor.pval$p.value),
         color="Significant and consistent in both DO and humans?") +
    theme_classic(base_size=8) +
@@ -508,30 +515,30 @@ Quantify consistency with correlation.
 # DO AL v. B6
 DO.AL.v.B6.pathway.age.coef.cor <- cor(
   DO.AL.v.B6.pathway.maaslin.df$coef.DO_AL, 
-  DO.AL.v.B6.pathway.maaslin.df$coef.B6, method="pearson")
+  DO.AL.v.B6.pathway.maaslin.df$coef.B6, method="spearman")
 DO.AL.v.B6.pathway.age.coef.cor.pval <- cor.test(
   DO.AL.v.B6.pathway.maaslin.df$coef.DO_AL, 
-  DO.AL.v.B6.pathway.maaslin.df$coef.B6, method="pearson")
+  DO.AL.v.B6.pathway.maaslin.df$coef.B6, method="spearman")
 
 # DO AL v. human
 DO.AL.v.human.pathway.age.coef.cor <- cor(
   DO.AL.v.human.pathway.maaslin.df$coef.DO_AL, 
   DO.AL.v.human.pathway.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 DO.AL.v.human.pathway.age.coef.cor.pval <- cor.test(
   DO.AL.v.human.pathway.maaslin.df$coef.DO_AL, 
   DO.AL.v.human.pathway.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 
 # B6 v. human
 B6.v.human.pathway.age.coef.cor <- cor(
   B6.v.human.pathway.maaslin.df$coef.B6, 
   B6.v.human.pathway.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 B6.v.human.pathway.age.coef.cor.pval <- cor.test(
   B6.v.human.pathway.maaslin.df$coef.B6, 
   B6.v.human.pathway.maaslin.df$coef.human, 
-  method="pearson")
+  method="spearman")
 ```
 
 ```{r}
@@ -557,11 +564,13 @@ pathway.feats.to.label.df <- data.frame(label = c(
    ggplot(aes(x=coef.DO_AL, y=coef.B6,
               label=label, color=both.sig.and.same.dir)) +
    geom_point(shape=16, size=0.25) +
-   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   # geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_hline(yintercept=0, lty=2) + 
+   geom_vline(xintercept=0, lty=2) + 
    geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
    scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    labs(x="DO AL age coefficient", y="B6 age coefficient", 
-        title=sprintf("Pathway, correlation=%.2f, p-value=%.2f", 
+        title=sprintf("rho=%.2f, p-value=%.2f", 
                       DO.AL.v.B6.pathway.age.coef.cor, DO.AL.v.B6.pathway.age.coef.cor.pval$p.value),
         color="Significant and consistent in both DO and B6?") +
    theme_classic(base_size=8) +
@@ -569,9 +578,9 @@ pathway.feats.to.label.df <- data.frame(label = c(
 ```
 
 ```{r}
-pdf("../plots/DO_AL_v_B6_humann_pathway_age_coefficients.pdf", height=2, width=2)
-DO.AL.v.B6.pathway.maaslin.p
-dev.off()
+# pdf("../plots/DO_AL_v_B6_humann_pathway_age_coefficients.pdf", height=2, width=2)
+# DO.AL.v.B6.pathway.maaslin.p
+# dev.off()
 ```
 
 #### DO AL v. human
@@ -586,11 +595,13 @@ dev.off()
    ggplot(aes(x=coef.DO_AL, y=coef.human,
               label=label, color=both.sig.and.same.dir)) +
    geom_point(shape=16, size=0.25) +
-   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   # geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_hline(yintercept=0, lty=2) +
+   geom_vline(xintercept=0, lty=2) +
    geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
    scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    labs(x="DO AL age coefficient", y="Human age coefficient", 
-        title=sprintf("Pathways, correlation=%.2f, p-value=%.2f", 
+        title=sprintf("rho=%.2f, p-value=%.2f", 
                       DO.AL.v.human.pathway.age.coef.cor, DO.AL.v.human.pathway.age.coef.cor.pval$p.value),
         color="Significant and consistent in both DO AL mice and humans?") +
    theme_classic(base_size=8) +
@@ -598,9 +609,9 @@ dev.off()
 ```
 
 ```{r}
-pdf("../plots/DO_AL_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
-DO.AL.v.human.pathway.maaslin.p
-dev.off()
+# pdf("../plots/DO_AL_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
+# DO.AL.v.human.pathway.maaslin.p
+# dev.off()
 ```
 
 #### B6 v. human
@@ -615,11 +626,13 @@ dev.off()
    ggplot(aes(x=coef.B6, y=coef.human,
               label=label, color=both.sig.and.same.dir)) +
    geom_point(shape=16, size=0.25) +
-   geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   # geom_smooth(aes(color=NULL, label=NULL), color="gray80", method="lm", linewidth=0.5) +
+   geom_hline(yintercept=0, lty=2) + 
+   geom_vline(xintercept=0, lty=2) + 
    geom_text_repel(size=6*0.36, min.segment.length=0, max.overlaps=Inf) +
    scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    labs(x="B6 age coefficient", y="Human age coefficient", 
-        title=sprintf("Pathways, correlation=%.2f, p-value=%.2f", 
+        title=sprintf("rho=%.2f, p-value=%.2f", 
                       B6.v.human.pathway.age.coef.cor, B6.v.human.pathway.age.coef.cor.pval$p.value),
         color="Significant and consistent in both B6 and humans?") +
    theme_classic(base_size=8) +
@@ -627,9 +640,9 @@ dev.off()
 ```
 
 ```{r}
-pdf("../plots/B6_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
-B6.v.human.pathway.maaslin.p
-dev.off()
+# pdf("../plots/B6_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
+# B6.v.human.pathway.maaslin.p
+# dev.off()
 ```
 
 # Uniqueness
@@ -678,8 +691,8 @@ uniq.df <- rbind(
    ggplot(aes(x=age, y=Uniqueness, color=study)) +
    geom_point(shape=16, alpha=0.1) +
    geom_smooth(method="lm", linewidth=0.5) +
-   facet_wrap(~study, scales="free") +
-   labs(x="Age", y="",
+   facet_wrap(~study, scales="free_x") +
+   labs(x="Age", y="Uniqueness",
         title="Taxonomic uniqueness (genus-level)") +
    theme_classic(base_size=8) +
    theme(legend.position="none") +
@@ -912,7 +925,7 @@ this.pathway.feat.search.string <- "RIBOSYN2PWY"
   ggplot(aes(x=age, y=value, color=study)) +
   geom_point(shape=16, alpha=0.1) +
   geom_smooth(method="lm", linewidth=0.5) +
-  facet_wrap(~study, scales="free") +
+  facet_wrap(~study, scales="free_x") +
   labs(x="Age", y="log2(TPM)",
        title="Flavin biosynthesis") +
   theme_classic(base_size=8) +
