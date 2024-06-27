@@ -1,35 +1,30 @@
+suppressPackageStartupMessages(library(tidyverse))
 
-```{r, warning=F, message=F}
-library(tidyverse)
-```
+# read command line arguments
+args <- commandArgs(trailingOnly=TRUE)
+if (length(args) != 1) {
+  stop(sprintf(
+    "Must provide only one command line argument: a directory with RDS files. args: %s",
+    args), call.=F)
+}
 
-Directory with ASReml outputs
+# the only input should be the output of run_asreml*.R: a directory with RDS files, e.g. ../results/asreml_kraken_genus/
+dir.w.RDS.files <- args[1]
+cat(sprintf("Input directory: %s\n", dir.w.RDS.files))
 
-```{r}
-dir.w.RDS.files <- "../results/asreml_kraken_genus/"
-```
-
-Get list of RDS files to collate
-
-```{r}
+# get list of RDS files to collate
 list.of.RDS.paths <- list.files(dir.w.RDS.files, pattern=".Rds", full.names=T)
-length(list.of.RDS.paths)
-```
+cat(sprintf("Collating %i results...\n", length(list.of.RDS.paths)))
 
-Initialize outputs
-
-```{r}
+# initialize outputs
 list.of.fixed.dfs <- vector("list", length(list.of.RDS.paths))
 list.of.wald.dfs <- vector("list", length(list.of.RDS.paths))
 list.of.varcomp.dfs <- vector("list", length(list.of.RDS.paths))
 feat.name.vec <- rep("", length(list.of.RDS.paths))
 pval.vec <- rep(0, length(list.of.RDS.paths))
 herit.se.vec <- rep(0, length(list.of.RDS.paths))
-```
 
-Loop over RDS files
-
-```{r}
+# loop over RDS files
 for (ii in seq(length(list.of.RDS.paths))) {
   
   this.res <- readRDS(list.of.RDS.paths[[ii]])
@@ -43,11 +38,8 @@ for (ii in seq(length(list.of.RDS.paths))) {
   feat.name.vec[[ii]] <- this.feat
   
 }
-```
 
-Concatenate
-
-```{r}
+# concatenate
 fixed.df <- do.call(rbind, list.of.fixed.dfs)
 wald.df <- do.call(rbind, list.of.wald.dfs)
 varcomp.df <- do.call(rbind, list.of.varcomp.dfs)
@@ -57,11 +49,8 @@ pval.df <- data.frame(
 herit.se.df <- data.frame(
   feature = feat.name.vec,
   herit.se = herit.se.vec)
-```
 
-Combine heritability estimate, heritability standard error, and LRT p-values
-
-```{r}
+# combine heritability estimate, heritability standard error, and LRT p-values
 herit.df <- merge(
   varcomp.df %>% 
     dplyr::filter(term == "vm(Mouse, kinship.mat.x2)") %>% 
@@ -70,18 +59,9 @@ herit.df <- merge(
   merge(pval.df, by="feature") %>% 
   dplyr::rename(herit = PVE,
                 LRT.pval = genetics.LRT.pval)
-```
 
-Combine fixed effect coefficients in fixed.df with Wald test p-values
-
-```{r}
-nrow(wald.df)
-nrow(fixed.df)
-```
-
-N.B. wald.df has one p-value for the diet coefficient, but fixed.df has a separate coefficient for each diet.
-
-```{r}
+# combine fixed effect coefficients in fixed.df with Wald test p-values
+# N.B. wald.df has one p-value for the diet coefficient, but fixed.df has a separate coefficient for each diet
 out.fixef.df <- merge(
   
   fixed.df %>% 
@@ -91,15 +71,13 @@ out.fixef.df <- merge(
     dplyr::rename(fixef = term),
   
   by=c("fixef", "feature"))
-  
-dim(wald.df)
-dim(fixed.df)
-dim(out.fixef.df)
-```
 
-Export fixef.df, varcomp.df (AKA ranef.df), and herit.df
+# confirm the sizes are what we expect  
+# dim(wald.df)
+# dim(fixed.df)
+# dim(out.fixef.df)
 
-```{r}
+# export fixef.df, varcomp.df (AKA ranef.df), and herit.df
 write.table(out.fixef.df, sprintf("%s/fixef.txt", dir.w.RDS.files),
             sep="\t", quote=F, row.names=F)
 
@@ -108,4 +86,5 @@ write.table(varcomp.df, sprintf("%s/ranef.txt", dir.w.RDS.files),
 
 write.table(herit.df, sprintf("%s/herit.txt", dir.w.RDS.files),
             sep="\t", quote=F, row.names=F)
-```
+
+cat("Wrote fixef.txt, ranef.txt, and herit.txt.\n")
