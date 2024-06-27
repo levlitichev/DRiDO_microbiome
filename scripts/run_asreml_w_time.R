@@ -16,9 +16,6 @@ suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
 # activating ASReml in the parallel for loop is a problem
 asreml.license.offline(10)
 
-# change working directory
-setwd("~/Documents/phd/calico_aging/DRiDO_microbiome_github/scripts/")
-
 # check available cores with detectCores()
 cl <- makeCluster(6)
 registerDoParallel(cl)

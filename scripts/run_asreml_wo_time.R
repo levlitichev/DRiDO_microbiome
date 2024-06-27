@@ -13,9 +13,6 @@ suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
 # activating ASReml in the parallel for loop is a problem
 asreml.license.offline(10)
 
-# change working directory
-setwd("~/DRiDO_microbiome_github/scripts/")
-
 # check available cores with detectCores()
 cl <- makeCluster(6)
 registerDoParallel(cl)
@@ -51,7 +48,7 @@ kinship.df <- read.csv(
 
 # import metadata
 stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 mouse.meta.df <- read.csv(
   "../data/metadata/AnimalData_Processed_20230712.csv") %>% 
