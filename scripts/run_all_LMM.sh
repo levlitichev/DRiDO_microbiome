@@ -114,7 +114,7 @@ Rscript run_asreml_all_ranef_w_time.R \
 # Model 1, with MetaPhlAn instead of Kraken taxonomic results
 # y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 Rscript run_asreml.R \
-  ../results/DO_genus_log2relab_filt_w_comm_n259x2997.txt \
+  ../results/metaphlan_genus_log2relab_filt_w_comm_n259x2997.txt \
   ../results/asreml_metaphlan_genus_w_time/ \
   "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
   "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
