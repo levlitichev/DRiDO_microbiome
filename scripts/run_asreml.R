@@ -1,6 +1,6 @@
 # 2024-06-27: Script now accepts fixed and random formulas as arguments.
 # Run a linear mixed model for all features.
-# This script is fast enough to run locally, i.e. no need for a cluster (<5 minutes for 100 features)
+# This script is fast enough to run locally, i.e. no need for a cluster (<5 minutes for 100 features and 3000 samples)
 
 # load libraries
 suppressPackageStartupMessages(library(tidyverse))
