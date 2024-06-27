@@ -124,7 +124,7 @@ Rscript collate_asreml.R ../results/asreml_metaphlan_genus_w_time/
 # Model 1, with Kraken species-level data
 # y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 Rscript run_asreml.R \
-  ../results/kraken_species_clr_filt_w_comm_n207x2997_240515.txt \
+  ../results/kraken_species_clr_filt_w_comm_n207x2997.txt \
   ../results/asreml_kraken_species_w_time/ \
   "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
   "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
@@ -143,3 +143,34 @@ Rscript run_asreml.R \
   "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
   "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
 Rscript collate_asreml.R ../results/asreml_kraken_genus_downsampled/
+
+# --- PATHWAYS ---
+
+# Model 1: HUMAnN pathways, model with time, genera, fixed and random effects
+run_asreml_w_time.R ../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt ../results/asreml_humann_pathways_w_time/
+
+# Model 2: Model without time
+run_asreml_wo_time.R ../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt ../results/asreml_humann_pathways_wo_time/
+
+# Model 3: Model run separately for samples collected close in chronological time
+TODO: run_asreml_at_different_times.R ../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt ../results/asreml_humann_pathways_per_time_slice/ # TODO
+
+# Model 8: Model run separately per age group
+# probably can be consolidated to use run_asreml_w_time.R and a different data file
+run_asreml_per_age.R ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt ../results/asreml_humann_pathways_per_age_w_time
+
+# Model 9: All random effects
+run_asreml_all_ranef_w_time.R ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt ../results/asreml_kraken_genus_all_ranef_w_time/
+
+# Model 1, with MetaPhlAn instead of Kraken taxonomic results
+run_asreml_w_time.R ../results/DO_genus_log2relab_filt_w_comm_n259x2997.txt ../results/asreml_metaphlan_genus_w_time/
+
+# Model 1, with Kraken species-level data
+run_asreml_w_time.R results/kraken_species_clr_filt_w_comm_n207x2997_240515.txt ../results/asreml_kraken_species/
+
+# Model 1, using lme4qtl instead of ASReml
+run_lme4qtl.R ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt ../results/lme4qtl_kraken_genus
+
+# Model 1, using downsampled data
+# probably can be consolidated to use run_asreml_w_time.R and a different data file
+run_asreml_downsampled.R ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt ../results/asreml_kraken_genus_w_time/
