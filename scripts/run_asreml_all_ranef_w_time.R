@@ -1,11 +1,14 @@
+# 2024-05-10: Added chronological time to the model.
+
 # Run a linear model for all features with the following specification (all random effects):
 
-# y_mb ~ age (r) + diet (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r) 
+# y_mb ~ age (r) + diet (r) + time(r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r) 
 
-# pretty slow, takes ~1 hour for ~100 features
+# takes 10-20 minutes for ~100 features
 
 # load libraries
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(asreml))
 suppressPackageStartupMessages(library(foreach)) # for parallel for-loop
 suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
@@ -13,25 +16,32 @@ suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
 # activating ASReml in the parallel for loop is a problem
 asreml.license.offline(10)
 
-# change working directory
-setwd("~/DRiDO_microbiome_github/scripts/")
-
 # check available cores with detectCores()
 cl <- makeCluster(6)
 registerDoParallel(cl)
 
-### --- INPUTS --- ###
+### --- COMMAND LINE INPUTS --- ###
 
-# specify output directory
-out.dir <- "../results/asreml_kraken_genus_all_ranef/"
-stopifnot(dir.exists(out.dir))
+# read in command line arguments
+args <- commandArgs(trailingOnly=TRUE)
+if (length(args) != 2) {
+  stop(sprintf(
+    "Must provide two command line arguments: the path to the microbiome data and the output directory. args: %s",
+    args), call.=F)
+}
 
-# import microbiome data
-mb.df <- read.table(
-  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
-  # "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
-  sep="\t", header=T, row.names=1)
-# mb.df[1:5, 1:3]
+# first argument is microbiome data, e.g. ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt
+mb.df <- read.table(args[1], sep="\t", header=T, row.names=1)
+# md.df[1:5, 1:5]
+
+# second argument is output directory, e.g. ../results/asreml_kraken_genus_all_ranef/
+# it must already exist
+out.dir <- args[2]
+if (!dir.exists(out.dir)) {
+  stop(sprintf("Output directory must already exist. out.dir: %s", out.dir))
+}
+
+### --- OTHER INPUTS --- ###
 
 # import kinship matrix
 kinship.df <- read.csv(
@@ -41,7 +51,7 @@ kinship.df <- read.csv(
 
 # import metadata
 stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 mouse.meta.df <- read.csv(
   "../data/metadata/AnimalData_Processed_20230712.csv") %>% 
@@ -64,6 +74,11 @@ mb.scaled.df <- mb.df %>%
   data.frame() %>% # keep samples in the rows
   rownames_to_column("stool.ID")
 # dim(mb.scaled.df)
+
+# round date of stool collection to quarter in order to make it a factor
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  mutate(date.stool.collection.approx = ymd(date.stool.collection.approx)) %>% 
+  mutate(quarter.stool.collection = round_date(date.stool.collection.approx, "quarter"))
 
 # add metadata to microbiome data
 mb.scaled.annot.df <- merge(
@@ -96,8 +111,9 @@ final.mb.annot.df <- final.mb.annot.df %>%
     age.approx.months == 5 ~ "AL",
     TRUE ~ as.character(Diet))) %>% 
   
-  # convert age to factor to use as random effect
-  mutate(Age=factor(age.approx.months)) %>% 
+  # convert age and date of stool collection to factors to use as random effects
+  mutate(Age=factor(age.approx.months),
+         Time=factor(quarter.stool.collection)) %>% 
   
   # convert to factors
   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40")),
@@ -112,7 +128,7 @@ kinship.mat.x2 <- kinship.mat*2
 rm(kinship.mat) # to make sure I don't use the wrong one
 
 # define function to run on one feature at a time
-run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
+run_one_feat_all_ranef <- function(this.feat, this.df) {
   
   cat(this.feat, "\n")
   
@@ -121,7 +137,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   ))
   
   ranef.formula <- as.formula(paste(
-    "~ Age + Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
+    "~ Age + Diet.5mo.as.AL + Time + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
   ))
   
   # ~~~ FULL MODEL ~~~
@@ -132,7 +148,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   # ~~~ NO AGE ~~~
   ranef.formula.no.age <- as.formula(paste(
-    "~ Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
+    "~ Diet.5mo.as.AL + Time + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
   ))
   
   this.model.no.age <- asreml(
@@ -144,7 +160,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   # ~~~ NO DIET ~~~
   ranef.formula.no.diet <- as.formula(paste(
-    "~ Age + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
+    "~ Age + Time + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
   ))
   
   this.model.no.diet <- asreml(
@@ -154,9 +170,21 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   this.LRT.pval.diet <- 1 - pchisq(2 * (this.model$loglik - this.model.no.diet$loglik), 1)
   
+  # ~~~ NO TIME ~~~
+  ranef.formula.no.time <- as.formula(paste(
+    "~ Age + Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
+  ))
+  
+  this.model.no.time <- asreml(
+    fixed = fixef.formula,
+    random = ranef.formula.no.time,
+    data = this.df)
+  
+  this.LRT.pval.time <- 1 - pchisq(2 * (this.model$loglik - this.model.no.time$loglik), 1)
+  
   # ~~~ NO MOUSE ~~~
   ranef.formula.no.mouse <- as.formula(paste(
-    "~ Age + Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+    "~ Age + Diet.5mo.as.AL + Time + vm(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
   ))
   
   this.model.no.mouse <- asreml(
@@ -168,7 +196,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   # ~~~ NO GENETICS ~~~
   ranef.formula.no.genetics <- as.formula(paste(
-    "~ Age + Diet.5mo.as.AL + ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+    "~ Age + Diet.5mo.as.AL + Time + ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
   ))
   
   this.model.no.genetics <- asreml(
@@ -180,7 +208,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   # ~~~ NO COHORT ~~~
   ranef.formula.no.cohort <- as.formula(paste(
-    "~ Age + Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cage + Batch"
+    "~ Age + Diet.5mo.as.AL + Time + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cage + Batch"
   ))
   
   this.model.no.cohort <- asreml(
@@ -192,7 +220,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   # ~~~ NO CAGE ~~~
   ranef.formula.no.cage <- as.formula(paste(
-    "~ Age + Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Batch"
+    "~ Age + Diet.5mo.as.AL + Time + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Batch"
   ))
   
   this.model.no.cage <- asreml(
@@ -204,7 +232,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   
   # ~~~ NO BATCH ~~~
   ranef.formula.no.batch <- as.formula(paste(
-    "~ Age + Diet.5mo.as.AL + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage"
+    "~ Age + Diet.5mo.as.AL + Time + vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage"
   ))
   
   this.model.no.batch <- asreml(
@@ -240,6 +268,7 @@ run_one_feat_age_and_DR_ranef <- function(this.feat, this.df) {
   LRT.pval.df <- data.frame(LRT.pval = c(
     Age = this.LRT.pval.age,
     Diet = this.LRT.pval.diet,
+    Time = this.LRT.pval.time,
     Mouse = this.LRT.pval.mouse,
     Genetics = this.LRT.pval.genetics,
     Cohort = this.LRT.pval.cohort,
@@ -266,7 +295,7 @@ IGNORE <- foreach(
   .packages = c("tidyverse", "asreml")) %dopar% {
     
     .GlobalEnv$kinship.mat.x2 <- kinship.mat.x2
-    run_one_feat_age_and_DR_ranef(
+    run_one_feat_all_ranef(
       this.feat, 
       this.df = final.mb.annot.df)
   }
