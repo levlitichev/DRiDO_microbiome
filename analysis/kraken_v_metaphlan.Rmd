@@ -22,7 +22,7 @@ lib.meta.df <- read.table(
   "../data/metadata/library_metadata_after_QC_n3213_230620.txt",
   sep="\t", header=T)
 stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_n3124_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_n3124_240418.txt", 
   sep="\t", header=T)
 mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 ```
