@@ -20,18 +20,28 @@ setwd("~/DRiDO_microbiome_github/scripts/")
 cl <- makeCluster(6)
 registerDoParallel(cl)
 
-### --- INPUTS --- ###
+### --- COMMAND LINE INPUTS --- ###
 
-# specify output directory
-out.dir <- "../results/asreml_kraken_genus/"
-stopifnot(dir.exists(out.dir))
+# read in command line arguments
+args <- commandArgs(trailingOnly=TRUE)
+if (length(args) != 2) {
+  stop(sprintf(
+    "Must provide two command line arguments: the path to the microbiome data and the output directory. args: %s",
+    args), call.=F)
+}
 
-# import microbiome data
-mb.df <- read.table(
-  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
-  # "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
-  sep="\t", header=T, row.names=1)
-# mb.df[1:5, 1:3]
+# first argument is microbiome data, e.g. ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt
+mb.df <- read.table(args[1], sep="\t", header=T, row.names=1)
+# md.df[1:5, 1:5]
+
+# second argument is output directory, e.g. ../results/asreml_kraken_genus/
+# it must already exist
+out.dir <- args[2]
+if (!dir.exists(out.dir)) {
+  stop(sprintf("Output directory must already exist. out.dir: %s", out.dir))
+}
+
+### --- OTHER INPUTS --- ###
 
 # import kinship matrix
 kinship.df <- read.csv(
