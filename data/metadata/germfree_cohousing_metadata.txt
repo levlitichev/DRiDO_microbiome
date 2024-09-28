@@ -1,0 +1,132 @@
+sample.id	timepoint	timepoint.short	group	cage	ear	mouse	run
+c63_N_Feb1	1 month cohousing	C4	CY	c63	N	c63_N	1
+c63_R_Feb1	1 month cohousing	C4	CY	c63	R	c63_R	1
+c63_L_Feb1	1 month cohousing	C4	CY	c63	L	c63_L	1
+c63_B_Feb1	1 month cohousing	C4	CO	c63	B	c63_B	1
+c63_2R_Feb1	1 month cohousing	C4	CO	c63	2R	c63_2R	1
+c63_N_Jan18	2 weeks cohousing	C2	CY	c63	N	c63_N	2
+c63_R_Jan18	2 weeks cohousing	C2	CY	c63	R	c63_R	2
+c63_L_Jan18	2 weeks cohousing	C2	CY	c63	L	c63_L	2
+c63_B_Jan18	2 weeks cohousing	C2	CO	c63	B	c63_B	2
+c63_2R_Jan18	2 weeks cohousing	C2	CO	c63	2R	c63_2R	2
+c63_N_Jan4	Baseline	B	CY	c63	N	c63_N	1
+c63_R_Jan4	Baseline	B	CY	c63	R	c63_R	1
+c63_L_Jan4	Baseline	B	CY	c63	L	c63_L	1
+c63_B_Jan4	Baseline	B	CO	c63	B	c63_B	1
+c63_2R_Jan4	Baseline	B	CO	c63	2R	c63_2R	1
+c64_N_Feb1	1 month cohousing	C4	CY	c64	N	c64_N	1
+c64_R_Feb1	1 month cohousing	C4	CY	c64	R	c64_R	1
+c64_L_Feb1	1 month cohousing	C4	CY	c64	L	c64_L	1
+c64_B_Feb1	1 month cohousing	C4	CO	c64	B	c64_B	1
+c64_2R_Feb2	1 month cohousing	C4	CO	c64	2R	c64_2R	1
+c64_N_Jan18	2 weeks cohousing	C2	CY	c64	N	c64_N	2
+c64_R_Jan18	2 weeks cohousing	C2	CY	c64	R	c64_R	2
+c64_L_Jan18	2 weeks cohousing	C2	CY	c64	L	c64_L	2
+c64_B_Jan18	2 weeks cohousing	C2	CO	c64	B	c64_B	2
+c64_2R_Jan18	2 weeks cohousing	C2	CO	c64	2R	c64_2R	2
+c64_N_Jan4	Baseline	B	CY	c64	N	c64_N	1
+c64_R_Jan4	Baseline	B	CY	c64	R	c64_R	1
+c64_L_Jan4	Baseline	B	CY	c64	L	c64_L	1
+c64_B_Jan4	Baseline	B	CO	c64	B	c64_B	1
+c64_2R_Jan4	Baseline	B	CO	c64	2R	c64_2R	1
+c65_N_Feb1	1 month cohousing	C4	CY	c65	N	c65_N	1
+c65_R_Feb1	1 month cohousing	C4	CY	c65	R	c65_R	1
+c65_L_Feb1	1 month cohousing	C4	CY	c65	L	c65_L	1
+c65_B_Feb1	1 month cohousing	C4	CO	c65	B	c65_B	1
+c65_2R_Feb1	1 month cohousing	C4	CO	c65	2R	c65_2R	1
+c65_N_Jan18	2 weeks cohousing	C2	CY	c65	N	c65_N	2
+c65_R_Jan18	2 weeks cohousing	C2	CY	c65	R	c65_R	2
+c65_L_Jan18	2 weeks cohousing	C2	CY	c65	L	c65_L	2
+c65_B_Jan18	2 weeks cohousing	C2	CO	c65	B	c65_B	2
+c65_2R_Jan18	2 weeks cohousing	C2	CO	c65	2R	c65_2R	2
+c65_N_Jan4	Baseline	B	CY	c65	N	c65_N	1
+c65_R_Jan4	Baseline	B	CY	c65	R	c65_R	1
+c65_L_Jan4	Baseline	B	CY	c65	L	c65_L	1
+c65_B_Jan4	Baseline	B	CO	c65	B	c65_B	1
+c65_2R_Jan4	Baseline	B	CO	c65	2R	c65_2R	1
+c66_R_Feb1	1 month cohousing	C4	CY	c66	R	c66_R	1
+c66_L_Feb1	1 month cohousing	C4	CY	c66	L	c66_L	1
+c66_B_Feb1	1 month cohousing	C4	CO	c66	B	c66_B	1
+c66_N_Feb2	1 month cohousing	C4	CY	c66	N	c66_N	1
+c66_2R_Feb2	1 month cohousing	C4	CO	c66	2R	c66_2R	1
+c66_N_Jan18	2 weeks cohousing	C2	CY	c66	N	c66_N	2
+c66_R_Jan18	2 weeks cohousing	C2	CY	c66	R	c66_R	2
+c66_L_Jan18	2 weeks cohousing	C2	CY	c66	L	c66_L	2
+c66_B_Jan18	2 weeks cohousing	C2	CO	c66	B	c66_B	2
+c66_2R_Jan18	2 weeks cohousing	C2	CO	c66	2R	c66_2R	2
+c66_N_Jan4	Baseline	B	CY	c66	N	c66_N	1
+c66_R_Jan4	Baseline	B	CY	c66	R	c66_R	1
+c66_L_Jan4	Baseline	B	CY	c66	L	c66_L	1
+c66_B_Jan4	Baseline	B	CO	c66	B	c66_B	1
+c66_2R_Jan4	Baseline	B	CO	c66	2R	c66_2R	1
+c67_N_Feb1	1 month cohousing	C4	CY	c67	N	c67_N	1
+c67_R_Feb1	1 month cohousing	C4	CY	c67	R	c67_R	1
+c67_L_Feb1	1 month cohousing	C4	CY	c67	L	c67_L	1
+c67_B_Feb1	1 month cohousing	C4	CO	c67	B	c67_B	1
+c67_2R_Feb1	1 month cohousing	C4	CO	c67	2R	c67_2R	1
+c67_N_Jan18	2 weeks cohousing	C2	CY	c67	N	c67_N	2
+c67_R_Jan18	2 weeks cohousing	C2	CY	c67	R	c67_R	2
+c67_L_Jan18	2 weeks cohousing	C2	CY	c67	L	c67_L	2
+c67_B_Jan18	2 weeks cohousing	C2	CO	c67	B	c67_B	2
+c67_2R_Jan18	2 weeks cohousing	C2	CO	c67	2R	c67_2R	2
+c67_N_Jan4	Baseline	B	CY	c67	N	c67_N	1
+c67_R_Jan4	Baseline	B	CY	c67	R	c67_R	1
+c67_L_Jan4	Baseline	B	CY	c67	L	c67_L	1
+c67_B_Jan4	Baseline	B	CO	c67	B	c67_B	1
+c67_2R_Jan4	Baseline	B	CO	c67	2R	c67_2R	1
+c68_N_Feb1	1 month cohousing	C4	O	c68	N	c68_N	1
+c68_R_Feb1	1 month cohousing	C4	O	c68	R	c68_R	1
+c68_L_Feb1	1 month cohousing	C4	O	c68	L	c68_L	1
+c68_B_Feb1	1 month cohousing	C4	O	c68	B	c68_B	1
+c68_2R_Feb2	1 month cohousing	C4	O	c68	2R	c68_2R	1
+c68_N_Jan18	2 weeks cohousing	C2	O	c68	N	c68_N	2
+c68_R_Jan18	2 weeks cohousing	C2	O	c68	R	c68_R	2
+c68_L_Jan18	2 weeks cohousing	C2	O	c68	L	c68_L	2
+c68_B_Jan18	2 weeks cohousing	C2	O	c68	B	c68_B	2
+c68_2R_Jan18	2 weeks cohousing	C2	O	c68	2R	c68_2R	2
+c68_N_Jan4	Baseline	B	O	c68	N	c68_N	1
+c68_R_Jan4	Baseline	B	O	c68	R	c68_R	1
+c68_L_Jan4	Baseline	B	O	c68	L	c68_L	1
+c68_B_Jan4	Baseline	B	O	c68	B	c68_B	1
+c68_2R_Jan4	Baseline	B	O	c68	2R	c68_2R	1
+c69_N_Feb1	1 month cohousing	C4	O	c69	N	c69_N	1
+c69_R_Feb1	1 month cohousing	C4	O	c69	R	c69_R	1
+c69_L_Feb1	1 month cohousing	C4	O	c69	L	c69_L	1
+c69_B_Feb1	1 month cohousing	C4	O	c69	B	c69_B	1
+c69_N_Jan18	2 weeks cohousing	C2	O	c69	N	c69_N	2
+c69_R_Jan18	2 weeks cohousing	C2	O	c69	R	c69_R	2
+c69_L_Jan18	2 weeks cohousing	C2	O	c69	L	c69_L	2
+c69_B_Jan18	2 weeks cohousing	C2	O	c69	B	c69_B	2
+c69_N_Jan4	Baseline	B	O	c69	N	c69_N	1
+c69_R_Jan4	Baseline	B	O	c69	R	c69_R	1
+c69_L_Jan4	Baseline	B	O	c69	L	c69_L	1
+c69_B_Jan4	Baseline	B	O	c69	B	c69_B	1
+c70_R_Feb1	1 month cohousing	C4	Y	c70	R	c70_R	1
+c70_B_Feb1	1 month cohousing	C4	Y	c70	B	c70_B	1
+c70_L_Feb2	1 month cohousing	C4	Y	c70	L	c70_L	1
+c70_N_Feb2	1 month cohousing	C4	Y	c70	N	c70_N	1
+c70_2R_Feb2	1 month cohousing	C4	Y	c70	2R	c70_2R	1
+c70_N_Jan18	2 weeks cohousing	C2	Y	c70	N	c70_N	2
+c70_R_Jan18	2 weeks cohousing	C2	Y	c70	R	c70_R	2
+c70_L_Jan18	2 weeks cohousing	C2	Y	c70	L	c70_L	2
+c70_B_Jan18	2 weeks cohousing	C2	Y	c70	B	c70_B	2
+c70_2R_Jan18	2 weeks cohousing	C2	Y	c70	2R	c70_2R	2
+c70_N_Jan4	Baseline	B	Y	c70	N	c70_N	1
+c70_R_Jan4	Baseline	B	Y	c70	R	c70_R	1
+c70_B_Jan4	Baseline	B	Y	c70	B	c70_B	1
+c70_2R_Jan4	Baseline	B	Y	c70	2R	c70_2R	1
+c71_N_Feb1	1 month cohousing	C4	Y	c71	N	c71_N	1
+c71_R_Feb1	1 month cohousing	C4	Y	c71	R	c71_R	1
+c71_L_Feb1	1 month cohousing	C4	Y	c71	L	c71_L	1
+c71_B_Feb1	1 month cohousing	C4	Y	c71	B	c71_B	1
+c71_2R_Feb2	1 month cohousing	C4	Y	c71	2R	c71_2R	1
+c71_N_Jan18	2 weeks cohousing	C2	Y	c71	N	c71_N	2
+c71_R_Jan18	2 weeks cohousing	C2	Y	c71	R	c71_R	2
+c71_L_Jan18	2 weeks cohousing	C2	Y	c71	L	c71_L	2
+c71_B_Jan18	2 weeks cohousing	C2	Y	c71	B	c71_B	2
+c71_2R_Jan18	2 weeks cohousing	C2	Y	c71	2R	c71_2R	2
+c71_N_Jan4	Baseline	B	Y	c71	N	c71_N	1
+c71_R_Jan4	Baseline	B	Y	c71	R	c71_R	1
+c71_L_Jan4	Baseline	B	Y	c71	L	c71_L	1
+c71_B_Jan4	Baseline	B	Y	c71	B	c71_B	1
+c71_2R_Jan4	Baseline	B	Y	c71	2R	c71_2R	1
