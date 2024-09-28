@@ -87,9 +87,10 @@ mb.scaled.df <- mb.df %>%
   rownames_to_column("stool.ID")
 # dim(mb.scaled.df)
 
-# create new column with days since first stool collection
+# create new columns related to date of stool collection
 stool.meta.annot.df <- stool.meta.annot.df %>% 
   mutate(collection.date = ymd(date.stool.collection.approx)) %>% 
+  mutate(quarter.collection.date = round_date(collection.date, "quarter")) %>% 
   mutate(days.from.first.stool.collection = time_length(
     collection.date - min(collection.date), unit="day"))
 
@@ -126,7 +127,7 @@ final.mb.annot.df <- final.mb.annot.df %>%
     TRUE ~ as.character(Diet))) %>% 
   
   # scale age and chronological time
-  mutate(age.wks.scaled=scale(age.wks),
+  mutate(age.wks.scaled = scale(age.wks),
          time.scaled = scale(days.from.first.stool.collection)) %>% 
   
   # convert to factors
@@ -135,7 +136,8 @@ final.mb.annot.df <- final.mb.annot.df %>%
          Cohort=factor(Cohort),
          Cage=factor(Cage),
          Batch=factor(ext.batch),
-         Mouse=factor(mouse.ID, levels=mice.to.keep))
+         Mouse=factor(mouse.ID, levels=mice.to.keep),
+         Quarter.Date=factor(quarter.collection.date))
 
 # multiply kinship by 2
 kinship.mat.x2 <- kinship.mat*2
