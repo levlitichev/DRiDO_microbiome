@@ -83,11 +83,14 @@ DO.AL.genus.df <- DO.AL.genus.df.feats.in.rows %>%
   arrange(stool.ID) %>% 
   column_to_rownames("stool.ID")
 
+# define output directory
+out.dir <- "../results/maaslin2_DO_AL_genus"
+
 # run MaAsLin2
 maaslin.res.DO.AL.genus <- Maaslin2(
   input_data = DO.AL.genus.df,
   input_metadata = DO.AL.meta.df,
-  output = "../results/maaslin2_DO_AL_genus",
+  output = out.dir,
   fixed_effects = c("Age"),
   random_effects = c("mouse.ID", "Cohort", "Cage", "Batch"),
   cores = 4,
@@ -95,6 +98,11 @@ maaslin.res.DO.AL.genus <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
+
+# clean up 
+unlink(file.path(out.dir, "features"), recursive=T)
+unlink(file.path(out.dir, "fits"), recursive=T)
+file.remove(file.path(out.dir, "significant_results.tsv"))
 
 # --- DO AL, pathways ---
 
@@ -121,11 +129,14 @@ DO.AL.pathway.df <- DO.AL.pathway.df.feats.in.rows %>%
   arrange(stool.ID) %>% 
   column_to_rownames("stool.ID")
 
+# define output directory
+out.dir <- "../results/maaslin2_DO_AL_pathway"
+
 # run MaAsLin2
 maaslin.res.DO.AL.pathway <- Maaslin2(
   input_data = DO.AL.pathway.df,
   input_metadata = DO.AL.meta.df,
-  output = "../results/maaslin2_DO_AL_pathway",
+  output = out.dir,
   fixed_effects = c("Age"),
   random_effects = c("mouse.ID", "Cohort", "Cage", "Batch"),
   cores = 4,
@@ -133,6 +144,11 @@ maaslin.res.DO.AL.pathway <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
+
+# clean up 
+unlink(file.path(out.dir, "features"), recursive=T)
+unlink(file.path(out.dir, "fits"), recursive=T)
+file.remove(file.path(out.dir, "significant_results.tsv"))
 
 # --- B6, genera ---
 
@@ -159,12 +175,14 @@ B6.genus.df <- B6.genus.df.feats.in.rows %>%
   arrange(id) %>% 
   column_to_rownames("id")
 
+# define output directory
+out.dir <- "../results/maaslin2_B6_genus"
 
 # run MaAsLin2
 maaslin.res.B6.genus <- Maaslin2(
   input_data = B6.genus.df,
   input_metadata = B6.meta.df,
-  output = "../results/maaslin2_B6_genus",
+  output = out.dir,
   fixed_effects = c("Age"),
   random_effects = c("Cage"),
   cores = 4,
@@ -172,6 +190,11 @@ maaslin.res.B6.genus <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
+
+# clean up 
+unlink(file.path(out.dir, "features"), recursive=T)
+unlink(file.path(out.dir, "fits"), recursive=T)
+file.remove(file.path(out.dir, "significant_results.tsv"))
 
 # --- B6, pathways ---
 
@@ -198,11 +221,14 @@ B6.pathway.df <- B6.pathway.df.feats.in.rows %>%
   arrange(id) %>% 
   column_to_rownames("id")
 
+# define output directory
+out.dir <- "../results/maaslin2_B6_pathway"
+
 # run MaAsLin2
 maaslin.res.B6.pathway <- Maaslin2(
   input_data = B6.pathway.df,
   input_metadata = B6.meta.df,
-  output = "../results/maaslin2_B6_pathway",
+  output = out.dir,
   fixed_effects = c("Age"),
   random_effects = c("Cage"),
   cores = 4,
@@ -210,6 +236,11 @@ maaslin.res.B6.pathway <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
+
+# clean up 
+unlink(file.path(out.dir, "features"), recursive=T)
+unlink(file.path(out.dir, "fits"), recursive=T)
+file.remove(file.path(out.dir, "significant_results.tsv"))
 
 # --- Human, genera ---
 
@@ -235,11 +266,14 @@ human.genus.df <- human.genus.df.feats.in.rows %>%
   arrange(sample_id) %>% 
   column_to_rownames("sample_id")
 
+# define output directory
+out.dir <- "../results/maaslin2_human_genus"
+
 # run MaAsLin2
 maaslin.res.human.genus <- Maaslin2(
   input_data = human.genus.df,
   input_metadata = human.meta.df,
-  output = "../results/maaslin2_human_genus",
+  output = out.dir,
   fixed_effects = c("age"),
   random_effects = c("study_name"),
   cores = 4,
@@ -247,6 +281,11 @@ maaslin.res.human.genus <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
+
+# clean up 
+unlink(file.path(out.dir, "features"), recursive=T)
+unlink(file.path(out.dir, "fits"), recursive=T)
+file.remove(file.path(out.dir, "significant_results.tsv"))
 
 
 # --- Human, pathways ---
@@ -273,11 +312,14 @@ human.pathway.df <- human.pathway.df.feats.in.rows %>%
   arrange(sample_id) %>% 
   column_to_rownames("sample_id")
 
+# define output directory
+out.dir <- "../results/maaslin2_human_pathway"
+
 # run MaAsLin2
 maaslin.res.human.pathway <- Maaslin2(
   input_data = human.pathway.df,
   input_metadata = human.meta.df,
-  output = "../results/maaslin2_human_pathway",
+  output = out.dir,
   fixed_effects = c("age"),
   random_effects = c("study_name"),
   cores = 4,
@@ -285,3 +327,8 @@ maaslin.res.human.pathway <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
+
+# clean up 
+unlink(file.path(out.dir, "features"), recursive=T)
+unlink(file.path(out.dir, "fits"), recursive=T)
+file.remove(file.path(out.dir, "significant_results.tsv"))
