@@ -75,36 +75,12 @@ full.df <- pheno.df %>%
 dim(full.df)
 ```
 
-# Create better pathway names for plotting
-
-Import long pathway names.
+## Import short and long pathway names
 
 ```{r}
-pathway.original.names <- read.table(
-  "../data/pathabundance_tpm_agg_by_stool_ID_n422x2997.txt", 
-  sep="\t", header=T, quote="", row.names=1) %>% rownames()
-```
-
-```{r}
-pathway.names.df <- data.frame(original = pathway.original.names) %>% 
-  
-  # extract the pathway ID (before the colon)
-  mutate(short = str_extract(original, "(.*):")) %>% 
-  mutate(short = str_sub(short, 1, nchar(short)-1)) %>% 
-  
-  # remove punctuation
-  mutate(short.clean = str_replace_all(short, "[:punct:]", "")) %>% 
-  
-  # for some reason, + not included in punct?
-  mutate(short.clean = str_replace_all(short.clean, "\\+", "")) %>%
-  
-  # prefix with X if it starts with a number
-  mutate(short.clean = case_when(
-    str_detect(short.clean, "^[:digit:]") ~ paste0("X", short.clean),
-    TRUE ~ short.clean)) %>% 
-  
-  arrange(short.clean) %>% 
-  relocate(short.clean) 
+pathway.names.df <- read.table(
+  "../data/metadata/pathway_long_and_short_names_n703.txt",
+  sep="\t", header=T, quote="")
 ```
 
 Add additional columns for plotting.
