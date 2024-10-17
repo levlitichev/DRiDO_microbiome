@@ -1,0 +1,618 @@
+Create supplementary tables.
+
+Supplementary Table 3 = genera, Kraken, Model 1
+Supplementary Table 4 = pathways, Model 1
+Supplementary Table 5 = species, Kraken, Model 1
+Supplementary Table 6 = DO AL, genera, MetaPhlAn, MaAsLin2, Model 5
+Supplementary Table 7 = B6, genera, MetaPhlAn, MaAsLin2, Model 6
+Supplementary Table 8 = human, genera, MetaPhlAn, MaAsLin2, Model 7
+Supplementary Table 9 = DO AL, pathways, MaAsLin2, Model 5
+Supplementary Table 10 = B6, pathways, MaAsLin2, Model 6
+Supplementary Table 11 = human, pathways, MaAsLin2, Model 7
+Supplementary Table 12 = genera, Kraken, Model 10 (all random effects)
+Supplementary Table 13 = pathways, Model 10 (all random effects)
+Supplementary Table 14 = associations between genera and phenotypes, Model 11 (longitudinal)
+Supplementary Table 15 = associations between pathways and phenotypes, Model 11 (longitudinal)
+Supplementary Table 16 = mediation results between genera and phenotypes, Models 13 and 14 (longitudinal)
+Supplementary Table 17 = mediation results between pathways and phenotypes, Models 13 and 14 (longitudinal)
+Supplementary Table 18 = associations between genera and phenotypes, Model 12 (cross-sectional)
+Supplementary Table 19 = associations between pathways and phenotypes, Model 12 (cross-sectional)
+
+**Tables 14-19 are exported in `pheno_assoc_and_mediation.Rmd`.**
+
+For fixed effects, we report coefficients, p-values (Wald test), and adjusted p-values (BH). For random effects, we report proportion of variance explained, p-values (LRT), and adjusted p-values (BH).
+
+```{r, warning=F, message=F}
+library(tidyverse)
+```
+
+```{r}
+community.features <- c(
+  "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1",
+  
+  # used in MaAsLin
+  "Shannon", "Simpson", "InvSimpson", "Observed",
+  
+  # inconsistently named
+  "uniq", "Uniqueness")
+```
+
+# Import metadata
+
+## Short and long pathway names
+
+```{r}
+pathway.names.df <- read.table(
+  "../data/metadata/pathway_long_and_short_names_n703.txt",
+  sep="\t", header=T, quote="")
+```
+
+```{r}
+n_distinct(pathway.names.df$original)
+n_distinct(pathway.names.df$short.clean)
+```
+
+`original` is unique, but `short.clean` is not. Let's make the mapping one-to-one. Not sure which original pathway name is best to keep, so will choose randomly.
+
+```{r}
+pathway.names.uniq.df <- pathway.names.df %>% 
+  distinct(short.clean, .keep_all=T)
+```
+
+# Define functions
+
+## Fixed effects
+
+1. Age: rename columns, calculate adjusted p-values.
+2. DR: pivot wider to end up with one feature per row, rename columns, calculate adjusted p-values.
+3. Merge the age and DR dataframes
+4. Indicate which features are community features
+
+```{r}
+process_fixef_df <- function(fixef.df) {
+  
+  # age
+  age.df <- fixef.df %>% 
+    dplyr::filter(fixef == "age.wks.scaled") %>% 
+    dplyr::select(feature, solution, std.error, Pr.chisq..con.) %>% 
+    dplyr::rename(solution.age = solution,
+                  std.error.age = std.error,
+                  pval.age = Pr.chisq..con.) %>% 
+    mutate(padj.age = p.adjust(pval.age, method="BH"))
+  
+  # DR
+  DR.df <- fixef.df %>% 
+    dplyr::filter(fixef == "Diet.5mo.as.AL") %>% 
+    dplyr::filter(fixef.value != "AL") %>% 
+    pivot_wider(id_cols = c(feature, Pr.chisq..con.), 
+                values_from = c(solution, std.error),
+                names_from="fixef.value", names_sep=".") %>% 
+    dplyr::rename(pval.DR = Pr.chisq..con.) %>%
+    relocate(pval.DR, .after = last_col()) %>% 
+    mutate(padj.DR = p.adjust(pval.DR, method="BH"))
+  
+  # combine
+  out.df <- merge(
+    age.df,
+    DR.df,
+    by="feature"
+  )
+  
+  return(out.df)
+  
+}
+```
+
+## Random effects
+
+1. Rename variables to have cleaner names
+2. Export PVE for each random effect
+3. For genetics, we have standard error and a p-value, so we'll add those
+
+```{r}
+process_ranef_df <- function(ranef.df, herit.df) {
+  
+  PVE.df <- ranef.df %>% 
+    
+    # ignore residual
+    dplyr::filter(term != "units!R") %>% 
+    
+    # create cleaner names for certain experimental variables
+    mutate(term.clean = case_match(
+      term,
+      "vm(Mouse, kinship.mat.x2)" ~ "Genetics",
+      "ide(Mouse)" ~ "Mouse",
+      .default = term)) %>% 
+    
+    # pivot
+    pivot_wider(id_cols = feature,
+                names_from = term.clean,
+                values_from = PVE)
+  
+  # prepend column names with "PVE." (except for the first column "feature")
+  colnames(PVE.df)[2:ncol(PVE.df)] <- paste0("PVE.", colnames(PVE.df)[2:ncol(PVE.df)])
+  
+  # create adjusted p-values for heritability
+  herit.df <- herit.df %>% 
+    dplyr::rename(herit.pval = LRT.pval) %>% 
+    mutate(herit.padj = p.adjust(herit.pval, method="BH"))
+  
+  # merge
+  out.df <- merge(herit.df, PVE.df, by="feature") %>% 
+    
+    # "PVE.Genetics" and "herit" columns are redundant
+    dplyr::select(-PVE.Genetics)
+  
+  return(out.df)
+  
+}
+```
+
+# Table 3: Kraken, genera, Model 1
+
+```{r}
+kraken.genus.model1.fixef.df <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+kraken.genus.model1.ranef.df <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/ranef.txt",
+  sep="\t", header=T)
+
+kraken.genus.model1.herit.df <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+```
+
+```{r}
+kraken.genus.model1.fixef.out.df <- process_fixef_df(kraken.genus.model1.fixef.df)
+kraken.genus.model1.ranef.out.df <- process_ranef_df(kraken.genus.model1.ranef.df, kraken.genus.model1.herit.df)
+
+tmp.kraken.genus.model1.out.df <- merge(
+  kraken.genus.model1.fixef.out.df,
+  kraken.genus.model1.ranef.out.df,
+  by="feature")
+
+# more adjustments
+kraken.genus.model1.out.df <- tmp.kraken.genus.model1.out.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # move is.community.feat to second column
+  relocate(is.community.feat, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+
+```  
+
+```{r}
+kraken.genus.model1.out.df %>%
+  write.table("../supp_tables/table3.txt", sep="\t", quote=F, row.names=F)
+```
+
+# Table 4: pathways, Model 1
+
+Pathways.
+
+```{r}
+pathways.model1.fixef.df <- read.table(
+  "../results/asreml_humann_pathways_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+pathways.model1.ranef.df <- read.table(
+  "../results/asreml_humann_pathways_w_time_ranef/ranef.txt",
+  sep="\t", header=T)
+
+pathways.model1.herit.df <- read.table(
+  "../results/asreml_humann_pathways_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+```
+
+```{r}
+pathways.model1.fixef.out.df <- process_fixef_df(pathways.model1.fixef.df)
+pathways.model1.ranef.out.df <- process_ranef_df(pathways.model1.ranef.df, pathways.model1.herit.df)
+
+tmp.pathways.model1.out.df <- merge(
+  pathways.model1.fixef.out.df,
+  pathways.model1.ranef.out.df,
+  by="feature")
+
+# more adjustments
+pathways.model1.out.df <- tmp.pathways.model1.out.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # move is.community.feat to second column
+  relocate(is.community.feat, .after=feature) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename 'original' to 'full.pathway.name' and move to second column
+  dplyr::rename(full.pathway.name = original) %>% 
+  relocate(full.pathway.name, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+
+```
+
+```{r}
+pathways.model1.out.df %>%
+  write.table("../supp_tables/table4.txt", sep="\t", quote=F, row.names=F)
+```
+
+# Table 5: Kraken, species, Model 1
+
+```{r}
+kraken.species.model1.fixef.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+kraken.species.model1.ranef.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/ranef.txt",
+  sep="\t", header=T)
+
+kraken.species.model1.herit.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+```
+
+```{r}
+kraken.species.model1.fixef.out.df <- process_fixef_df(kraken.species.model1.fixef.df)
+kraken.species.model1.ranef.out.df <- process_ranef_df(kraken.species.model1.ranef.df, kraken.species.model1.herit.df)
+
+tmp.kraken.species.model1.out.df <- merge(
+  kraken.species.model1.fixef.out.df,
+  kraken.species.model1.ranef.out.df,
+  by="feature")
+
+# more adjustments
+kraken.species.model1.out.df <- tmp.kraken.species.model1.out.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # move is.community.feat to second column
+  relocate(is.community.feat, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+
+```
+
+```{r}
+kraken.species.model1.out.df %>%
+  write.table("../supp_tables/table5.txt", sep="\t", quote=F, row.names=F)
+```
+
+# MaAsLin2
+
+## Table 6: DO AL, genera, MetaPhlAn, Model 5
+
+```{r}
+DO.AL.genus.maaslin.df <- read.table(
+  "../results/maaslin2_DO_AL_genus/all_results.tsv",
+  sep="\t", header=T)
+
+DO.AL.genus.maaslin.out.df <- DO.AL.genus.maaslin.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # rename columns for consistency
+  dplyr::rename(solution.age = coef,
+                std.error.age = stderr,
+                pval.age = pval,
+                padj.age = qval) %>% 
+  
+  # subset to columns of interest
+  dplyr::select(feature, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+DO.AL.genus.maaslin.out.df %>%
+  write.table("../supp_tables/table6.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Table 7: B6, genera, MetaPhlAn, Model 6
+
+```{r}
+B6.genus.maaslin.df <- read.table(
+  "../results/maaslin2_B6_genus/all_results.tsv",
+  sep="\t", header=T)
+
+B6.genus.maaslin.out.df <- B6.genus.maaslin.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # rename columns for consistency
+  dplyr::rename(solution.age = coef,
+                std.error.age = stderr,
+                pval.age = pval,
+                padj.age = qval) %>% 
+  
+  # subset to columns of interest
+  dplyr::select(feature, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+B6.genus.maaslin.out.df %>%
+  write.table("../supp_tables/table7.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Table 8: Human, MetaPhlAn, Model 7
+
+```{r}
+human.genus.maaslin.df <- read.table(
+  "../results/maaslin2_human_genus/all_results.tsv",
+  sep="\t", header=T)
+
+human.genus.maaslin.out.df <- human.genus.maaslin.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # rename columns for consistency
+  dplyr::rename(solution.age = coef,
+                std.error.age = stderr,
+                pval.age = pval,
+                padj.age = qval) %>% 
+  
+  # subset to columns of interest
+  dplyr::select(feature, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+human.genus.maaslin.out.df %>%
+  write.table("../supp_tables/table8.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Table 9: DO AL, pathways, Model 5
+
+```{r}
+DO.AL.pathway.maaslin.df <- read.table(
+  "../results/maaslin2_DO_AL_pathway/all_results.tsv",
+  sep="\t", header=T)
+
+DO.AL.pathway.maaslin.out.df <- DO.AL.pathway.maaslin.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename columns for consistency
+  dplyr::rename(solution.age = coef,
+                std.error.age = stderr,
+                pval.age = pval,
+                padj.age = qval,
+                full.pathway.name = original) %>% 
+  
+  # subset to columns of interest
+  dplyr::select(feature, full.pathway.name, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+DO.AL.pathway.maaslin.out.df %>%
+  write.table("../supp_tables/table9.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Table 10: DO AL, pathways, Model 5
+
+```{r}
+B6.pathway.maaslin.df <- read.table(
+  "../results/maaslin2_B6_pathway/all_results.tsv",
+  sep="\t", header=T)
+
+B6.pathway.maaslin.out.df <- B6.pathway.maaslin.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename columns for consistency
+  dplyr::rename(solution.age = coef,
+                std.error.age = stderr,
+                pval.age = pval,
+                padj.age = qval,
+                full.pathway.name = original) %>% 
+  
+  # subset to columns of interest
+  dplyr::select(feature, full.pathway.name, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+B6.pathway.maaslin.out.df %>%
+  write.table("../supp_tables/table10.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Table 11: Human, pathways, Model 5
+
+```{r}
+human.pathway.maaslin.df <- read.table(
+  "../results/maaslin2_human_pathway/all_results.tsv",
+  sep="\t", header=T)
+
+human.pathway.maaslin.out.df <- human.pathway.maaslin.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename columns for consistency
+  dplyr::rename(solution.age = coef,
+                std.error.age = stderr,
+                pval.age = pval,
+                padj.age = qval,
+                full.pathway.name = original) %>% 
+  
+  # subset to columns of interest
+  dplyr::select(feature, full.pathway.name, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+human.pathway.maaslin.out.df %>%
+  write.table("../supp_tables/table11.txt", sep="\t", quote=F, row.names=F)
+```
+
+# Table 12: Kraken, genera, Model 10 (all random effects)
+
+```{r}
+kraken.genus.model10.ranef.df <- read.table(
+  "../results/asreml_kraken_genus_all_ranef_w_time/ranef.txt",
+  sep="\t", header=T)
+
+
+kraken.genus.model10.ranef.out.df <- kraken.genus.model10.ranef.df %>% 
+
+  # rename p-value column
+  dplyr::rename(pval = LRT.pval) %>% 
+    
+  # create adjusted p-values, separately within each experimental variable
+  group_by(term.clean) %>% 
+  mutate(padj = p.adjust(pval, method="BH")) %>% 
+  ungroup() %>% 
+
+  # pivot wider
+  pivot_wider(id_cols = feature, names_from = term.clean, 
+              values_from = c(PVE, pval, padj), names_sep = ".") %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>%
+  
+  # specify order of columns
+  dplyr::select(feature, is.community.feat,
+                PVE.Age, pval.Age, padj.Age,
+                PVE.Diet, pval.Diet, padj.Diet,
+                PVE.Genetics, pval.Genetics, padj.Genetics,
+                PVE.Time, pval.Time, padj.Time,
+                PVE.Cohort, pval.Cohort, padj.Cohort,
+                PVE.Batch, pval.Batch, padj.Batch,
+                PVE.Cage, pval.Cage, padj.Cage,
+                PVE.Mouse, pval.Mouse, padj.Mouse,
+                PVE.Residual, pval.Residual, padj.Residual) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+  
+```
+
+```{r}
+kraken.genus.model10.ranef.out.df %>%
+  write.table("../supp_tables/table12.txt", sep="\t", quote=F, row.names=F)
+```
+
+# Table 13: pathways, Model 10 (all random effects)
+
+```{r}
+pathways.model10.ranef.df <- read.table(
+  "../results/asreml_humann_pathways_all_ranef_w_time/ranef.txt",
+  sep="\t", header=T)
+
+pathways.model10.ranef.out.df <- pathways.model10.ranef.df %>% 
+
+  # rename p-value column
+  dplyr::rename(pval = LRT.pval) %>% 
+    
+  # create adjusted p-values, separately within each experimental variable
+  group_by(term.clean) %>% 
+  mutate(padj = p.adjust(pval, method="BH")) %>% 
+  ungroup() %>% 
+
+  # pivot wider
+  pivot_wider(id_cols = feature, names_from = term.clean, 
+              values_from = c(PVE, pval, padj), names_sep = ".") %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>%
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename 'original' to 'full.pathway.name'n
+  dplyr::rename(full.pathway.name = original) %>% 
+  
+  # specify order of columns
+  dplyr::select(feature, full.pathway.name, is.community.feat,
+                PVE.Age, pval.Age, padj.Age,
+                PVE.Diet, pval.Diet, padj.Diet,
+                PVE.Genetics, pval.Genetics, padj.Genetics,
+                PVE.Time, pval.Time, padj.Time,
+                PVE.Cohort, pval.Cohort, padj.Cohort,
+                PVE.Batch, pval.Batch, padj.Batch,
+                PVE.Cage, pval.Cage, padj.Cage,
+                PVE.Mouse, pval.Mouse, padj.Mouse,
+                PVE.Residual, pval.Residual, padj.Residual) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+```
+
+```{r}
+pathways.model10.ranef.out.df %>%
+  write.table("../supp_tables/table13.txt", sep="\t", quote=F, row.names=F)
+```
