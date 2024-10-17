@@ -1066,6 +1066,16 @@ dim(B6.pathway.all.feats.wide.out.df)
 dim(human.pathway.all.feats.wide.out.df)
 ```
 
+## Long and short pathway names
+
+```{r}
+pathway.names.df %>%
+  dplyr::select(original, short, short.clean) %>%
+  write.table(sprintf(
+    "../data/metadata/pathway_long_and_short_names_n%i.txt", nrow(pathway.names.df)),
+    sep="\t", row.names=F, quote=F)
+```
+
 ## DO
 
 ```{r}
