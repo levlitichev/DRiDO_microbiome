@@ -180,9 +180,9 @@ fxn.pheno.res.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_pval_histogram_tax.pdf", width=2, height=2)
-# tax.mb.pheno.assoc.pval.hist
-# dev.off()
+pdf("../plots/mb_pheno_assoc_pval_histogram_tax.pdf", width=2, height=2)
+tax.mb.pheno.assoc.pval.hist
+dev.off()
 ```
 
 ```{r}
@@ -198,9 +198,9 @@ fxn.pheno.res.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_pval_histogram_fxn.pdf", width=2, height=2)
-# fxn.mb.pheno.assoc.pval.hist
-# dev.off()
+pdf("../plots/mb_pheno_assoc_pval_histogram_fxn.pdf", width=2, height=2)
+fxn.mb.pheno.assoc.pval.hist
+dev.off()
 ```
 
 * Both functional and taxonomic features have very nice-looking p-value distributions
@@ -335,11 +335,6 @@ fxn.assoc.mediation.merged.df %>%
 
 * For 40% CR, 1.3% of taxonomic and 0.8% of functional associations are hits
 
-```{r}
-tax.assoc.mediation.merged.df
-fxn.assoc.mediation.merged.df
-```
-
 # Export supplementary tables
 
 Little ugly, but we'll separate the merged tables into the association and mediation results again.
@@ -368,7 +363,7 @@ tax.pheno.assoc.out.df <- tax.assoc.mediation.merged.df %>%
 
 ```{r}
 tax.pheno.assoc.out.df %>%
-  write.table("../supp_tables/table14.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table15.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Functional assocations
@@ -404,13 +399,11 @@ fxn.pheno.assoc.out.df <- fxn.assoc.mediation.merged.df %>%
 ```
 
 ```{r}
-fxn.pheno.res.out.df %>%
-  write.table("../supp_tables/table15.txt", sep="\t", quote=F, row.names=F)
+fxn.pheno.assoc.out.df %>%
+  write.table("../supp_tables/table16.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Taxonomic mediation
-
-pheno feature (full.pathway.name) diet ACME_est ACME_p ACME_padj ADE_est ADE_p ADE_padj prop.med
 
 ```{r}
 tax.pheno.mediation.out.df <- tax.assoc.mediation.merged.df %>% 
@@ -428,7 +421,7 @@ tax.pheno.mediation.out.df <- tax.assoc.mediation.merged.df %>%
 
 ```{r}
 tax.pheno.mediation.out.df %>%
-  write.table("../supp_tables/table16.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table17.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Functional mediation
@@ -457,7 +450,7 @@ fxn.pheno.mediation.out.df <- fxn.assoc.mediation.merged.df %>%
 
 ```{r}
 fxn.pheno.mediation.out.df %>%
-  write.table("../supp_tables/table17.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table18.txt", sep="\t", quote=F, row.names=F)
 ```
 
 # Proportion mediated
@@ -525,9 +518,9 @@ assoc.v.mediation.tax.feats.barplot <- num.sig.tax.assoc.p +
 ```
 
 ```{r}
-# pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
-# assoc.v.mediation.tax.feats.barplot
-# dev.off()
+pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
+assoc.v.mediation.tax.feats.barplot
+dev.off()
 ```
 
 ## Functional
@@ -567,9 +560,9 @@ assoc.v.mediation.fxn.feats.barplot <- num.sig.fxn.assoc.p +
 ```
 
 ```{r}
-# pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
-# assoc.v.mediation.fxn.feats.barplot
-# dev.off()
+pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
+assoc.v.mediation.fxn.feats.barplot
+dev.off()
 ```
 
 # Domains with the most associations
@@ -610,9 +603,9 @@ frac.hits.per.domain.df <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_frac_hits_per_domain_barplot.pdf", height=2, width=3)
-# frac.hits.per.domain.p
-# dev.off()
+pdf("../plots/mb_pheno_assoc_frac_hits_per_domain_barplot.pdf", height=2, width=3)
+frac.hits.per.domain.p
+dev.off()
 ```
 
 # Heatmaps
@@ -654,9 +647,9 @@ bw.tax.feats <- c(
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_bw_select_tax_feats_heatmap.pdf", height=2, width=4)
-# tax.bw.assoc.heatmap
-# dev.off()
+pdf("../plots/mb_pheno_assoc_bw_select_tax_feats_heatmap.pdf", height=2, width=4)
+tax.bw.assoc.heatmap
+dev.off()
 ```
 
 ## Significant by both association and mediation (40% CR)
@@ -738,9 +731,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
-# tax.and.fxn.heatmap.tall
-# dev.off()
+pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
+tax.and.fxn.heatmap.tall
+dev.off()
 ```
 
 # Examples
@@ -760,9 +753,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/paramuribaculum_v_percfat_split_by_diet.pdf", height=1, width=4)
-# paramuribaculum.v.percfat.split.by.diet.p
-# dev.off()
+pdf("../plots/paramuribaculum_v_percfat_split_by_diet.pdf", height=1, width=4)
+paramuribaculum.v.percfat.split.by.diet.p
+dev.off()
 ```
 
 ## Akkermansia versus energy expenditure
@@ -780,9 +773,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/akkermansia_v_EE.pdf", height=1.25, width=3.5)
-# akkermansia.v.MetCageEE.p
-# dev.off()
+pdf("../plots/akkermansia_v_EE.pdf", height=1.25, width=3.5)
+akkermansia.v.MetCageEE.p
+dev.off()
 ```
 
 ## Methionine pathway versus VCO2
@@ -800,9 +793,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/PWY7977_v_MetCageVCO2.pdf", height=1.25, width=3.5)
-# PWY7977.v.MetCageVCO2.p
-# dev.off()
+pdf("../plots/PWY7977_v_MetCageVCO2.pdf", height=1.25, width=3.5)
+PWY7977.v.MetCageVCO2.p
+dev.off()
 ```
 
 # Cross-sectional microbiome-phenotype associations
@@ -910,7 +903,7 @@ tax.pheno.assoc.xs.out.df <- tax.pheno.res.xs.df %>%
 
 ```{r}
 tax.pheno.assoc.xs.out.df %>% 
-  write.table("../supp_tables/table18.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table19.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ### Functional
@@ -942,7 +935,7 @@ fxn.pheno.assoc.xs.out.df <- fxn.pheno.res.xs.df %>%
 
 ```{r}
 fxn.pheno.assoc.xs.out.df %>% 
-  write.table("../supp_tables/table19.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table20.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Domains with the most associations
@@ -978,7 +971,7 @@ fxn.pheno.assoc.xs.out.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
-# frac.xs.hits.per.domain.barplots
-# dev.off()
+pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
+frac.xs.hits.per.domain.barplots
+dev.off()
 ```
