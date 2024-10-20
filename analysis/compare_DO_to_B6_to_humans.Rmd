@@ -167,9 +167,9 @@ perc.feats.assoc.w.age.df <- data.frame(c(
 ```
 
 ```{r}
-# pdf("../plots/perc_feats_associated_w_age_DO_v_B6_v_humans.pdf", width=1.5, height=3)
-# perc.feats.assoc.w.age.p
-# dev.off()
+pdf("../plots/perc_feats_associated_w_age_DO_v_B6_v_humans.pdf", width=1.5, height=3)
+perc.feats.assoc.w.age.p
+dev.off()
 ```
 
 # Universal age-associated features
@@ -344,9 +344,9 @@ genus.feats.to.label <- c(
 ```
 
 ```{r}
-# pdf("../plots/DO_AL_v_B6_mpa_genus_age_coefficients.pdf", height=2, width=2)
-# DO.AL.v.B6.genus.maaslin.p
-# dev.off()
+pdf("../plots/DO_AL_v_B6_mpa_genus_age_coefficients.pdf", height=2, width=2)
+DO.AL.v.B6.genus.maaslin.p
+dev.off()
 ```
 
 #### DO AL v. human
@@ -375,9 +375,9 @@ genus.feats.to.label <- c(
 ```
 
 ```{r}
-# pdf("../plots/DO_AL_v_human_mpa_genus_age_coefficients.pdf", height=2, width=2)
-# DO.AL.v.human.genus.maaslin.p
-# dev.off()
+pdf("../plots/DO_AL_v_human_mpa_genus_age_coefficients.pdf", height=2, width=2)
+DO.AL.v.human.genus.maaslin.p
+dev.off()
 ```
 
 #### B6 v. human
@@ -406,9 +406,9 @@ genus.feats.to.label <- c(
 ```
 
 ```{r}
-# pdf("../plots/B6_v_human_mpa_genus_age_coefficients.pdf", height=2, width=2)
-# B6.v.human.genus.maaslin.p
-# dev.off()
+pdf("../plots/B6_v_human_mpa_genus_age_coefficients.pdf", height=2, width=2)
+B6.v.human.genus.maaslin.p
+dev.off()
 ```
 
 ## Pathways
@@ -578,9 +578,9 @@ pathway.feats.to.label.df <- data.frame(label = c(
 ```
 
 ```{r}
-# pdf("../plots/DO_AL_v_B6_humann_pathway_age_coefficients.pdf", height=2, width=2)
-# DO.AL.v.B6.pathway.maaslin.p
-# dev.off()
+pdf("../plots/DO_AL_v_B6_humann_pathway_age_coefficients.pdf", height=2, width=2)
+DO.AL.v.B6.pathway.maaslin.p
+dev.off()
 ```
 
 #### DO AL v. human
@@ -640,9 +640,9 @@ pathway.feats.to.label.df <- data.frame(label = c(
 ```
 
 ```{r}
-# pdf("../plots/B6_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
-# B6.v.human.pathway.maaslin.p
-# dev.off()
+pdf("../plots/B6_v_human_humann_pathway_age_coefficients.pdf", height=2, width=2)
+B6.v.human.pathway.maaslin.p
+dev.off()
 ```
 
 # Uniqueness
@@ -700,9 +700,9 @@ uniq.df <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/DO_AL_B6_human_mpa_genus_uniq_v_age_faceted.pdf", height=1.75, width=4)
-# DO.AL.B6.human.uniq.v.age.faceted.p
-# dev.off()
+pdf("../plots/DO_AL_B6_human_mpa_genus_uniq_v_age_faceted.pdf", height=2, width=4)
+DO.AL.B6.human.uniq.v.age.faceted.p
+dev.off()
 ```
 
 ## Separately per human study
@@ -750,9 +750,9 @@ n.per.human.study.df <- human.uniq.df %>%
 ```
 
 ```{r}
-# pdf("../plots/uniq_age_coef_per_human_study.pdf", height=3, width=2.5)
-# uniq.coef.per.human.study.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/uniq_age_coef_per_human_study.pdf", height=3, width=2.5)
+uniq.coef.per.human.study.p + theme(legend.position="none")
+dev.off()
 ```
 
 
@@ -864,9 +864,9 @@ n.per.human.study.df <- human.genus.alpha.div.long.df %>%
 ```
 
 ```{r}
-# pdf("../plots/alpha_div_age_coef_per_human_study.pdf", height=3, width=5)
-# alpha.div.coef.per.human.study.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/alpha_div_age_coef_per_human_study.pdf", height=3, width=5)
+alpha.div.coef.per.human.study.p + theme(legend.position="none")
+dev.off()
 ```
 
 # Examples
@@ -934,9 +934,9 @@ this.pathway.feat.search.string <- "RIBOSYN2PWY"
 ```
 
 ```{r}
-# pdf("../plots/DO_AL_B6_human_flavin_biosynth_v_age_faceted.pdf", height=1.75, width=4)
-# flavin.biosynth.v.age.faceted.p
-# dev.off()
+pdf("../plots/DO_AL_B6_human_flavin_biosynth_v_age_faceted.pdf", height=2, width=4)
+flavin.biosynth.v.age.faceted.p
+dev.off()
 ```
 
 ## Genera
