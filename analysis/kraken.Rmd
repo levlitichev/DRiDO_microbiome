@@ -5,6 +5,7 @@ title: "Analysis of taxonomic results based on Kraken"
 **2024-10-19 updates:**
 - Time is a random effect instead of fixed effect
 - Plotting individual genera against age using mean ± SEM, instead of boxplots
+- Added comparison of number of significant features for genus versus species
 
 # Load libraries
 
@@ -113,6 +114,20 @@ Model: y_mb ~ age (r) + diet (r) + time (r) + [genetics] (r) + mouse (r) + batch
 ```{r}
 ranef.df.all.ranef.model <- read.table(
   "../results/asreml_kraken_genus_all_ranef_w_time/ranef.txt",
+  sep="\t", header=T)
+```
+
+## Species
+
+Model: y_mb ~ age (f) + diet (f) + time(r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+
+```{r}
+species.fixef.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+species.herit.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
@@ -1173,6 +1188,109 @@ ranef.df.all.ranef.model <- ranef.df.all.ranef.model %>%
 ```{r}
 pdf("../plots/PVE_all_ranef_genera.pdf", height=2, width=2)
 genus.all.ranef.PVE.p
+dev.off()
+```
+
+# Genus v. species LMM results
+
+Extract species-level results and adjust p-values.
+
+```{r}
+# age
+species.age.df <- species.fixef.df %>% 
+  dplyr::filter(fixef == "age.wks.scaled")
+species.age.df <- species.age.df %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+# DR
+species.DR.df <- species.fixef.df %>% 
+  dplyr::filter(fixef == "Diet.5mo.as.AL") %>% 
+  dplyr::filter(fixef.value != "AL") # the AL row doesn't add anything
+species.DR.padj.df <- species.DR.df %>% 
+  dplyr::filter(fixef.value == "40") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH) %>% 
+  dplyr::select(feature, padj, is.sig)
+species.DR.df <- species.DR.df %>% 
+  merge(species.DR.padj.df, by="feature")
+
+# heritability
+species.herit.df <- species.herit.df %>% 
+  mutate(padj = p.adjust(LRT.pval, method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+```
+
+Calculate proportion of significant features.
+
+```{r}
+(frac.sig.df <- data.frame(
+  effect = c("Age", "Age", "DR", "DR", "Genetics", "Genetics"),
+  g.or.s = c("genus", "species", "genus", "species", "genus", "species"),
+  n.sig = c(
+    age.df %>% dplyr::filter(is.sig) %>% nrow,
+    species.age.df %>% dplyr::filter(is.sig) %>% nrow,
+    DR.df %>% dplyr::filter(fixef.value == "40") %>% dplyr::filter(is.sig) %>% nrow,
+    species.DR.padj.df %>% dplyr::filter(is.sig) %>% nrow,
+    herit.df %>% dplyr::filter(is.sig) %>% nrow,
+    species.herit.df %>% dplyr::filter(is.sig) %>% nrow
+  )
+) %>% 
+  mutate(n.feats = case_match(
+    g.or.s,
+    "genus" ~ nrow(age.df),
+    "species" ~ nrow(species.age.df))) %>% 
+  mutate(frac.sig = n.sig / n.feats))
+```
+
+```{r}
+(age.frac.sig.p <- frac.sig.df %>% 
+   dplyr::filter(effect == "Age") %>% 
+   ggplot(aes(x=g.or.s, y=frac.sig)) +
+   geom_col(fill=age.color) +
+   labs(x=NULL, y="Fraction of features with padj < 0.01") +
+   ylim(0, 1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)))
+```
+
+```{r}
+pdf("../plots/age_fraction_sig_feats_genus_v_species.pdf", height=1.8, width=1.4)
+age.frac.sig.p
+dev.off()
+```
+
+```{r}
+(DR.frac.sig.p <- frac.sig.df %>% 
+   dplyr::filter(effect == "DR") %>% 
+   ggplot(aes(x=g.or.s, y=frac.sig)) +
+   geom_col(fill=diet.color) +
+   labs(x=NULL, y="Fraction of features with padj < 0.01") +
+   ylim(0, 1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)))
+```
+
+```{r}
+pdf("../plots/DR_fraction_sig_feats_genus_v_species.pdf", height=1.8, width=1.4)
+DR.frac.sig.p
+dev.off()
+```
+
+```{r}
+(genetics.frac.sig.p <- frac.sig.df %>% 
+   dplyr::filter(effect == "Genetics") %>% 
+   ggplot(aes(x=g.or.s, y=frac.sig)) +
+   geom_col(fill=genetics.color) +
+   labs(x=NULL, y="Fraction of features with padj < 0.01") +
+   ylim(0, 1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)))
+```
+
+```{r}
+pdf("../plots/genetics_fraction_sig_feats_genus_v_species.pdf", height=1.8, width=1.4)
+genetics.frac.sig.p
 dev.off()
 ```
 
