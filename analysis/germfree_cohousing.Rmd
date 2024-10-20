@@ -138,11 +138,8 @@ Add lines between centroids for Y to CY and for O to CO.
 (germfree.cohousing.pcoa.p <- pcoa.genus.df %>% 
    ggplot(aes(x=Axis.1, y=Axis.2, color=current.group)) +
    geom_point(shape=16, alpha=0.3) +
-   # geom_segment(aes(xend=Axis.1.end, yend=Axis.2.end, color=NA), 
-   #              color="black", arrow=arrow(),
-   #              data=pcoa.lines.bw.centroids.df) +
    geom_point(data=pcoa.centroids.df, size=5, shape="+") +
-   facet_wrap(~timepoint.short, nrow=1) +
+   facet_wrap(~timepoint.short, ncol=1) +
    theme_classic(base_size=8) +
    labs(x=sprintf("PCoA1 (%.1f%%)", 100*pcoa.res$values$Relative_eig[1]), 
         y=sprintf("PCoA2 (%.1f%%)", 100*pcoa.res$values$Relative_eig[2]),
@@ -151,8 +148,8 @@ Add lines between centroids for Y to CY and for O to CO.
 ```
 
 ```{r}
-# pdf("../plots/germfree_cohousing_pcoa.pdf", width=4.5, height=2)
-# germfree.cohousing.pcoa.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/germfree_cohousing_pcoa.pdf", width=2, height=4.5)
+germfree.cohousing.pcoa.p + theme(legend.position="none")
+dev.off()
 ```
 
