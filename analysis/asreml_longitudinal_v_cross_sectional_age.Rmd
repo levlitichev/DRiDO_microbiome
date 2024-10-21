@@ -86,6 +86,15 @@ herit.df <- herit.df %>%
   mutate(is.sig = LRT.padj < PADJ.THRESH)
 ```
 
+```{r}
+herit.df %>% 
+  group_by(age) %>% 
+  dplyr::count(is.sig) %>% 
+  arrange(desc(is.sig))
+```
+
+These numbers are just genera, no community features.
+
 # p-value histograms
 
 Indicate # samples and # mice at each timepoint (added these numbers manually).
