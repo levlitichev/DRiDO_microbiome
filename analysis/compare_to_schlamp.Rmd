@@ -15,7 +15,7 @@ library(ggrepel)
 
 ```{r}
 herit.df <- read.table(
-  "../results/asreml_kraken_genus/herit.txt", sep="\t", header=T)
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt", sep="\t", header=T)
 ```
 
 Adjust p-values.
@@ -95,14 +95,14 @@ merged.df <- merged.df %>%
   # geom_linerange(aes(ymin=h2.schlamp-se.schlamp, ymax=h2.schlamp+se.schlamp)) +
   geom_abline(lty=2) +
   geom_text_repel(size=0.36*6) +
-  scale_color_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
-  labs(x="h2, DRiDO", y="h2, Schlamp") +
+  scale_color_manual(values=c(`TRUE`="gold", `FALSE`="gray80")) +
+  labs(x="Heritability, this study", y="Heritability, Schlamp21") +
   theme_classic(base_size=8) +
   theme(legend.position="none"))
 ```
 
 ```{r}
-pdf("../plots/heritability_comparison_w_schlamp.pdf", height=2, width=2)
+pdf("../plots/heritability_comparison_w_schlamp.pdf", height=2.5, width=2.5)
 schlamp.h2.comparison.p
 dev.off()
 ```
