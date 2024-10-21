@@ -3,6 +3,7 @@ We will run PERMANOVA on the full dataset to determine if age and diet have a si
 ```{r, warning=F, message=F}
 library(tidyverse)
 library(phyloseq)
+library(foreach) # %do%
 library(vegan) # adonis2
 library(parallel) # to speed up PERMANOVA
 ```
@@ -107,6 +108,10 @@ permanova.res <- adonis2(
   data=this.meta.df, 
   permutations=999, 
   parallel=4)
+```
+
+```{r}
+permanova.res
 ```
 
 ## All samples
