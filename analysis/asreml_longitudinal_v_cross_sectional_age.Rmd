@@ -2,21 +2,47 @@ LMM separately per age versus longitudinally.
 
 ```{r, warning=F, message=F}
 library(tidyverse)
+
+PADJ.THRESH <- 0.01 
 ```
 
 # Import cross-sectional LMM results
 
 ```{r}
-herit.df.cross <- read.table(
-  "../results/asreml_kraken_genus_per_age/herit.txt",
-  sep="\t", header=T)
+herit.df.5mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_5mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 5)
+herit.df.10mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_10mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 10)
+herit.df.16mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_16mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 16)
+herit.df.22mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_5mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 22)
+herit.df.28mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_28mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 28)
+
+herit.df.xs <- rbind(
+  herit.df.5mo,
+  herit.df.10mo,
+  herit.df.16mo,
+  herit.df.22mo,
+  herit.df.28mo)
 ```
 
 # Import longitudinal LMM results
 
 ```{r}
 herit.df.longitud <- read.table(
-  "../results/asreml_kraken_genus/herit.txt",
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
@@ -24,7 +50,7 @@ herit.df.longitud <- read.table(
 
 ```{r}
 herit.df.longitud.downsamp <- read.table(
-  "../results/asreml_kraken_genus_downsampled/herit.txt",
+  "../results/asreml_kraken_genus_downsampled_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
@@ -33,8 +59,7 @@ herit.df.longitud.downsamp <- read.table(
 ```{r}
 herit.df <- rbind(
   
-  herit.df.cross %>%
-    separate(col=age.and.feature, into=c("age", "feature"), sep="_") %>% 
+  herit.df.xs %>%
     dplyr::select(feature, herit, LRT.pval, age),
   
   herit.df.longitud %>% 
@@ -58,7 +83,7 @@ herit.df <- herit.df %>%
   group_by(age) %>% 
   mutate(LRT.padj = p.adjust(LRT.pval, method="BH")) %>% 
   ungroup() %>% 
-  mutate(is.sig = LRT.padj < 0.01)
+  mutate(is.sig = LRT.padj < PADJ.THRESH)
 ```
 
 # p-value histograms
@@ -68,18 +93,18 @@ Indicate # samples and # mice at each timepoint (added these numbers manually).
 ```{r}
 n.per.age.df <- data.frame(
   n.samples = c(
-    M5 = 563, M10 = 509, M16 = 641, M22 = 519, M28 = 367,
+    `5` = 563, `10` = 509, `16` = 641, `22` = 519, `28` = 367,
     longitudinal = 2974, longitudinal_downsampled = 516),
   
   n.mice = c(
-    M5 = 563, M10 = 509, M16 = 641, M22 = 519, M28 = 367,
+    `5` = 563, `10` = 509, `16` = 641, `22` = 519, `28` = 367,
     longitudinal = 904, longitudinal_downsampled = 110))
 ```
 
 ```{r}
 (longitud.v.cross.sectional.herit.pval.hists <- herit.df %>% 
    merge(n.per.age.df, by.x="age", by.y="row.names") %>% 
-   mutate(age = factor(age, levels=c("M5", "M10", "M16", "M22", "M28", "longitudinal", "longitudinal_downsampled"))) %>% 
+   mutate(age = factor(age, levels=c("5", "10", "16", "22", "28", "longitudinal", "longitudinal_downsampled"))) %>% 
    mutate(is.sig = factor(is.sig, levels=c(T, F))) %>% 
    ggplot(aes(LRT.pval, fill=is.sig)) +
    geom_histogram(bins=20) +
@@ -94,11 +119,10 @@ n.per.age.df <- data.frame(
 ```
 
 ```{r}
-pdf("../plots/longitudinal_v_cross_sectional_heritability_genera_pval_histograms.pdf", height=2, width=6)
+pdf("../plots/longitudinal_v_cross_sectional_heritability_genera_pval_histograms.pdf", height=2, width=7)
 longitud.v.cross.sectional.herit.pval.hists
 dev.off()
 ```
-
 
 # % significantly heritable
 
