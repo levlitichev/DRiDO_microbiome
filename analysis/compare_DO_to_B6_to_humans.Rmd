@@ -140,7 +140,7 @@ human.pathway.maaslin.df <- read.table(
 # Proportion of age-associated taxa per dataset
 
 ```{r}
-perc.feats.assoc.w.age.df <- data.frame(c(
+(perc.feats.assoc.w.age.df <- data.frame(frac = c(
   `DO AL_genus` = prop.table(table(DO.AL.genus.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
   B6_genus = prop.table(table(B6.genus.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
   Human_genus = prop.table(table(human.genus.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
@@ -148,11 +148,10 @@ perc.feats.assoc.w.age.df <- data.frame(c(
   B6_pathway = prop.table(table(B6.pathway.maaslin.df$qval < PADJ.THRESH))[["TRUE"]],
   Human_pathway = prop.table(table(human.pathway.maaslin.df$qval < PADJ.THRESH))[["TRUE"]]
 )) %>%
-  setNames("frac") %>%
   mutate(perc = frac*100) %>%
   rownames_to_column("study_tax.or.fxn") %>%
   separate(study_tax.or.fxn, into=c("study", "tax.or.fxn"), sep="_") %>%
-  mutate(study = factor(study, levels=c("DO AL", "B6", "Human")))
+  mutate(study = factor(study, levels=c("DO AL", "B6", "Human"))))
 ```
 
 ```{r}

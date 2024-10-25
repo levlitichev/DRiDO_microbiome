@@ -50,7 +50,7 @@ asreml.v.lme4qtl.herit.df <- merge(
 ```
 
 ```{r}
-pdf("../plots/lme4qtl_v_asreml_genus_heritability_w_time_ranef.pdf", height=2, width=2)
+pdf("../plots/lme4qtl_v_asreml_genus_heritability_w_time_ranef.pdf", height=2.5, width=2.5)
 asreml.v.lme4qtl.herit.p
 dev.off()
 ```
