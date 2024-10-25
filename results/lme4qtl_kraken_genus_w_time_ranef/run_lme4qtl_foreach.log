@@ -1,0 +1,463 @@
+starting worker pid=61974 on localhost:11819 at 18:27:08.391
+starting worker pid=61973 on localhost:11819 at 18:27:08.395
+starting worker pid=61977 on localhost:11819 at 18:27:08.396
+starting worker pid=61972 on localhost:11819 at 18:27:08.397
+starting worker pid=61976 on localhost:11819 at 18:27:08.397
+starting worker pid=61975 on localhost:11819 at 18:27:08.401
+── Attaching core tidyverse packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Attaching core tidyverse packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+── Attaching core tidyverse packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+── Attaching core tidyverse packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+── Attaching core tidyverse packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+COE1 
+Duncaniella 
+LachnospiraceaeNOV 
+CAG873 
+OscillospiraceaeNOV Acetatifactor
+ 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/LachnospiraceaeNOV.txt
+Paramuribaculum 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG873.txt
+CAG485 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/OscillospiraceaeNOV.txt
+Ligilactobacillus 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/COE1.txt
+X142 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Duncaniella.txt
+Alistipes 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Acetatifactor.txt
+UBA3282 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Paramuribaculum.txt
+Muribaculum 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG485.txt
+TF0111 
+Writing output to ../results/lme4qtl_kraken_genus/X142.txt
+Dorea 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/UBA3282.txt
+CAG95 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Alistipes.txt
+Oscillibacter 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Ligilactobacillus.txt
+Lactobacillus 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Muribaculum.txt
+UBA9475 
+Writing output to ../results/lme4qtl_kraken_genus/CAG95.txt
+Lawsonibacter 
+Writing output to ../results/lme4qtl_kraken_genus/Dorea.txt
+EubacteriumJ 
+Writing output to ../results/lme4qtl_kraken_genus/TF0111.txt
+UBA7182 
+Writing output to ../results/lme4qtl_kraken_genus/Oscillibacter.txt
+UBA7173 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Lactobacillus.txt
+X1XD4269 
+Writing output to ../results/lme4qtl_kraken_genus/EubacteriumJ.txt
+Limosilactobacillus 
+Writing output to ../results/lme4qtl_kraken_genus/UBA9475.txt
+Kineothrix 
+Writing output to ../results/lme4qtl_kraken_genus/Lawsonibacter.txt
+UMGS268 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/UBA7182.txt
+Akkermansia 
+Writing output to ../results/lme4qtl_kraken_genus/UBA7173.txt
+UBA11940 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Limosilactobacillus.txt
+UBA3700NOV 
+Writing output to ../results/lme4qtl_kraken_genus/X1XD4269.txt
+EubacteriumF 
+Writing output to ../results/lme4qtl_kraken_genus/Kineothrix.txt
+HungatellaA 
+Writing output to ../results/lme4qtl_kraken_genus/Akkermansia.txt
+MuribaculaceaeNOV 
+Writing output to ../results/lme4qtl_kraken_genus/UBA11940.txt
+Adlercreutzia 
+Writing output to ../results/lme4qtl_kraken_genus/UMGS268.txt
+Bifidobacterium 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/UBA3700NOV.txt
+Schaedlerella 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/HungatellaA.txt
+UBA9502 
+Writing output to ../results/lme4qtl_kraken_genus/EubacteriumF.txt
+Acutalibacter 
+Writing output to ../results/lme4qtl_kraken_genus/MuribaculaceaeNOV.txt
+CAG552NOV 
+Writing output to ../results/lme4qtl_kraken_genus/Bifidobacterium.txt
+UBA3700 
+Writing output to ../results/lme4qtl_kraken_genus/Adlercreutzia.txt
+Dubosiella 
+Writing output to ../results/lme4qtl_kraken_genus/Schaedlerella.txt
+UMGS1370 
+Writing output to ../results/lme4qtl_kraken_genus/UBA9502.txt
+CAG303 
+Writing output to ../results/lme4qtl_kraken_genus/Acutalibacter.txt
+ButyricicoccaceaeNOV 
+Writing output to ../results/lme4qtl_kraken_genus/CAG552NOV.txt
+UMGS1872 
+Writing output to ../results/lme4qtl_kraken_genus/UMGS1370.txt
+UBA2882 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/UBA3700.txt
+Angelakisella 
+Writing output to ../results/lme4qtl_kraken_genus/Dubosiella.txt
+Desulfovibrio 
+Writing output to ../results/lme4qtl_kraken_genus/CAG303.txt
+ASF356 
+Writing output to ../results/lme4qtl_kraken_genus/UMGS1872.txt
+AM0715 
+Writing output to ../results/lme4qtl_kraken_genus/ButyricicoccaceaeNOV.txt
+CAG582 
+Writing output to ../results/lme4qtl_kraken_genus/Angelakisella.txt
+UBA1394 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Desulfovibrio.txt
+CAG81 
+Writing output to ../results/lme4qtl_kraken_genus/UBA2882.txt
+CAG56 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/AM0715.txt
+Emergencia 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/ASF356.txt
+MarseilleP3106 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG582.txt
+UBA946 
+Writing output to ../results/lme4qtl_kraken_genus/UBA1394.txt
+ClostridiumQ 
+Writing output to ../results/lme4qtl_kraken_genus/CAG81.txt
+X1XD876 
+Writing output to ../results/lme4qtl_kraken_genus/CAG56.txt
+D1663 
+Writing output to ../results/lme4qtl_kraken_genus/Emergencia.txt
+Escherichia 
+Writing output to ../results/lme4qtl_kraken_genus/UBA946.txt
+Anaerotruncus 
+Writing output to ../results/lme4qtl_kraken_genus/MarseilleP3106.txt
+Lachnospira 
+Writing output to ../results/lme4qtl_kraken_genus/ClostridiumQ.txt
+BorkfalkiaceaeNOV 
+Writing output to ../results/lme4qtl_kraken_genus/D1663.txt
+CAG475 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/X1XD876.txt
+Roseburia 
+Writing output to ../results/lme4qtl_kraken_genus/Anaerotruncus.txt
+ErysipelotrichaceaeNOV 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Escherichia.txt
+Flavonifractor 
+Writing output to ../results/lme4qtl_kraken_genus/Lachnospira.txt
+CAG510 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/BorkfalkiaceaeNOV.txt
+Anaerotignum 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG475.txt
+EubacteriumG 
+Writing output to ../results/lme4qtl_kraken_genus/ErysipelotrichaceaeNOV.txt
+Evtepia 
+Writing output to ../results/lme4qtl_kraken_genus/Flavonifractor.txt
+Erysipelatoclostridium 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG510.txt
+UMGS1004 
+Writing output to ../results/lme4qtl_kraken_genus/Roseburia.txt
+RuminiclostridiumE 
+Writing output to ../results/lme4qtl_kraken_genus/EubacteriumG.txt
+Parvibacter 
+Writing output to ../results/lme4qtl_kraken_genus/Anaerotignum.txt
+Turicibacter 
+Writing output to ../results/lme4qtl_kraken_genus/Evtepia.txt
+AF3328 
+Writing output to ../results/lme4qtl_kraken_genus/Erysipelatoclostridium.txt
+ErysipelatoclostridiaceaeNOV 
+Writing output to ../results/lme4qtl_kraken_genus/UMGS1004.txt
+Ileibacterium 
+Writing output to ../results/lme4qtl_kraken_genus/RuminiclostridiumE.txt
+CAG776 
+Writing output to ../results/lme4qtl_kraken_genus/AF3328.txt
+Bacteroides 
+Writing output to ../results/lme4qtl_kraken_genus/Turicibacter.txt
+UMGS1815 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/ErysipelatoclostridiaceaeNOV.txt
+CAG115 
+Writing output to ../results/lme4qtl_kraken_genus/Parvibacter.txt
+UBA11957 
+Writing output to ../results/lme4qtl_kraken_genus/Ileibacterium.txt
+UMGS1217 
+Writing output to ../results/lme4qtl_kraken_genus/CAG776.txt
+AnaerovoracaceaeNOV 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/UMGS1815.txt
+UBA1405 
+Writing output to ../results/lme4qtl_kraken_genus/Bacteroides.txt
+CAG274NOV 
+Writing output to ../results/lme4qtl_kraken_genus/CAG115.txt
+Clostridium 
+Writing output to ../results/lme4qtl_kraken_genus/UBA11957.txt
+UBA7160 
+Writing output to ../results/lme4qtl_kraken_genus/UMGS1217.txt
+CAG273 
+Writing output to ../results/lme4qtl_kraken_genus/AnaerovoracaceaeNOV.txt
+EnterococcusD 
+Writing output to ../results/lme4qtl_kraken_genus/UBA1405.txt
+Mailhella 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG274NOV.txt
+CAG41 
+Writing output to ../results/lme4qtl_kraken_genus/CAG273.txt
+Staphylococcus 
+Writing output to ../results/lme4qtl_kraken_genus/UBA7160.txt
+Romboutsia 
+Writing output to ../results/lme4qtl_kraken_genus/Clostridium.txt
+CAG145 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/EnterococcusD.txt
+UBA3818 
+Writing output to ../results/lme4qtl_kraken_genus/Mailhella.txt
+Prevotella 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Staphylococcus.txt
+Chao1 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/CAG41.txt
+Shannon 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Romboutsia.txt
+Simpson 
+Writing output to ../results/lme4qtl_kraken_genus/CAG145.txt
+PCoA1 
+Writing output to ../results/lme4qtl_kraken_genus/UBA3818.txt
+PCoA2 
+Writing output to ../results/lme4qtl_kraken_genus/Prevotella.txt
+PCoA3 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Chao1.txt
+uniq 
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/Shannon.txt
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/PCoA1.txt
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/PCoA2.txt
+Writing output to ../results/lme4qtl_kraken_genus/Simpson.txt
+Writing output to ../results/lme4qtl_kraken_genus/uniq.txt
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+Writing output to ../results/lme4qtl_kraken_genus/PCoA3.txt
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00233566 (tol = 0.002, component 1)
+2: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00233566 (tol = 0.002, component 1)
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00287485 (tol = 0.002, component 1)
+2: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00287485 (tol = 0.002, component 1)
+3: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00291448 (tol = 0.002, component 1)
+4: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00291448 (tol = 0.002, component 1)
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.0022864 (tol = 0.002, component 1)
+2: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.0022864 (tol = 0.002, component 1)
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00269335 (tol = 0.002, component 1)
+2: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00269335 (tol = 0.002, component 1)
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00346708 (tol = 0.002, component 1)
+2: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00346708 (tol = 0.002, component 1)
+3: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00218837 (tol = 0.002, component 1)
+4: In lme4:::checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
+  Model failed to converge with max|grad| = 0.00218837 (tol = 0.002, component 1)
+Execution halted

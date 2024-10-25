@@ -1,0 +1,42 @@
+2024-10-17 09:45:36.497361 INFO::Writing function arguments to log file
+2024-10-17 09:45:36.498284 DEBUG::Function arguments
+2024-10-17 09:45:36.499619 DEBUG::Output folder: ../results/maaslin2_B6_pathway
+2024-10-17 09:45:36.500168 DEBUG::Min Abundance: 0.000000
+2024-10-17 09:45:36.50147 DEBUG::Min Prevalence: 0.000000
+2024-10-17 09:45:36.502118 DEBUG::Normalization: NONE
+2024-10-17 09:45:36.503875 DEBUG::Transform: NONE
+2024-10-17 09:45:36.504536 DEBUG::Analysis method: LM
+2024-10-17 09:45:36.505777 DEBUG::Max significance: 0.250000
+2024-10-17 09:45:36.506426 DEBUG::Random effects: Cage
+2024-10-17 09:45:36.507841 DEBUG::Fixed effects: Age
+2024-10-17 09:45:36.508631 DEBUG::Correction method: BH
+2024-10-17 09:45:36.510192 DEBUG::Standardize: TRUE
+2024-10-17 09:45:36.510906 DEBUG::Cores: 4
+2024-10-17 09:45:36.512691 INFO::Verifying options selected are valid
+2024-10-17 09:45:36.513619 INFO::Determining format of input files
+2024-10-17 09:45:36.515293 INFO::Input format is data samples as rows and metadata samples as rows
+2024-10-17 09:45:36.516619 DEBUG::A total of 141 samples were found in both the data and metadata
+2024-10-17 09:45:36.51844 DEBUG::Reordering data/metadata to use same sample ordering
+2024-10-17 09:45:36.520332 INFO::Formula for random effects: expr ~ (1 | Cage)
+2024-10-17 09:45:36.522372 INFO::Formula for fixed effects: expr ~  Age
+2024-10-17 09:45:36.523312 INFO::Filter data based on min abundance and min prevalence
+2024-10-17 09:45:36.524981 INFO::Total samples in data: 141
+2024-10-17 09:45:36.525805 INFO::Min samples required with min abundance for a feature not to be filtered: 0.000000
+2024-10-17 09:45:36.529649 INFO::Total filtered features: 0
+2024-10-17 09:45:36.530561 INFO::Filtered feature names from abundance and prevalence filtering:
+2024-10-17 09:45:36.534866 INFO::Total filtered features with variance filtering: 0
+2024-10-17 09:45:36.536167 INFO::Filtered feature names from variance filtering:
+2024-10-17 09:45:36.538579 INFO::Running selected normalization method: NONE
+2024-10-17 09:45:36.539451 INFO::Applying z-score to standardize continuous metadata
+2024-10-17 09:45:36.542344 INFO::Running selected transform method: NONE
+2024-10-17 09:45:36.543481 INFO::Running selected analysis method: LM
+2024-10-17 09:45:36.54605 INFO::Creating cluster of 4 R processes
+2024-10-17 09:45:42.094997 INFO::Counting total values for each feature
+2024-10-17 09:45:42.100966 INFO::Writing filtered data to file ../results/maaslin2_B6_pathway/features/filtered_data.tsv
+2024-10-17 09:45:42.11859 INFO::Writing filtered, normalized data to file ../results/maaslin2_B6_pathway/features/filtered_data_norm.tsv
+2024-10-17 09:45:42.139838 INFO::Writing filtered, normalized, transformed data to file ../results/maaslin2_B6_pathway/features/filtered_data_norm_transformed.tsv
+2024-10-17 09:45:42.156733 INFO::Writing residuals to file ../results/maaslin2_B6_pathway/fits/residuals.rds
+2024-10-17 09:45:42.166183 INFO::Writing fitted values to file ../results/maaslin2_B6_pathway/fits/fitted.rds
+2024-10-17 09:45:42.171007 INFO::Writing extracted random effects to file ../results/maaslin2_B6_pathway/fits/ranef.rds
+2024-10-17 09:45:42.173816 INFO::Writing all results to file (ordered by increasing q-values): ../results/maaslin2_B6_pathway/all_results.tsv
+2024-10-17 09:45:42.175977 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.250000 ) to file (ordered by increasing q-values): ../results/maaslin2_B6_pathway/significant_results.tsv
