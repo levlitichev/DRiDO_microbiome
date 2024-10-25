@@ -1,0 +1,350 @@
+---
+title: "Effect of chronological time"
+---
+
+What is the effect on our linear mixed models when we add chronological time (either as a fixed effect or random effect)? Is the model "improved"?
+
+We will address this question in two ways.
+
+First, we will just report how many features are associated with age when time is included as a fixed effect, as a random effect, or not at all.
+
+Next, we will compare these 3 models against "cross-sectional" models, i.e. models run on samples collected at roughly the same time. In these models, chronological time is removed from the equation, so we consider age coefficients estimated from these models to be a kind of gold standard.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(patchwork) # plot_layout
+
+PADJ.THRESH <- 0.01
+
+age.color <- "seagreen"
+theme_set(theme_classic(base_size=8))
+```
+
+# Import longitudinal results 
+
+Full model with time as random effect, time as fixed effect, and without time.
+
+```{r}
+fixef.df.w.time.ranef <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+fixef.df.w.time.fixef <- read.table(
+  "../results/asreml_kraken_genus_w_time_fixef/fixef.txt",
+  sep="\t", header=T)
+
+fixef.df.wo.time <- read.table(
+  "../results/asreml_kraken_genus_wo_time/fixef.txt",
+  sep="\t", header=T)
+```
+
+# Import cross-sectional results
+
+Only perform cross-sectional models for genera, not pathways.
+
+```{r}
+fixef.df.slice1 <- read.table(
+  "../results/cross_sectional_slices/asreml_kraken_genus_slice1/fixef.txt",
+  sep="\t", header=T)
+
+fixef.df.slice2 <- read.table(
+  "../results/cross_sectional_slices/asreml_kraken_genus_slice2/fixef.txt",
+  sep="\t", header=T)
+
+fixef.df.slice3 <- read.table(
+  "../results/cross_sectional_slices/asreml_kraken_genus_slice3/fixef.txt",
+  sep="\t", header=T)
+```
+
+# Extract age coefficients and adjust p-values
+
+```{r}
+age.df.w.time.ranef <- fixef.df.w.time.ranef %>% 
+  dplyr::filter(fixef == "age.wks.scaled") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+age.df.w.time.fixef <- fixef.df.w.time.fixef %>% 
+  dplyr::filter(fixef == "age.wks.scaled") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+age.df.wo.time <- fixef.df.wo.time %>% 
+  dplyr::filter(fixef == "age.wks.scaled") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+age.df.slice1 <- fixef.df.slice1 %>% 
+  dplyr::filter(fixef == "age.wks.scaled") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+age.df.slice2 <- fixef.df.slice2 %>% 
+  dplyr::filter(fixef == "age.wks.scaled") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+age.df.slice3 <- fixef.df.slice3 %>% 
+  dplyr::filter(fixef == "age.wks.scaled") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+```
+
+# 1) Number of age-associated features
+
+```{r}
+table(age.df.slice1$is.sig)
+table(age.df.slice2$is.sig)
+table(age.df.slice3$is.sig)
+table(age.df.w.time.fixef$is.sig)
+table(age.df.w.time.ranef$is.sig)
+table(age.df.wo.time$is.sig)
+```
+
+* Longitudinal model without time has the most age-associated features
+* Longitudinal model with time as ranef has fewer, but still a lot of, age-associated features
+* Longitudinal model with time as fixef has few age-associated features
+* All cross-sectional models have 5 age-associated features, and they're all different across the 3 models
+
+```{r}
+num.age.feats.df <- data.frame(
+  model = factor(c("Fixed effect", "Random effect", "Omitted"), levels=c("Fixed effect", "Random effect", "Omitted")),
+  n.age.feats = c(sum(age.df.w.time.fixef$is.sig), sum(age.df.w.time.ranef$is.sig), sum(age.df.wo.time$is.sig)))
+
+(barplot.age.assoc.feats.w.or.wo.time <- num.age.feats.df %>% 
+    ggplot(aes(x=model, y=n.age.feats)) +
+    geom_col(fill=age.color) +
+    labs(x="Time", y="# age-associated genera") +
+    theme_classic(base_size=8))
+```
+
+~/Documents/phd/calico_aging/DRiDO_microbiome_github/analysis/effect_of_chronological_time.Rmd
+
+```{r}
+pdf("../plots/barplot_num_age_assoc_genera_w_time_fixef_ranef_omitted.pdf", height=2, width=1.5)
+barplot.age.assoc.feats.w.or.wo.time
+dev.off()
+```
+
+# 2) Correlations between models
+
+```{r}
+age.long.df <- rbind(
+  age.df.slice1 %>% mutate(model="slice1"),
+  age.df.slice2 %>% mutate(model="slice2"),
+  age.df.slice3 %>% mutate(model="slice3"),
+  age.df.w.time.ranef %>% mutate(model="full.w.time.ranef"),
+  age.df.w.time.fixef %>% mutate(model="full.w.time.fixef"),
+  age.df.wo.time %>% mutate(model="full.wo.time"))
+
+age.wide.df <- age.long.df %>% 
+  pivot_wider(id_cols = feature,
+              values_from = solution,
+              names_from = model)
+```
+
+```{r}
+# Slice 1
+(spearman.full.w.time.ranef.v.slice1 <- cor(age.wide.df$slice1, age.wide.df$full.w.time.ranef, method="spearman"))
+(spearman.full.w.time.fixef.v.slice1 <- cor(age.wide.df$slice1, age.wide.df$full.w.time.fixef, method="spearman"))
+(spearman.full.wo.time.v.slice1 <- cor(age.wide.df$slice1, age.wide.df$full.wo.time, method="spearman"))
+
+spearman.pval.full.w.time.ranef.v.slice1 <- cor.test(age.wide.df$slice1, age.wide.df$full.w.time.ranef, method="spearman")$p.value
+spearman.pval.full.w.time.fixef.v.slice1 <- cor.test(age.wide.df$slice1, age.wide.df$full.w.time.fixef, method="spearman")$p.value
+spearman.pval.full.wo.time.v.slice1 <- cor.test(age.wide.df$slice1, age.wide.df$full.wo.time, method="spearman")$p.value
+
+# Slice 2
+(spearman.full.w.time.ranef.v.slice2 <- cor(age.wide.df$slice2, age.wide.df$full.w.time.ranef, method="spearman"))
+(spearman.full.w.time.fixef.v.slice2 <- cor(age.wide.df$slice2, age.wide.df$full.w.time.fixef, method="spearman"))
+(spearman.full.wo.time.v.slice2 <- cor(age.wide.df$slice2, age.wide.df$full.wo.time, method="spearman"))
+
+spearman.pval.full.w.time.ranef.v.slice2 <- cor.test(age.wide.df$slice2, age.wide.df$full.w.time.ranef, method="spearman")$p.value
+spearman.pval.full.w.time.fixef.v.slice2 <- cor.test(age.wide.df$slice2, age.wide.df$full.w.time.fixef, method="spearman")$p.value
+spearman.pval.full.wo.time.v.slice2 <- cor.test(age.wide.df$slice2, age.wide.df$full.wo.time, method="spearman")$p.value
+
+# Slice 3
+(spearman.full.w.time.ranef.v.slice3 <- cor(age.wide.df$slice3, age.wide.df$full.w.time.ranef, method="spearman"))
+(spearman.full.w.time.fixef.v.slice3 <- cor(age.wide.df$slice3, age.wide.df$full.w.time.fixef, method="spearman"))
+(spearman.full.wo.time.v.slice3 <- cor(age.wide.df$slice3, age.wide.df$full.wo.time, method="spearman"))
+
+spearman.pval.full.w.time.ranef.v.slice3 <- cor.test(age.wide.df$slice3, age.wide.df$full.w.time.ranef, method="spearman")$p.value
+spearman.pval.full.w.time.fixef.v.slice3 <- cor.test(age.wide.df$slice3, age.wide.df$full.w.time.fixef, method="spearman")$p.value
+spearman.pval.full.wo.time.v.slice3 <- cor.test(age.wide.df$slice3, age.wide.df$full.wo.time, method="spearman")$p.value
+```
+
+* Correlations are highest for the model with time as a fixed effect
+* Correlation with the model that includes time as ranef is *slightly* better than for model without time
+
+```{r}
+# Slice 1 v. longitudinal w/ time ranef
+full.w.time.ranef.v.slice1.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice1, y=full.w.time.ranef)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 1", y="With time, ranef",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.w.time.ranef.v.slice1, spearman.pval.full.w.time.ranef.v.slice1)) +
+  theme_classic(base_size=8)
+
+# Slice 2 v. longitudinal w/ time ranef
+full.w.time.ranef.v.slice2.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice2, y=full.w.time.ranef)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 2", y="With time, ranef",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.w.time.ranef.v.slice2, spearman.pval.full.w.time.ranef.v.slice2)) +
+  theme_classic(base_size=8)
+
+# Slice 3 v. longitudinal w/ time ranef
+full.w.time.ranef.v.slice3.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice3, y=full.w.time.ranef)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 3", y="With time, ranef",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e",
+       spearman.full.w.time.ranef.v.slice3, spearman.pval.full.w.time.ranef.v.slice3)) +
+  theme_classic(base_size=8)
+
+# Slice 1 v. longitudinal w/ time fixef
+full.w.time.fixef.v.slice1.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice1, y=full.w.time.fixef)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 1", y="With time, fixef",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.w.time.fixef.v.slice1, spearman.pval.full.w.time.fixef.v.slice1)) +
+  theme_classic(base_size=8)
+
+# Slice 2 v. longitudinal w/ time fixef
+full.w.time.fixef.v.slice2.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice2, y=full.w.time.fixef)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 2", y="With time, fixef",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.w.time.fixef.v.slice2, spearman.pval.full.w.time.fixef.v.slice2)) +
+  theme_classic(base_size=8)
+
+# Slice 3 v. longitudinal w/ time fixef
+full.w.time.fixef.v.slice3.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice3, y=full.w.time.fixef)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 3", y="With time, fixef",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e",
+       spearman.full.w.time.fixef.v.slice3, spearman.pval.full.w.time.fixef.v.slice3)) +
+  theme_classic(base_size=8)
+
+# Slice 1 v. longitudinal w/o time
+full.wo.time.v.slice1.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice1, y=full.wo.time)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 1", y="Without time",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.wo.time.v.slice1, spearman.pval.full.wo.time.v.slice1)) +
+  theme_classic(base_size=8)
+
+# Slice 2 v. longitudinal w/o time
+full.wo.time.v.slice2.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice2, y=full.wo.time)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 2", y="Without time",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.wo.time.v.slice2, spearman.pval.full.wo.time.v.slice2)) +
+  theme_classic(base_size=8)
+
+# Slice 3 v. longitudinal w/o time
+full.wo.time.v.slice3.scatter.p <- age.wide.df %>% 
+  ggplot(aes(x=slice3, y=full.wo.time)) +
+  geom_abline(slope=1, lty=2) +
+  geom_smooth(aes(label=NULL), method="lm") + 
+  geom_point(shape=16) +
+  labs(x="Slice 3", y="Without time",
+       title=sprintf(
+         "rho = %.2f, p-value = %2.2e", 
+         spearman.full.wo.time.v.slice3, spearman.pval.full.wo.time.v.slice3)) +
+  theme_classic(base_size=8)
+```
+
+```{r, message=F}
+min.x <- min(
+  layer_scales(full.w.time.ranef.v.slice1.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.ranef.v.slice2.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.ranef.v.slice3.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice1.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice2.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice3.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.wo.time.v.slice1.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.wo.time.v.slice2.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.wo.time.v.slice3.scatter.p, 1, 1)$x$range$range[1])
+
+max.x <- max(
+  layer_scales(full.w.time.ranef.v.slice1.scatter.p, 1, 1)$x$range$range[2],
+  layer_scales(full.w.time.ranef.v.slice2.scatter.p, 1, 1)$x$range$range[2],
+  layer_scales(full.w.time.ranef.v.slice3.scatter.p, 1, 1)$x$range$range[2],
+  layer_scales(full.w.time.fixef.v.slice1.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice2.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice3.scatter.p, 1, 1)$x$range$range[1],
+  layer_scales(full.wo.time.v.slice1.scatter.p, 1, 1)$x$range$range[2],
+  layer_scales(full.wo.time.v.slice2.scatter.p, 1, 1)$x$range$range[2],
+  layer_scales(full.wo.time.v.slice3.scatter.p, 1, 1)$x$range$range[2])
+
+min.y <- min(
+  layer_scales(full.w.time.ranef.v.slice1.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.w.time.ranef.v.slice2.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.w.time.ranef.v.slice3.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice1.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice2.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.w.time.fixef.v.slice3.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.wo.time.v.slice1.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.wo.time.v.slice2.scatter.p, 1, 1)$y$range$range[1],
+  layer_scales(full.wo.time.v.slice3.scatter.p, 1, 1)$y$range$range[1])
+
+max.y <- max(
+  layer_scales(full.w.time.ranef.v.slice1.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.w.time.ranef.v.slice2.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.w.time.ranef.v.slice3.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.w.time.fixef.v.slice1.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.w.time.fixef.v.slice2.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.w.time.fixef.v.slice3.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.wo.time.v.slice1.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.wo.time.v.slice2.scatter.p, 1, 1)$y$range$range[2],
+  layer_scales(full.wo.time.v.slice3.scatter.p, 1, 1)$y$range$range[2])
+
+cor.cross.sectional.v.longitudinal.age.coef.manual.p <- (
+  full.w.time.fixef.v.slice1.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.w.time.fixef.v.slice2.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.w.time.fixef.v.slice3.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.w.time.ranef.v.slice1.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.w.time.ranef.v.slice2.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.w.time.ranef.v.slice3.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.wo.time.v.slice1.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.wo.time.v.slice2.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  (full.wo.time.v.slice3.scatter.p + ylim(min.y, max.y) + xlim(min.x, max.x)) +
+  plot_layout(nrow=3)
+```
+
+```{r}
+pdf("../plots/age_coef_cross_sectional_v_longitudinal_scatter.pdf", height=6, width=6)
+cor.cross.sectional.v.longitudinal.age.coef.manual.p
+dev.off()
+```
