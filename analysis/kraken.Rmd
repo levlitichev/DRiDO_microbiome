@@ -808,15 +808,19 @@ age.df <- age.df %>%
 
 ```{r}
 age.df %>% 
+  dplyr::filter(!(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))) %>%
+  dplyr::count(is.sig)
+
+age.df %>% 
   dplyr::count(is.sig)
 ```
 
 ```{r}
-78 / (78 + 29)
+61 / (61 + 39)
 65 / (65 + 42)
 ```
 
-* Majority (73%) of taxonomic features are significantly associated with age
+* Majority (61%) of taxonomic features are significantly associated with age (with or without community features)
 
 ```{r}
 age.df %>% 
@@ -885,8 +889,11 @@ DR.df <- DR.df %>%
   merge(DR.padj.df, by="feature") %>% 
   mutate(is.sig = padj < PADJ.THRESH)
 
+DR.df %>% dplyr::filter(fixef.value == "40") %>% dplyr::count(is.sig)
 dim(DR.df)
 ```
+
+* 100 of 107 genus-level features tested
 
 ## Barplots
 
@@ -1101,7 +1108,7 @@ herit.df %>%
 ```
 
 * 66% of genera are heritable
-* 64.5% of features are heritable (including the community features)
+* 64.5% of genus-level features are heritable (including the community features)
 
 ```{r}
 herit.df %>%
@@ -1150,7 +1157,6 @@ herit.genera.to.label <- c(
 # dev.off()
 ```
 
-
 # All random effects
 
 ```{r}
@@ -1162,6 +1168,8 @@ ranef.df.all.ranef.model %>%
 
 * 63% of variance remains unexplained
 * Genetics explain mean 7.5% of variance
+* DR --> 6.5%
+* Age --> 4.7%
 
 Adjust p-values within each experimental variable.
 
