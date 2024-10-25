@@ -2,8 +2,8 @@ Create supplementary tables.
 
 Supplementary Table 3 = genera, Kraken, Model 1
 Supplementary Table 4 = species, Kraken, Model 1
-Supplementary Table 5 = pathways, Model 1
-Supplementary Table 6 = genera, MetaPhlAn, Model 1
+Supplementary Table 5 = genera, MetaPhlAn, Model 1
+Supplementary Table 6 = pathways, Model 1
 Supplementary Table 7 = DO AL, genera, MetaPhlAn, MaAsLin2, Model 5
 Supplementary Table 8 = B6, genera, MetaPhlAn, MaAsLin2, Model 6
 Supplementary Table 9 = human, genera, MetaPhlAn, MaAsLin2, Model 7
@@ -18,9 +18,8 @@ Supplementary Table 17 = mediation results between genera and phenotypes, Models
 Supplementary Table 18 = mediation results between pathways and phenotypes, Models 13 and 14 (longitudinal)
 Supplementary Table 19 = associations between genera and phenotypes, Model 12 (cross-sectional)
 Supplementary Table 20 = associations between pathways and phenotypes, Model 12 (cross-sectional)
-Supplementary Table 21 = mapping between all figure panels and corresponding script in the Github
 
-**Tables 15-20 are exported in `pheno_assoc_and_mediation.Rmd`. Table 21 was made manually.**
+**Tables 15-20 are exported in `pheno_assoc_and_mediation.Rmd`.**
 
 For fixed effects, we report coefficients, p-values (Wald test), and adjusted p-values (BH). For random effects, we report proportion of variance explained, p-values (LRT), and adjusted p-values (BH).
 
@@ -248,7 +247,56 @@ kraken.species.model1.out.df %>%
   write.table("../supp_tables/table4.txt", sep="\t", quote=F, row.names=F)
 ```
 
-# Table 5: pathways, Model 1
+# Table 5: Kraken, genera, Model 1
+
+```{r}
+metaphlan.genus.model1.fixef.df <- read.table(
+  "../results/asreml_metaphlan_genus_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+metaphlan.genus.model1.ranef.df <- read.table(
+  "../results/asreml_metaphlan_genus_w_time_ranef/ranef.txt",
+  sep="\t", header=T)
+
+metaphlan.genus.model1.herit.df <- read.table(
+  "../results/asreml_metaphlan_genus_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+```
+
+```{r}
+metaphlan.genus.model1.fixef.out.df <- process_fixef_df(metaphlan.genus.model1.fixef.df)
+metaphlan.genus.model1.ranef.out.df <- process_ranef_df(metaphlan.genus.model1.ranef.df, metaphlan.genus.model1.herit.df)
+
+tmp.metaphlan.genus.model1.out.df <- merge(
+  metaphlan.genus.model1.fixef.out.df,
+  metaphlan.genus.model1.ranef.out.df,
+  by="feature")
+
+# more adjustments
+metaphlan.genus.model1.out.df <- tmp.metaphlan.genus.model1.out.df %>% 
+  
+  # indicate if community feature
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  
+  # move is.community.feat to second column
+  relocate(is.community.feat, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically
+  arrange(feature)
+
+```  
+
+```{r}
+metaphlan.genus.model1.out.df %>%
+  write.table("../supp_tables/table5.txt", sep="\t", quote=F, row.names=F)
+```
+
+# Table 6: pathways, Model 1
 
 Pathways.
 
@@ -304,55 +352,6 @@ pathways.model1.out.df <- tmp.pathways.model1.out.df %>%
 
 ```{r}
 pathways.model1.out.df %>%
-  write.table("../supp_tables/table5.txt", sep="\t", quote=F, row.names=F)
-```
-
-# Table 6: Kraken, genera, Model 1
-
-```{r}
-metaphlan.genus.model1.fixef.df <- read.table(
-  "../results/asreml_metaphlan_genus_w_time_ranef/fixef.txt",
-  sep="\t", header=T)
-
-metaphlan.genus.model1.ranef.df <- read.table(
-  "../results/asreml_metaphlan_genus_w_time_ranef/ranef.txt",
-  sep="\t", header=T)
-
-metaphlan.genus.model1.herit.df <- read.table(
-  "../results/asreml_metaphlan_genus_w_time_ranef/herit.txt",
-  sep="\t", header=T)
-```
-
-```{r}
-metaphlan.genus.model1.fixef.out.df <- process_fixef_df(metaphlan.genus.model1.fixef.df)
-metaphlan.genus.model1.ranef.out.df <- process_ranef_df(metaphlan.genus.model1.ranef.df, metaphlan.genus.model1.herit.df)
-
-tmp.metaphlan.genus.model1.out.df <- merge(
-  metaphlan.genus.model1.fixef.out.df,
-  metaphlan.genus.model1.ranef.out.df,
-  by="feature")
-
-# more adjustments
-metaphlan.genus.model1.out.df <- tmp.metaphlan.genus.model1.out.df %>% 
-  
-  # indicate if community feature
-  mutate(is.community.feat = case_when(
-    feature %in% community.features ~ "Y",
-    TRUE ~ "N")) %>% 
-  
-  # move is.community.feat to second column
-  relocate(is.community.feat, .after=feature) %>% 
-  
-  # round all numbers to 8 decimal places
-  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
-  
-  # sort alphabetically
-  arrange(feature)
-
-```  
-
-```{r}
-metaphlan.genus.model1.out.df %>%
   write.table("../supp_tables/table6.txt", sep="\t", quote=F, row.names=F)
 ```
 
@@ -380,6 +379,9 @@ DO.AL.genus.maaslin.out.df <- DO.AL.genus.maaslin.df %>%
   
   # subset to columns of interest
   dplyr::select(feature, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically
   arrange(feature)
@@ -413,6 +415,9 @@ B6.genus.maaslin.out.df <- B6.genus.maaslin.df %>%
   # subset to columns of interest
   dplyr::select(feature, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically
   arrange(feature)
 ```
@@ -444,6 +449,9 @@ human.genus.maaslin.out.df <- human.genus.maaslin.df %>%
   
   # subset to columns of interest
   dplyr::select(feature, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically
   arrange(feature)
@@ -482,6 +490,9 @@ DO.AL.pathway.maaslin.out.df <- DO.AL.pathway.maaslin.df %>%
   # subset to columns of interest
   dplyr::select(feature, full.pathway.name, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically
   arrange(feature)
 ```
@@ -519,6 +530,9 @@ B6.pathway.maaslin.out.df <- B6.pathway.maaslin.df %>%
   # subset to columns of interest
   dplyr::select(feature, full.pathway.name, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically
   arrange(feature)
 ```
@@ -555,6 +569,9 @@ human.pathway.maaslin.out.df <- human.pathway.maaslin.df %>%
   
   # subset to columns of interest
   dplyr::select(feature, full.pathway.name, is.community.feat, solution.age,	std.error.age,	pval.age,	padj.age) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically
   arrange(feature)
@@ -603,6 +620,9 @@ kraken.genus.model10.ranef.out.df <- kraken.genus.model10.ranef.df %>%
                 PVE.Cage, pval.Cage, padj.Cage,
                 PVE.Mouse, pval.Mouse, padj.Mouse,
                 PVE.Residual, pval.Residual, padj.Residual) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically
   arrange(feature)
@@ -658,6 +678,9 @@ pathways.model10.ranef.out.df <- pathways.model10.ranef.df %>%
                 PVE.Cage, pval.Cage, padj.Cage,
                 PVE.Mouse, pval.Mouse, padj.Mouse,
                 PVE.Residual, pval.Residual, padj.Residual) %>% 
+  
+    # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically
   arrange(feature)

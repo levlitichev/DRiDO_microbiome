@@ -357,6 +357,9 @@ tax.pheno.assoc.out.df <- tax.assoc.mediation.merged.df %>%
   # rename assoc_padj
   dplyr::rename(mb.padj = assoc_padj) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically by pheno, then microbiome feature
   arrange(pheno, feature)
 ```
@@ -394,6 +397,9 @@ fxn.pheno.assoc.out.df <- fxn.assoc.mediation.merged.df %>%
   # rename assoc_padj
   dplyr::rename(mb.padj = assoc_padj) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically by pheno, then microbiome feature
   arrange(pheno, feature)
 ```
@@ -414,6 +420,9 @@ tax.pheno.mediation.out.df <- tax.assoc.mediation.merged.df %>%
   # redo `is.community.feat` for consistency with other tables
   dplyr::rename(is.community.feat = feature.type) %>% 
   mutate(is.community.feat = case_match(is.community.feat, "community" ~ "Y", "individual" ~ "N")) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically by pheno, then microbiome feature, then diet
   arrange(pheno, feature, diet)
@@ -443,6 +452,9 @@ fxn.pheno.mediation.out.df <- fxn.assoc.mediation.merged.df %>%
   # rename 'original' to 'full.pathway.name' and move after 'feature' column
   dplyr::rename(full.pathway.name = original) %>% 
   relocate(full.pathway.name, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
   
   # sort alphabetically by pheno, then microbiome feature, then diet
   arrange(pheno, feature, diet)
@@ -896,9 +908,11 @@ tax.pheno.assoc.xs.out.df <- tax.pheno.res.xs.df %>%
     TRUE ~ "N")) %>% 
   relocate(is.community.feat, .after=feature) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically by pheno, then microbiome feature
   arrange(pheno, feature)
-  
 ```
 
 ```{r}
@@ -928,9 +942,11 @@ fxn.pheno.assoc.xs.out.df <- fxn.pheno.res.xs.df %>%
   dplyr::rename(full.pathway.name = original) %>% 
   relocate(full.pathway.name, .after=feature) %>% 
   
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
   # sort alphabetically by pheno, then microbiome feature
   arrange(pheno, feature)
-  
 ```
 
 ```{r}
