@@ -1,6 +1,6 @@
 # Run a linear mixed model for all features.
 # Very similar to run_asreml.R but uses lme4qtl instead of ASReml.
-# This script takes ~1 hour on a laptop (100 features and 3000 samples)
+# This script takes > 1 hour on a laptop (100 features and 3000 samples)
 
 # set working directory
 setwd("~/DRiDO_microbiome_github/scripts")
