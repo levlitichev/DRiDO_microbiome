@@ -8,18 +8,30 @@ cd ~/DRiDO_microbiome_github/scripts
 # --- TAXONOMY ---
 
 # Model 1: Kraken, model with time, genera, fixed and random effects
-# y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+# y_mb ~ age (f) + DR (f) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 in_path="../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt"
-out_dir="../results/asreml_kraken_genus_w_time/"
+out_dir="../results/asreml_kraken_genus_w_time_ranef/"
 mkdir $out_dir
 Rscript run_asreml.R $in_path $out_dir \
-  "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
+  "~ age.wks.scaled + Diet.5mo.as.AL" \
+  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Quarter.Date + Cohort + Cage + Batch" \
+  "~ ide(Mouse, kinship.mat.x2) + Quarter.Date + Cohort + Cage + Batch"
+Rscript collate_asreml.R $out_dir
+rm "$out_dir"*.Rds
+
+# Model 2: Model with time as a fixed effect
+# y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+in_path="../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt"
+out_dir="../results/asreml_kraken_genus_w_time_fixef/"
+mkdir $out_dir
+Rscript run_asreml.R $in_path $out_dir \
+  "~ age.wks.scaled + Diet.5mo.as.AL" \
   "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
   "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
-# Model 2: Model without time
+# Model 3: Model without time
 # y_mb ~ age (f) + DR (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 in_path="../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt"
 out_dir="../results/asreml_kraken_genus_wo_time/"
@@ -31,7 +43,7 @@ Rscript run_asreml.R $in_path $out_dir \
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
-# Model 3: Model run separately for each of three cross-sectional data slices
+# Model 4: Run separately for each of three cross-sectional data slices
 # y_mb ~ age (f) + DR (f) + [genetics] (r) + batch (r) + cohort (r) + cage (r)
 
 ## Slice 1
@@ -67,7 +79,7 @@ Rscript run_asreml.R $in_path $out_dir \
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
-# Model 8: Model run separately per age
+# Model 9: Model run separately per age
 # At 5 months:          y_mb ~ [genetics] (r) + batch (r) + cohort (r) + cage (r) 
 # After randomization:  y_mb ~ DR (f) + [genetics] (r) + batch (r) + cohort (r) + cage (r) 
 
@@ -126,7 +138,7 @@ Rscript run_asreml.R $in_path $out_dir \
 Rscript collate_asreml.R $out_dir # also deletes the uncollated .txt files
 rm "$out_dir"*.Rds
 
-# Model 9: All random effects
+# Model 10: All random effects
 in_path="../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt"
 out_dir="../results/asreml_kraken_genus_all_ranef_w_time/"
 mkdir $out_dir
@@ -135,56 +147,56 @@ Rscript collate_asreml_all_ranef.R $out_dir
 find "$out_dir" -type f -name "*.txt" ! -name "ranef.txt" -delete
 
 # Model 1, with MetaPhlAn instead of Kraken taxonomic results
-# y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+# y_mb ~ age (f) + DR (f) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 in_path="../results/metaphlan_genus_log2relab_filt_w_comm_n259x2997.txt"
-out_dir="../results/asreml_metaphlan_genus_w_time/"
+out_dir="../results/asreml_metaphlan_genus_w_time_ranef/"
 mkdir $out_dir
 Rscript run_asreml.R $in_path $out_dir \
-  "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
-  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
-  "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+  "~ age.wks.scaled + Diet.5mo.as.AL" \
+  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Quarter.Date + Cohort + Cage + Batch" \
+  "~ ide(Mouse, kinship.mat.x2) + Quarter.Date + Cohort + Cage + Batch"
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
 # Model 1, with Kraken species-level data
-# y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+# y_mb ~ age (f) + DR (f) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 in_path="../results/kraken_species_clr_filt_w_comm_n207x2997.txt"
-out_dir="../results/asreml_kraken_species_w_time/"
+out_dir="../results/asreml_kraken_species_w_time_ranef/"
 mkdir $out_dir
 Rscript run_asreml.R $in_path $out_dir \
-  "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
-  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
-  "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+  "~ age.wks.scaled + Diet.5mo.as.AL" \
+  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Quarter.Date + Cohort + Cage + Batch" \
+  "~ ide(Mouse, kinship.mat.x2) + Quarter.Date + Cohort + Cage + Batch"
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
 # Model 1, with downsampled data
-# y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+# y_mb ~ age (f) + DR (f) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 in_path="../results/kraken_genus_clr_filt_w_comm_downsampled_n107x519.txt"
 out_dir="../results/asreml_kraken_genus_downsampled/"
 mkdir $out_dir
 Rscript run_asreml.R $in_path $out_dir \
-  "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
-  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
-  "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+  "~ age.wks.scaled + Diet.5mo.as.AL" \
+  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Quarter.Date + Cohort + Cage + Batch" \
+  "~ ide(Mouse, kinship.mat.x2) + Quarter.Date + Cohort + Cage + Batch"
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
 # --- PATHWAYS ---
 
 # Model 1: HUMAnN pathways, model with time, fixed and random effects
-# y_mb ~ age (f) + DR (f) + time (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+# y_mb ~ age (f) + DR (f) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 in_path="../results/pathway_log2tpm_filt_w_comm_n273x2997.txt"
-out_dir="../results/asreml_humann_pathways_w_time/"
+out_dir="../results/asreml_humann_pathways_w_time_ranef/"
 mkdir $out_dir
 Rscript run_asreml.R $in_path $out_dir \
-  "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
-  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
-  "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+  "~ age.wks.scaled + Diet.5mo.as.AL" \
+  "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Quarter.Date + Cohort + Cage + Batch" \
+  "~ ide(Mouse, kinship.mat.x2) + Quarter.Date + Cohort + Cage + Batch"
 Rscript collate_asreml.R $out_dir
 rm "$out_dir"*.Rds
 
-# Model 9: All random effects
+# Model 10: All random effects
 in_path="../results/pathway_log2tpm_filt_w_comm_n273x2997.txt"
 out_dir="../results/asreml_humann_pathways_all_ranef_w_time/"
 mkdir $out_dir
