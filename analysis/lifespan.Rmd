@@ -89,8 +89,8 @@ median.df <- data.frame(quantile(surv.fit, probs=0.5)$quantile) %>%
 ```
 
 ```{r}
-# pdf("../plots/lifespan_boxplots.pdf", height=2, width=2)
-# lifespan.boxplots
-# dev.off()
+pdf("../plots/lifespan_boxplots.pdf", height=2, width=2)
+lifespan.boxplots
+dev.off()
 ```
 

@@ -1043,7 +1043,7 @@ human.blautia.lm.per.study.df <- human.blautia.log2relab.df %>%
 ```
 
 ```{r}
-# pdf("../plots/blautia_age_coef_per_human_study.pdf", height=3, width=2)
-# blautia.coef.per.human.study.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/blautia_age_coef_per_human_study.pdf", height=3, width=2)
+blautia.coef.per.human.study.p + theme(legend.position="none")
+dev.off()
 ```
