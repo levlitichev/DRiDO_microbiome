@@ -143,6 +143,28 @@ pathway.log2tpm.annot.df <- pathway.log2tpm.df %>%
 dim(pathway.log2tpm.annot.df)
 ```
 
+## Import short and long pathway names
+
+```{r}
+pathway.names.df <- read.table(
+  "../data/metadata/pathway_long_and_short_names_n703.txt",
+  sep="\t", header=T, quote="")
+```
+
+Add additional columns for plotting.
+
+```{r}
+pathway.names.df <- pathway.names.df %>% 
+  mutate(after.colon = str_sub(str_extract(original, "(?=:)(.*)"), 3)) %>% 
+  mutate(after.colon.short = ifelse(
+    nchar(after.colon) > 30, 
+    paste0(str_sub(after.colon, 1, 27), "..."),
+    after.colon)) %>% 
+  mutate(after.colon.short.w.ID = paste0(
+    after.colon.short, " (", short, ")")) %>% 
+  relocate(after.colon.short.w.ID)
+```
+
 # Predict age of *all* mice (slow)
 
 Genera, 10-fold cross validation.
@@ -622,6 +644,7 @@ age.pred.top.10.most.imp.pathways <- feat.imp.summarised.df.age.AL.pathways.cv %
    geom_jitter(height=0.2, shape=16) +
    labs(x="% increase in MSE", y="Pathway",
         title="10 most important pathways for age prediction") +
+   theme_classic(base_size=8) +
    theme(axis.text.y = element_text(size=4)))
 ```
 
@@ -1353,7 +1376,8 @@ Plot collapsing across age.
    stat_summary(fun="mean", geom="col", fill=diet.color) +
    geom_jitter(height=0.1, shape=16) +
    labs(x="Mean decrease in accuracy", y="Genus",
-        title="10 most important genera for binary DR prediction"))
+        title="10 most important genera for binary DR prediction") +
+   theme_classic(base_size=8))
 ```
 
 ```{r}
@@ -1516,6 +1540,7 @@ Plot collapsing across age.
    geom_jitter(height=0.1, shape=16) +
    labs(x="Mean decrease in accuracy", y="Pathway",
         title="10 most important pathways for binary DR prediction") +
+   theme_classic(base_size=8) +
    theme(axis.text.y = element_text(size=4)))
 ```
 
