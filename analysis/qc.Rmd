@@ -188,9 +188,9 @@ seq.meta.annot.df.w.qc %>%
 ```
 
 ```{r}
-# pdf("../plots/num_read_pairs_per_sample_boxplots.pdf", width=2, height=2)
-# read.pairs.per.sample.type.boxplots
-# dev.off()
+pdf("../plots/num_read_pairs_per_sample_boxplots.pdf", width=2, height=2)
+read.pairs.per.sample.type.boxplots
+dev.off()
 ```
 
 ```{r}
@@ -508,9 +508,9 @@ bc.dist.long.df <- data.frame(as.matrix(bc.dist)) %>%
 ```
 
 ```{r}
-# pdf("../plots/pairwise_sample_distances_with_outliers.pdf", height=2, width=2)
-# pairwise.sample.dists.w.outliers.hist
-# dev.off()
+pdf("../plots/pairwise_sample_distances_with_outliers.pdf", height=2, width=2)
+pairwise.sample.dists.w.outliers.hist
+dev.off()
 ```
 
 ## Examine pairs with large distances
