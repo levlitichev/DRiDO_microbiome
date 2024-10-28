@@ -160,9 +160,9 @@ pcoa.genus.bc.w.ctls.df <- merge(
 ```
 
 ```{r}
-# pdf("../plots/pcoa_w_controls.pdf", height=2, width=2)
-# pcoa.w.ctls.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/pcoa_w_controls.pdf", height=2, width=2)
+pcoa.w.ctls.p + theme(legend.position="none")
+dev.off()
 ```
 
 ```{r}
@@ -240,9 +240,9 @@ pcoa2.no.ctls.lims <- layer_scales(pcoa.no.ctls.p, 1, 1)$y$range$range
 ```
 
 ```{r}
-# pdf("../plots/pcoa_same_DNA_multiple_libs.pdf", width=2.5, height=2.5)
-# pcoa.same.DNA.p
-# dev.off()
+pdf("../plots/pcoa_same_DNA_multiple_libs.pdf", width=2.5, height=2.5)
+pcoa.same.DNA.p
+dev.off()
 ```
 
 ### Same library, sequenced twice
@@ -274,7 +274,7 @@ length(lib.IDs.seqd.more.than.once)
 * Pretty similar
 
 ```{r}
-# pdf("../plots/pcoa_same_lib.pdf", width=2.5, height=2.5)
-# pcoa.same.lib.p
-# dev.off()
+pdf("../plots/pcoa_same_lib.pdf", width=2.5, height=2.5)
+pcoa.same.lib.p
+dev.off()
 ```
