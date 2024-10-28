@@ -1,4 +1,4 @@
-setwd("~/Documents/phd/calico_aging/DRiDO_microbiome_github/scripts/")
+setwd("~/DRiDO_microbiome_github/scripts/")
 
 # import genus-level data
 genus.data.df <- read.table(

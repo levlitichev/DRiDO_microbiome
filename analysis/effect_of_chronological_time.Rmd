@@ -118,8 +118,6 @@ num.age.feats.df <- data.frame(
     theme_classic(base_size=8))
 ```
 
-~/Documents/phd/calico_aging/DRiDO_microbiome_github/analysis/effect_of_chronological_time.Rmd
-
 ```{r}
 pdf("../plots/barplot_num_age_assoc_genera_w_time_fixef_ranef_omitted.pdf", height=2, width=1.5)
 barplot.age.assoc.feats.w.or.wo.time
