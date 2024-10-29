@@ -4,7 +4,7 @@ output: github_document
 ---
 
 _Author:_ Lev Litichevskiy<br>
-_Date:_ October 31, 2023
+_Date:_ October 28, 2024
 
 In this tutorial, we import taxonomic classification results and perform several basic analyses:
 
@@ -27,11 +27,13 @@ library(phyloseq)
 library(speedyseq) # faster tax_glom
 library(ggpubr) # for t-test
 
-diet.palette <- c(AL="seashell4",
-                  `1D`="skyblue",
-                  `2D`="royalblue4",
-                  `20`="orange",
-                  `40`="firebrick")
+diet.palette.w.combined <- c(
+  Combined="black",
+  AL="seashell4",
+  `1D`="skyblue",
+  `2D`="royalblue4",
+  `20`="orange",
+  `40`="firebrick")
 ```
 
 # Import Kraken data
@@ -149,7 +151,7 @@ agg.genus.bc.dist <- agg.physeq.genus %>%
 
 # Alpha diversity
 
-We'll look at two ɑ-diversity metrics: Shannon index and Simpson's index. Both of these metrics account for both richness and evenness.
+We'll look at two ɑ-diversity metrics: Shannon index and Simpson's index. Both of these metrics account for both richness and evenness. We will plot data separately for each diet and if combining all data together.
 
 ```{r}
 alpha.div.df.genus <- estimate_richness(
@@ -162,51 +164,66 @@ alpha.div.long.df.genus <- alpha.div.df.genus %>%
   pivot_longer(c(Shannon, Simpson), names_to="metric")
 ```
 
-## Versus age
+```{r}
+# summarize per diet 
+alpha.div.plot.df.per.diet <- alpha.div.long.df.genus %>% 
+  dplyr::filter(metric %in% c("Shannon", "Simpson")) %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each metric, age, and diet combination
+  group_by(metric, Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+alpha.div.plot.df.across.diets <- alpha.div.long.df.genus %>% 
+  dplyr::filter(metric %in% c("Shannon", "Simpson")) %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  
+  # compute mean and SD across diets (separately for each metric)
+  group_by(metric, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3) %>% 
+  
+  # indicate that we summarized across diets
+  mutate(Diet = "Combined")
+```
 
 ```{r, fig.height=3}
-alpha.div.long.df.genus %>% 
+alpha.div.plot.df.per.diet %>% 
   
-  # omit the few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>% 
+  ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem, color=Diet)) +
   
-  ggplot(aes(x=age.approx.months, y=value)) +
+  # plot each diet separately
+  geom_path(alpha=0.3) +
+  geom_pointrange(alpha=0.3) +
   
-  # plot line of best fit
-  geom_smooth(method="lm") +
+  # plot all diets together
+  geom_path(data=alpha.div.plot.df.across.diets) +
+  geom_pointrange(data=alpha.div.plot.df.across.diets) +
   
-  geom_boxplot(aes(group=age.approx.months), fill="seagreen") +
+  # facet by alpha diversity metric
+  facet_wrap(~metric, scales="free") +
   
   # indicate that DR was initiated at 6 months
   geom_vline(xintercept=6, lty=2) +
   
-  facet_wrap(~metric, scales="free") +
-  labs(title="Alpha diversity versus age", x="Age (months)", y="") +
-  theme_bw(base_size=10)
-```
-
-## Versus diet
-
-```{r, fig.height=3.5}
-alpha.div.long.df.genus %>% 
+  # apply pre-defined color palette
+  scale_color_manual(values=diet.palette.w.combined) +
+  labs(x="Age (months)", y="", title="Alpha diversity") +
   
-  # omit the few 46 month samples for consistency with the versus age plot
-  dplyr::filter(age.approx.months <= 40) %>% 
-  
-  # specify diet order
-  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-  
-  ggplot(aes(x=Diet.5mo.as.AL, y=value, fill=Diet.5mo.as.AL)) +
-  geom_boxplot() +
-  
-  # t-test
-  stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
-  
-  labs(x="", y="") +
-  facet_wrap(~metric, scales="free") +
-  scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+  theme_classic(base_size=10)
 ```
 
 # Uniqueness
@@ -222,8 +239,6 @@ agg.genus.uniq.bc.df <- data.frame(
   merge(stool.meta.annot.df, by="stool.ID")
 ```
 
-## Versus age
-
 Regress uniqueness versus age to get slope and p-value.
 
 ```{r}
@@ -237,49 +252,61 @@ agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients[
   "age.approx.months", "Estimate"]
 ```
 
-```{r, out.width="75%"}
-agg.genus.uniq.bc.df %>% 
+```{r}
+# summarize per diet 
+uniq.plot.df.per.diet <- agg.genus.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
   
-  # omit few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>%
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
   
-  ggplot(aes(x=age.approx.months, y=uniqueness)) +
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+uniq.plot.df.across.diets <- agg.genus.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
   
-  # indicate that DR was initiated at 6 months
-  geom_vline(xintercept=6, lty=2) +
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
   
-  # plot line of best fit
-  geom_smooth(method="lm") +
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3) %>% 
   
-  geom_boxplot(aes(group=age.approx.months), fill="seagreen") +
-  
-  labs(x="Age (months)", y="Uniqueness", 
-       title=sprintf("Taxonomic uniqueness, slope = %.1e, p-value = %.1e",
-                     agg.genus.uniq.bc.lm.beta, agg.genus.uniq.bc.lm.pval)) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+  # indicate that we summarized across diets
+  mutate(Diet = "Combined")
 ```
 
-## Versus diet
-
-```{r, out.width="60%"}
-agg.genus.uniq.bc.df %>% 
+```{r,out.width="75%"}
+# plot
+uniq.plot.df.per.diet %>% 
+  ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+             color=Diet)) +
   
-  # omit the few 46 month samples for consistency with the versus age plot
-  dplyr::filter(age.approx.months <= 40) %>% 
+  # per diet
+  geom_path(alpha=0.3) +
+  geom_pointrange(alpha=0.3) +
   
-  # specify diet order
-  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  # across diets
+  geom_path(data=uniq.plot.df.across.diets) +
+  geom_pointrange(data=uniq.plot.df.across.diets) +
   
-  ggplot(aes(x=Diet.5mo.as.AL, y=uniqueness, fill=Diet.5mo.as.AL)) +
-  geom_boxplot() +
   
-  # t-test
-  stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
-  labs(x="Dietary group", y="Uniqueness", title="Taxonomic uniqueness") +
-  scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+  scale_color_manual(values=diet.palette.w.combined) +
+  labs(x="Age (months)", y="Uniqueness", color="Diet",
+       title=sprintf("Taxonomic uniqueness\nCombined slope = %.1e, p-value = %.1e",
+                     agg.genus.uniq.bc.lm.beta, agg.genus.uniq.bc.lm.pval)) +
+  geom_vline(xintercept=6, lty=2) +
+  theme_classic(base_size=10)
 ```
 
 # PCoA
@@ -314,7 +341,7 @@ agg.pcoa.genus.bc.df %>%
   # slight transparency
   geom_point(alpha=0.8) +
 
-  scale_color_manual(values=diet.palette) +
+  scale_color_manual(values=diet.palette.w.combined) +
 
   # customize the legend for size
   scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2)) +
@@ -327,74 +354,95 @@ We can sort of see a color gradient (red mostly at the top) and a size gradient 
 
 # Examples of individual genera
 
-## Bifidobacterium versus age
+Create function for plotting mean ± SEM for individual features.
+
+```{r}
+plot_one_genus_versus_age <- function(this.genus, type.of.error.bar="sem") {
+  
+  # summarize per diet 
+  plot.df.per.diet <- agg.physeq.genus %>% 
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == this.genus) %>% 
+    mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+    
+    # compute mean, SD, and SEM for each age and diet combination
+    group_by(Diet, age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(Abundance),
+              sd = sd(Abundance),
+              sem = sd(Abundance)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3)
+  
+  # summarize across diets
+  plot.df.across.diets <- agg.physeq.genus %>% 
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == this.genus) %>% 
+    
+    # compute mean, SD, and SEM across diets
+    group_by(age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(Abundance),
+              sd = sd(Abundance),
+              sem = sd(Abundance)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3) %>% 
+    
+    # indicate that we summarized across diets
+    mutate(Diet = "Combined")
+  
+  # indicate what to use for error bars
+  plot.df.per.diet <- plot.df.per.diet %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  plot.df.across.diets <- plot.df.across.diets %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  # plot
+  plot.df.per.diet %>%
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-error, ymax=mean+error,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3) +
+    geom_pointrange(alpha=0.3) +
+    
+    # across diets
+    geom_path(data=plot.df.across.diets) +
+    geom_pointrange(data=plot.df.across.diets) +
+  
+    scale_color_manual(values=diet.palette.w.combined) +
+    labs(x="Age (months)", y="Relative abundance (%)", color="Diet",
+         title=sprintf("%s", this.genus)) +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=10)
+}
+```
+
+### Bifidobacterium
 
 Bifidobacterium is the genus that increases the most with age.
 
-```{r, out.width="50%"}
-agg.physeq.genus %>%
-  
-  # convert to relative abundances
-  transform_sample_counts(function(x) x/sum(x)) %>% 
-  
-  # extract data from phyloseq object
-  psmelt %>% 
-  
-  # take log10
-  mutate(log10relab=log10(Abundance)) %>% 
-  
-  # subset to Bifido
-  dplyr::filter(genus == "Bifidobacterium") %>% 
-  
-  # omit the few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>%
-  
-  ggplot(aes(x=age.approx.months, y=log10relab)) +
-  
-  # indicate that DR was initiated at 6 months
-  geom_vline(xintercept=6, lty=2) +
-  
-  geom_smooth(method="lm") +
-  geom_boxplot(aes(group=age.approx.months), fill="seagreen") +
-  labs(x="Age (months)", y="log10(relab)", title="Bifidobacterium") +
-  theme_bw(base_size=10)
+```{r, out.width="60%"}
+plot_one_genus_versus_age("Bifidobacterium", type.of.error.bar="sem")
 ```
 
-## Ligilactobacillus versus diet
+## Ligilactobacillus
 
-Ligilactobacillus is strongly increased by DR
+Ligilactobacillus increases with age and is strongly increased by DR.
 
 ```{r, out.width="60%"}
-agg.physeq.genus %>% 
-  
-  # convert to relative abundances
-  transform_sample_counts(function(x) x/sum(x)) %>% 
-  
-  # extract data from phyloseq object
-  psmelt %>% 
-  
-  # subset to Bifido
-  dplyr::filter(genus == "Ligilactobacillus") %>% 
-  
-  # omit the few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>%
-  
-  # specify diet order
-  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-  
-  # take log10
-  mutate(log10relab=log10(Abundance)) %>% 
-  
-  ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
-  geom_boxplot() +
-  
-  # t-test
-  stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
-  
-  labs(x="", y="log10(relab)", title="Ligilactobacillus", fill="Diet") +
-  scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+plot_one_genus_versus_age("Ligilactobacillus", type.of.error.bar="sem")
 ```
 
 # sessionInfo

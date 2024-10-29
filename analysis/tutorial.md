@@ -1,7 +1,7 @@
 Analysis of taxonomic data from DRiDO microbiome study
 ================
 
-*Author:* Lev Litichevskiy<br> *Date:* October 31, 2023
+*Author:* Lev Litichevskiy<br> *Date:* October 28, 2024
 
 In this tutorial, we import taxonomic classification results and perform
 several basic analyses:
@@ -21,11 +21,13 @@ library(phyloseq)
 library(speedyseq) # faster tax_glom
 library(ggpubr) # for t-test
 
-diet.palette <- c(AL="seashell4",
-                  `1D`="skyblue",
-                  `2D`="royalblue4",
-                  `20`="orange",
-                  `40`="firebrick")
+diet.palette.w.combined <- c(
+  Combined="black",
+  AL="seashell4",
+  `1D`="skyblue",
+  `2D`="royalblue4",
+  `20`="orange",
+  `40`="firebrick")
 ```
 
 # Import Kraken data
@@ -63,7 +65,7 @@ agg.kraken.df[1:5, 1:4]
 
 ``` r
 stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 stool.meta.annot.df <- stool.meta.df %>%
@@ -72,7 +74,7 @@ stool.meta.annot.df <- stool.meta.df %>%
 dim(stool.meta.annot.df)
 ```
 
-    ## [1] 2997   25
+    ## [1] 2997   27
 
 ``` r
 n_distinct(stool.meta.annot.df$stool.ID)
@@ -194,7 +196,9 @@ agg.genus.bc.dist <- agg.physeq.genus %>%
 # Alpha diversity
 
 We’ll look at two ɑ-diversity metrics: Shannon index and Simpson’s
-index. Both of these metrics account for both richness and evenness.
+index. Both of these metrics account for both richness and evenness. We
+will plot data separately for each diet and if combining all data
+together.
 
 ``` r
 alpha.div.df.genus <- estimate_richness(
@@ -207,55 +211,66 @@ alpha.div.long.df.genus <- alpha.div.df.genus %>%
   pivot_longer(c(Shannon, Simpson), names_to="metric")
 ```
 
-## Versus age
+``` r
+# summarize per diet 
+alpha.div.plot.df.per.diet <- alpha.div.long.df.genus %>% 
+  dplyr::filter(metric %in% c("Shannon", "Simpson")) %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each metric, age, and diet combination
+  group_by(metric, Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+alpha.div.plot.df.across.diets <- alpha.div.long.df.genus %>% 
+  dplyr::filter(metric %in% c("Shannon", "Simpson")) %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  
+  # compute mean and SD across diets (separately for each metric)
+  group_by(metric, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3) %>% 
+  
+  # indicate that we summarized across diets
+  mutate(Diet = "Combined")
+```
 
 ``` r
-alpha.div.long.df.genus %>% 
+alpha.div.plot.df.per.diet %>% 
   
-  # omit the few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>% 
+  ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem, color=Diet)) +
   
-  ggplot(aes(x=age.approx.months, y=value)) +
+  # plot each diet separately
+  geom_path(alpha=0.3) +
+  geom_pointrange(alpha=0.3) +
   
-  # plot line of best fit
-  geom_smooth(method="lm") +
+  # plot all diets together
+  geom_path(data=alpha.div.plot.df.across.diets) +
+  geom_pointrange(data=alpha.div.plot.df.across.diets) +
   
-  geom_boxplot(aes(group=age.approx.months), fill="seagreen") +
+  # facet by alpha diversity metric
+  facet_wrap(~metric, scales="free") +
   
   # indicate that DR was initiated at 6 months
   geom_vline(xintercept=6, lty=2) +
   
-  facet_wrap(~metric, scales="free") +
-  labs(title="Alpha diversity versus age", x="Age (months)", y="") +
-  theme_bw(base_size=10)
-```
-
-    ## `geom_smooth()` using formula = 'y ~ x'
-
-<img src="tutorial_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
-
-## Versus diet
-
-``` r
-alpha.div.long.df.genus %>% 
+  # apply pre-defined color palette
+  scale_color_manual(values=diet.palette.w.combined) +
+  labs(x="Age (months)", y="", title="Alpha diversity") +
   
-  # omit the few 46 month samples for consistency with the versus age plot
-  dplyr::filter(age.approx.months <= 40) %>% 
-  
-  # specify diet order
-  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-  
-  ggplot(aes(x=Diet.5mo.as.AL, y=value, fill=Diet.5mo.as.AL)) +
-  geom_boxplot() +
-  
-  # t-test
-  stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
-  
-  labs(x="", y="") +
-  facet_wrap(~metric, scales="free") +
-  scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+  theme_classic(base_size=10)
 ```
 
 <img src="tutorial_files/figure-gfm/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
@@ -275,8 +290,6 @@ agg.genus.uniq.bc.df <- data.frame(
   merge(stool.meta.annot.df, by="stool.ID")
 ```
 
-## Versus age
-
 Regress uniqueness versus age to get slope and p-value.
 
 ``` r
@@ -291,55 +304,63 @@ agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients[
 ```
 
 ``` r
-agg.genus.uniq.bc.df %>% 
+# summarize per diet 
+uniq.plot.df.per.diet <- agg.genus.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
   
-  # omit few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>%
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
   
-  ggplot(aes(x=age.approx.months, y=uniqueness)) +
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+uniq.plot.df.across.diets <- agg.genus.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
   
-  # indicate that DR was initiated at 6 months
-  geom_vline(xintercept=6, lty=2) +
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
   
-  # plot line of best fit
-  geom_smooth(method="lm") +
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3) %>% 
   
-  geom_boxplot(aes(group=age.approx.months), fill="seagreen") +
-  
-  labs(x="Age (months)", y="Uniqueness", 
-       title=sprintf("Taxonomic uniqueness, slope = %.1e, p-value = %.1e",
-                     agg.genus.uniq.bc.lm.beta, agg.genus.uniq.bc.lm.pval)) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+  # indicate that we summarized across diets
+  mutate(Diet = "Combined")
 ```
-
-    ## `geom_smooth()` using formula = 'y ~ x'
-
-<img src="tutorial_files/figure-gfm/unnamed-chunk-19-1.png" width="75%" style="display: block; margin: auto;" />
-
-## Versus diet
 
 ``` r
-agg.genus.uniq.bc.df %>% 
+# plot
+uniq.plot.df.per.diet %>% 
+  ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+             color=Diet)) +
   
-  # omit the few 46 month samples for consistency with the versus age plot
-  dplyr::filter(age.approx.months <= 40) %>% 
+  # per diet
+  geom_path(alpha=0.3) +
+  geom_pointrange(alpha=0.3) +
   
-  # specify diet order
-  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  # across diets
+  geom_path(data=uniq.plot.df.across.diets) +
+  geom_pointrange(data=uniq.plot.df.across.diets) +
   
-  ggplot(aes(x=Diet.5mo.as.AL, y=uniqueness, fill=Diet.5mo.as.AL)) +
-  geom_boxplot() +
   
-  # t-test
-  stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
-  labs(x="Dietary group", y="Uniqueness", title="Taxonomic uniqueness") +
-  scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+  scale_color_manual(values=diet.palette.w.combined) +
+  labs(x="Age (months)", y="Uniqueness", color="Diet",
+       title=sprintf("Taxonomic uniqueness\nCombined slope = %.1e, p-value = %.1e",
+                     agg.genus.uniq.bc.lm.beta, agg.genus.uniq.bc.lm.pval)) +
+  geom_vline(xintercept=6, lty=2) +
+  theme_classic(base_size=10)
 ```
 
-<img src="tutorial_files/figure-gfm/unnamed-chunk-20-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="tutorial_files/figure-gfm/unnamed-chunk-20-1.png" width="75%" style="display: block; margin: auto;" />
 
 # PCoA
 
@@ -376,7 +397,7 @@ agg.pcoa.genus.bc.df %>%
   # slight transparency
   geom_point(alpha=0.8) +
 
-  scale_color_manual(values=diet.palette) +
+  scale_color_manual(values=diet.palette.w.combined) +
 
   # customize the legend for size
   scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2)) +
@@ -392,81 +413,100 @@ gradient (smaller dots at the bottom)
 
 # Examples of individual genera
 
-## Bifidobacterium versus age
+Create function for plotting mean ± SEM for individual features.
+
+``` r
+plot_one_genus_versus_age <- function(this.genus, type.of.error.bar="sem") {
+  
+  # summarize per diet 
+  plot.df.per.diet <- agg.physeq.genus %>% 
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == this.genus) %>% 
+    mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+    
+    # compute mean, SD, and SEM for each age and diet combination
+    group_by(Diet, age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(Abundance),
+              sd = sd(Abundance),
+              sem = sd(Abundance)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3)
+  
+  # summarize across diets
+  plot.df.across.diets <- agg.physeq.genus %>% 
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == this.genus) %>% 
+    
+    # compute mean, SD, and SEM across diets
+    group_by(age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(Abundance),
+              sd = sd(Abundance),
+              sem = sd(Abundance)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3) %>% 
+    
+    # indicate that we summarized across diets
+    mutate(Diet = "Combined")
+  
+  # indicate what to use for error bars
+  plot.df.per.diet <- plot.df.per.diet %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  plot.df.across.diets <- plot.df.across.diets %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  # plot
+  plot.df.per.diet %>%
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-error, ymax=mean+error,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3) +
+    geom_pointrange(alpha=0.3) +
+    
+    # across diets
+    geom_path(data=plot.df.across.diets) +
+    geom_pointrange(data=plot.df.across.diets) +
+  
+    scale_color_manual(values=diet.palette.w.combined) +
+    labs(x="Age (months)", y="Relative abundance (%)", color="Diet",
+         title=sprintf("%s", this.genus)) +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=10)
+}
+```
+
+### Bifidobacterium
 
 Bifidobacterium is the genus that increases the most with age.
 
 ``` r
-agg.physeq.genus %>%
-  
-  # convert to relative abundances
-  transform_sample_counts(function(x) x/sum(x)) %>% 
-  
-  # extract data from phyloseq object
-  psmelt %>% 
-  
-  # take log10
-  mutate(log10relab=log10(Abundance)) %>% 
-  
-  # subset to Bifido
-  dplyr::filter(genus == "Bifidobacterium") %>% 
-  
-  # omit the few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>%
-  
-  ggplot(aes(x=age.approx.months, y=log10relab)) +
-  
-  # indicate that DR was initiated at 6 months
-  geom_vline(xintercept=6, lty=2) +
-  
-  geom_smooth(method="lm") +
-  geom_boxplot(aes(group=age.approx.months), fill="seagreen") +
-  labs(x="Age (months)", y="log10(relab)", title="Bifidobacterium") +
-  theme_bw(base_size=10)
-```
-
-    ## `geom_smooth()` using formula = 'y ~ x'
-
-<img src="tutorial_files/figure-gfm/unnamed-chunk-24-1.png" width="50%" style="display: block; margin: auto;" />
-
-## Ligilactobacillus versus diet
-
-Ligilactobacillus is strongly increased by DR
-
-``` r
-agg.physeq.genus %>% 
-  
-  # convert to relative abundances
-  transform_sample_counts(function(x) x/sum(x)) %>% 
-  
-  # extract data from phyloseq object
-  psmelt %>% 
-  
-  # subset to Bifido
-  dplyr::filter(genus == "Ligilactobacillus") %>% 
-  
-  # omit the few 46 month samples
-  dplyr::filter(age.approx.months <= 40) %>%
-  
-  # specify diet order
-  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-  
-  # take log10
-  mutate(log10relab=log10(Abundance)) %>% 
-  
-  ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
-  geom_boxplot() +
-  
-  # t-test
-  stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
-  
-  labs(x="", y="log10(relab)", title="Ligilactobacillus", fill="Diet") +
-  scale_fill_manual(values=diet.palette) +
-  theme_bw(base_size=10) +
-  theme(legend.position="none")
+plot_one_genus_versus_age("Bifidobacterium", type.of.error.bar="sem")
 ```
 
 <img src="tutorial_files/figure-gfm/unnamed-chunk-25-1.png" width="60%" style="display: block; margin: auto;" />
+
+## Ligilactobacillus
+
+Ligilactobacillus increases with age and is strongly increased by DR.
+
+``` r
+plot_one_genus_versus_age("Ligilactobacillus", type.of.error.bar="sem")
+```
+
+<img src="tutorial_files/figure-gfm/unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" />
 
 # sessionInfo
 
@@ -474,54 +514,56 @@ agg.physeq.genus %>%
 sessionInfo()
 ```
 
-    ## R version 4.2.2 (2022-10-31)
-    ## Platform: x86_64-apple-darwin17.0 (64-bit)
-    ## Running under: macOS Big Sur ... 10.16
+    ## R version 4.3.2 (2023-10-31)
+    ## Platform: aarch64-apple-darwin20 (64-bit)
+    ## Running under: macOS Sonoma 14.3
     ## 
     ## Matrix products: default
-    ## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
-    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+    ## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
     ## 
     ## locale:
     ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## 
+    ## time zone: America/New_York
+    ## tzcode source: internal
     ## 
     ## attached base packages:
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
     ## 
     ## other attached packages:
-    ##  [1] ggpubr_0.6.0         speedyseq_0.5.3.9018 phyloseq_1.42.0     
-    ##  [4] lubridate_1.9.2      forcats_1.0.0        stringr_1.5.0       
-    ##  [7] dplyr_1.1.2          purrr_1.0.2          readr_2.1.4         
-    ## [10] tidyr_1.3.0          tibble_3.2.1         ggplot2_3.4.2       
+    ##  [1] ggpubr_0.6.0         speedyseq_0.5.3.9018 phyloseq_1.46.0     
+    ##  [4] lubridate_1.9.3      forcats_1.0.0        stringr_1.5.1       
+    ##  [7] dplyr_1.1.4          purrr_1.0.2          readr_2.1.5         
+    ## [10] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.1       
     ## [13] tidyverse_2.0.0     
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] nlme_3.1-163           bitops_1.0-7           GenomeInfoDb_1.34.9   
-    ##  [4] tools_4.2.2            backports_1.4.1        utf8_1.2.3            
-    ##  [7] R6_2.5.1               vegan_2.6-4            DBI_1.1.3             
-    ## [10] BiocGenerics_0.44.0    mgcv_1.9-0             colorspace_2.1-0      
-    ## [13] permute_0.9-7          rhdf5filters_1.10.1    ade4_1.7-22           
-    ## [16] withr_2.5.0            tidyselect_1.2.0       compiler_4.2.2        
-    ## [19] cli_3.6.1              Biobase_2.58.0         labeling_0.4.2        
-    ## [22] scales_1.2.1           digest_0.6.33          rmarkdown_2.23        
-    ## [25] XVector_0.38.0         pkgconfig_2.0.3        htmltools_0.5.5       
-    ## [28] highr_0.10             fastmap_1.1.1          rlang_1.1.1           
-    ## [31] rstudioapi_0.15.0      generics_0.1.3         farver_2.1.1          
-    ## [34] jsonlite_1.8.7         car_3.1-2              RCurl_1.98-1.12       
-    ## [37] magrittr_2.0.3         GenomeInfoDbData_1.2.9 biomformat_1.26.0     
-    ## [40] Matrix_1.6-0           Rcpp_1.0.11            munsell_0.5.0         
-    ## [43] S4Vectors_0.36.2       Rhdf5lib_1.20.0        fansi_1.0.4           
-    ## [46] ape_5.7-1              abind_1.4-5            lifecycle_1.0.3       
-    ## [49] stringi_1.7.12         yaml_2.3.7             carData_3.0-5         
-    ## [52] MASS_7.3-60            zlibbioc_1.44.0        rhdf5_2.42.1          
-    ## [55] plyr_1.8.8             grid_4.2.2             parallel_4.2.2        
-    ## [58] crayon_1.5.2           lattice_0.21-8         Biostrings_2.66.0     
-    ## [61] splines_4.2.2          multtest_2.54.0        hms_1.1.3             
-    ## [64] knitr_1.43             pillar_1.9.0           igraph_1.5.1          
-    ## [67] ggsignif_0.6.4         reshape2_1.4.4         codetools_0.2-19      
-    ## [70] stats4_4.2.2           glue_1.6.2             evaluate_0.21         
-    ## [73] data.table_1.14.8      vctrs_0.6.3            tzdb_0.4.0            
-    ## [76] foreach_1.5.2          gtable_0.3.3           xfun_0.40             
-    ## [79] broom_1.0.5            rstatix_0.7.2          survival_3.5-5        
-    ## [82] iterators_1.0.14       IRanges_2.32.0         cluster_2.1.4         
-    ## [85] timechange_0.2.0
+    ##  [1] ade4_1.7-22             tidyselect_1.2.1        farver_2.1.2           
+    ##  [4] Biostrings_2.70.3       bitops_1.0-7            fastmap_1.1.1          
+    ##  [7] RCurl_1.98-1.14         digest_0.6.35           timechange_0.3.0       
+    ## [10] lifecycle_1.0.4         cluster_2.1.6           survival_3.5-8         
+    ## [13] magrittr_2.0.3          compiler_4.3.2          rlang_1.1.4            
+    ## [16] tools_4.3.2             igraph_2.0.3            utf8_1.2.4             
+    ## [19] yaml_2.3.8              data.table_1.15.4       ggsignif_0.6.4         
+    ## [22] knitr_1.47              labeling_0.4.3          plyr_1.8.9             
+    ## [25] abind_1.4-5             withr_3.0.0             BiocGenerics_0.48.1    
+    ## [28] grid_4.3.2              stats4_4.3.2            fansi_1.0.6            
+    ## [31] multtest_2.58.0         biomformat_1.30.0       colorspace_2.1-0       
+    ## [34] Rhdf5lib_1.24.2         scales_1.3.0            iterators_1.0.14       
+    ## [37] MASS_7.3-60.0.1         cli_3.6.3               rmarkdown_2.26         
+    ## [40] vegan_2.6-4             crayon_1.5.2            generics_0.1.3         
+    ## [43] rstudioapi_0.16.0       reshape2_1.4.4          tzdb_0.4.0             
+    ## [46] ape_5.8                 rhdf5_2.46.1            zlibbioc_1.48.2        
+    ## [49] splines_4.3.2           parallel_4.3.2          XVector_0.42.0         
+    ## [52] vctrs_0.6.5             Matrix_1.6-5            carData_3.0-5          
+    ## [55] jsonlite_1.8.8          car_3.1-2               IRanges_2.36.0         
+    ## [58] hms_1.1.3               S4Vectors_0.40.2        rstatix_0.7.2          
+    ## [61] foreach_1.5.2           glue_1.7.0              codetools_0.2-20       
+    ## [64] stringi_1.8.3           gtable_0.3.5            GenomeInfoDb_1.38.8    
+    ## [67] munsell_0.5.1           pillar_1.9.0            htmltools_0.5.8.1      
+    ## [70] rhdf5filters_1.14.1     GenomeInfoDbData_1.2.11 R6_2.5.1               
+    ## [73] evaluate_0.24.0         lattice_0.22-6          Biobase_2.62.0         
+    ## [76] highr_0.11              backports_1.4.1         broom_1.0.5            
+    ## [79] Rcpp_1.0.12             nlme_3.1-164            permute_0.9-7          
+    ## [82] mgcv_1.9-1              xfun_0.45               pkgconfig_2.0.3
