@@ -1,10 +1,9 @@
-# Very similar to run_asreml.R but using lme4qtl instead of ASReml
+# Run a linear mixed model for all features.
+# Very similar to run_asreml.R but uses lme4qtl instead of ASReml.
+# This script takes > 1 hour on a laptop (100 features and 3000 samples)
 
-# Run a linear model for all features with the following specification:
-
-# y_mb ~ age (f) + diet (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r) 
-
-# this script is fast enough to run locally, i.e. no need for a cluster (~1 hour for 100 features)
+# set working directory
+setwd("~/DRiDO_microbiome_github/scripts")
 
 # load libraries
 suppressPackageStartupMessages(library(tidyverse))
@@ -12,20 +11,29 @@ suppressPackageStartupMessages(library(lme4qtl))
 suppressPackageStartupMessages(library(foreach)) # for parallel for-loop
 suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
 
-# change working directory
-setwd("~/DRiDO_microbiome_github/scripts/")
-
 ### --- INPUTS --- ###
-
-# specify output directory
-out.dir <- "../results/lme4qtl_kraken_genus/"
-stopifnot(dir.exists(out.dir))
 
 # import microbiome data
 mb.df <- read.table(
-  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt", 
+  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
   sep="\t", header=T, row.names=1)
-# mb.df[1:5, 1:3]
+# mb.df[1:5, 1:5]
+
+# make sure output directory already exists
+out.dir <- "../results/lme4qtl_kraken_genus/"
+if (!dir.exists(out.dir)) {
+  stop(sprintf("Output directory must already exist. out.dir: %s", out.dir))
+}
+
+# specify model
+# 1|mouse.ID accounts for additive genetic effects, while
+# 1|mouse.ID.repeatability accounts for repeatability
+formula.RHS <- "~ age.wks.scaled + Diet.5mo.as.AL + (1|Quarter.Date) + (1|mouse.ID) + (1|mouse.ID.repeatability) + (1|Batch) + (1|Cohort) + (1|Cage)"
+cat(sprintf("Model: %s\n", formula.RHS))
+
+# specify model without genetics to calculate LRT
+formula.no.genetics.RHS <- "~ age.wks.scaled + Diet.5mo.as.AL + (1|Quarter.Date) + (1|mouse.ID.repeatability) + (1|Batch) + (1|Cohort) + (1|Cage)"
+cat(sprintf("Model without genetics: %s\n", formula.no.genetics.RHS))
 
 # import kinship matrix
 kinship.df <- read.csv(
@@ -52,11 +60,8 @@ run_lme4qtl_one_feat <- function(this.feat, this.df, this.kinship.mat) {
   
   cat(this.feat, "\n")
 
-  # 1|mouse.ID accounts for additive genetic effects, while
-  # 1|mouse.ID.repeatability accounts for repeatability
-  this.formula <- as.formula(paste0(
-    this.feat, "~ age.wks.scaled + Diet.5mo.as.AL + (1|mouse.ID) + (1|mouse.ID.repeatability) + (1|Batch) + (1|Cohort) + (1|Cage)"
-    ))
+  # define model
+  this.formula <- as.formula(paste(this.feat, formula.RHS))
   
   # fit model
   this.model <- relmatLmer(
@@ -71,10 +76,8 @@ run_lme4qtl_one_feat <- function(this.feat, this.df, this.kinship.mat) {
   ranef.df <- VarProp(this.model) %>% 
     mutate(feature=this.feat)
   
-  # run model without genetics
-  this.reduced.formula <- as.formula(paste0(
-    this.feat, "~ age.wks.scaled + Diet.5mo.as.AL + (1|mouse.ID.repeatability) + (1|Batch) + (1|Cohort) + (1|Cage)"
-    ))
+  # define model without genetics
+  this.reduced.formula <- as.formula(paste(this.feat, formula.no.genetics.RHS))
   
   # I'm using relmatLmer, but lmer would also work
   this.model.no.genetics <- relmatLmer(
@@ -114,6 +117,11 @@ mb.scaled.df <- mb.df %>%
   data.frame() %>% # keep samples in the rows
   rownames_to_column("stool.ID")
 # dim(mb.scaled.df)
+
+# create new columns related to date of stool collection
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  mutate(collection.date = ymd(date.stool.collection.approx)) %>% 
+  mutate(quarter.collection.date = round_date(collection.date, "quarter"))
 
 # add metadata to microbiome data
 mb.scaled.annot.df <- merge(
@@ -155,7 +163,8 @@ final.mb.annot.df <- final.mb.annot.df %>%
          Cohort=factor(Cohort),
          Cage=factor(Cage),
          Batch=factor(ext.batch),
-         mouse.ID.repeatability=mouse.ID)
+         mouse.ID.repeatability=mouse.ID,
+         Quarter.Date=factor(quarter.collection.date))
 
 # multiply kinship by 2
 kinship.mat.x2 <- kinship.mat*2
@@ -174,4 +183,3 @@ IGNORE <- foreach(
   }
 
 cat("Done!\n")
-

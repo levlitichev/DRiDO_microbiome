@@ -12,7 +12,7 @@ library(phyloseq)
 ```{r}
 seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", sep="\t", header=T)
 lib.meta.df <- read.table("../data/metadata/library_metadata_after_QC_n3213_230620.txt", sep="\t", header=T)
-stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_240418.txt", sep="\t", header=T)
 ```
 
 ```{r}

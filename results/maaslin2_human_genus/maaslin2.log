@@ -1,0 +1,42 @@
+2024-10-17 09:46:07.344755 INFO::Writing function arguments to log file
+2024-10-17 09:46:07.345597 DEBUG::Function arguments
+2024-10-17 09:46:07.347156 DEBUG::Output folder: ../results/maaslin2_human_genus
+2024-10-17 09:46:07.34775 DEBUG::Min Abundance: 0.000000
+2024-10-17 09:46:07.349159 DEBUG::Min Prevalence: 0.000000
+2024-10-17 09:46:07.349643 DEBUG::Normalization: NONE
+2024-10-17 09:46:07.351053 DEBUG::Transform: NONE
+2024-10-17 09:46:07.352161 DEBUG::Analysis method: LM
+2024-10-17 09:46:07.354369 DEBUG::Max significance: 0.250000
+2024-10-17 09:46:07.354957 DEBUG::Random effects: study_name
+2024-10-17 09:46:07.355994 DEBUG::Fixed effects: age
+2024-10-17 09:46:07.356719 DEBUG::Correction method: BH
+2024-10-17 09:46:07.357761 DEBUG::Standardize: TRUE
+2024-10-17 09:46:07.358301 DEBUG::Cores: 4
+2024-10-17 09:46:07.359479 INFO::Verifying options selected are valid
+2024-10-17 09:46:07.360461 INFO::Determining format of input files
+2024-10-17 09:46:07.36243 INFO::Input format is data samples as rows and metadata samples as rows
+2024-10-17 09:46:07.363734 DEBUG::A total of 4101 samples were found in both the data and metadata
+2024-10-17 09:46:07.365682 DEBUG::Reordering data/metadata to use same sample ordering
+2024-10-17 09:46:07.369875 INFO::Formula for random effects: expr ~ (1 | study_name)
+2024-10-17 09:46:07.371215 INFO::Formula for fixed effects: expr ~  age
+2024-10-17 09:46:07.37192 INFO::Filter data based on min abundance and min prevalence
+2024-10-17 09:46:07.373785 INFO::Total samples in data: 4101
+2024-10-17 09:46:07.374501 INFO::Min samples required with min abundance for a feature not to be filtered: 0.000000
+2024-10-17 09:46:07.378591 INFO::Total filtered features: 0
+2024-10-17 09:46:07.379779 INFO::Filtered feature names from abundance and prevalence filtering:
+2024-10-17 09:46:07.386776 INFO::Total filtered features with variance filtering: 0
+2024-10-17 09:46:07.387896 INFO::Filtered feature names from variance filtering:
+2024-10-17 09:46:07.389833 INFO::Running selected normalization method: NONE
+2024-10-17 09:46:07.390522 INFO::Applying z-score to standardize continuous metadata
+2024-10-17 09:46:07.393116 INFO::Running selected transform method: NONE
+2024-10-17 09:46:07.394018 INFO::Running selected analysis method: LM
+2024-10-17 09:46:07.396351 INFO::Creating cluster of 4 R processes
+2024-10-17 09:46:17.744785 INFO::Counting total values for each feature
+2024-10-17 09:46:17.761786 INFO::Writing filtered data to file ../results/maaslin2_human_genus/features/filtered_data.tsv
+2024-10-17 09:46:17.930406 INFO::Writing filtered, normalized data to file ../results/maaslin2_human_genus/features/filtered_data_norm.tsv
+2024-10-17 09:46:18.097159 INFO::Writing filtered, normalized, transformed data to file ../results/maaslin2_human_genus/features/filtered_data_norm_transformed.tsv
+2024-10-17 09:46:18.271506 INFO::Writing residuals to file ../results/maaslin2_human_genus/fits/residuals.rds
+2024-10-17 09:46:18.35973 INFO::Writing fitted values to file ../results/maaslin2_human_genus/fits/fitted.rds
+2024-10-17 09:46:18.405448 INFO::Writing extracted random effects to file ../results/maaslin2_human_genus/fits/ranef.rds
+2024-10-17 09:46:18.410297 INFO::Writing all results to file (ordered by increasing q-values): ../results/maaslin2_human_genus/all_results.tsv
+2024-10-17 09:46:18.412665 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.250000 ) to file (ordered by increasing q-values): ../results/maaslin2_human_genus/significant_results.tsv

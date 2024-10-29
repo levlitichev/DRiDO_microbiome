@@ -1,6 +1,11 @@
 ---
-title: "Analysis of pathway results from HUMAnN"
+title: "Analysis of pathway results based on HUMAnN"
 ---
+
+**2024-10-20 updates:**
+- Time is a random effect instead of fixed effect
+- Volcano plots instead of barplots for age and heritability
+- Plotting individual features against age using mean ± SEM, instead of boxplots
 
 # Load libraries
 
@@ -46,7 +51,6 @@ stool.meta.annot.df <- stool.meta.annot.df %>%
     levels=c("AL", "1D", "2D", "20", "40")))
 ```
 
-
 # Import pathway data
 
 ```{r}
@@ -83,28 +87,12 @@ pathway.log2tpm.df <- log2(pathway.tpm.df.no.zeros)
 dim(pathway.log2tpm.df)
 ```
 
-# Create alternative pathway labels
+## Import short and long pathway names
 
 ```{r}
-pathway.names.df <- data.frame(original = rownames(pathway.log2tpm.df)) %>% 
-  
-  # extract the pathway ID (before the colon)
-  mutate(short = str_extract(original, "(.*):")) %>% 
-  mutate(short = str_sub(short, 1, nchar(short)-1)) %>% 
-  
-  # remove punctuation
-  mutate(short.clean = str_replace_all(short, "[:punct:]", "")) %>% 
-  
-  # for some reason, + not included in punct?
-  mutate(short.clean = str_replace_all(short.clean, "\\+", "")) %>%
-  
-  # prefix with X if it starts with a number
-  mutate(short.clean = case_when(
-    str_detect(short.clean, "^[:digit:]") ~ paste0("X", short.clean),
-    TRUE ~ short.clean)) %>% 
-  
-  arrange(short.clean) %>% 
-  relocate(short.clean) 
+pathway.names.df <- read.table(
+  "../data/metadata/pathway_long_and_short_names_n703.txt",
+  sep="\t", header=T, quote="")
 ```
 
 Add additional columns for plotting.
@@ -123,33 +111,40 @@ pathway.names.df <- pathway.names.df %>%
 
 We need `short.clean` and `after.colon.short.w.ID`.
 
+`original` is unique, but `short.clean` is not. Let's make the mapping one-to-one. Not sure which original pathway name is best to keep, so will choose randomly.
+
+```{r}
+pathway.names.uniq.df <- pathway.names.df %>% 
+  distinct(short.clean, .keep_all=T)
+```
+
 # Import ASReml results
 
 ## Age and DR as fixed effects
 
-Model: y_mb ~ age (f) + diet (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+Model: y_mb ~ age (f) + diet (f) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 
 ```{r}
 pathway.fixef.df <- read.table(
-  "../results/asreml_humann_pathways/fixef.txt",
+  "../results/asreml_humann_pathways_w_time_ranef/fixef.txt",
   sep="\t", header=T)
 
 pathway.ranef.df <- read.table(
-  "../results/asreml_humann_pathways/ranef.txt",
+  "../results/asreml_humann_pathways_w_time_ranef/ranef.txt",
   sep="\t", header=T)
 
 pathway.herit.df <- read.table(
-  "../results/asreml_humann_pathways/herit.txt",
+  "../results/asreml_humann_pathways_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
 ## All random effects
 
-Model: y_mb ~ age (r) + diet (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+Model: y_mb ~ age (r) + diet (r) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 
 ```{r}
 pathway.ranef.df.all.ranef.model <- read.table(
-  "../results/asreml_humann_pathways_all_ranef/ranef.txt",
+  "../results/asreml_humann_pathways_all_ranef_w_time/ranef.txt",
   sep="\t", header=T)
 ```
 
@@ -206,7 +201,7 @@ Also indicate if this pathway passed prevalence filtration.
 ```{r}
 pathway.type.df <- pathway.type.df %>% 
   dplyr::rename(original = pathway) %>% 
-  merge(pathway.names.df, by="original") %>% 
+  merge(pathway.names.uniq.df, by="original") %>% 
   mutate(passed.prev.filt = short.clean %in% unique(pathway.fixef.df$feature))
 ```
 
@@ -245,9 +240,9 @@ one.comm.and.one.spec.path <- c(
 ```
 
 ```{r}
-# pdf("../plots/community_wide_v_specialized_pathway_example_histograms.pdf", height=3, width=1.5)
-# example.comm.v.specialized.histograms
-# dev.off()
+pdf("../plots/community_wide_v_specialized_pathway_example_histograms.pdf", height=3, width=1.5)
+example.comm.v.specialized.histograms
+dev.off()
 ```
 
 # Uniqueness
@@ -263,24 +258,61 @@ pathway.uniq.df <- data.frame(
 ```
 
 ```{r}
-(pathway.uniq.v.age.p <- pathway.uniq.df %>% 
-   dplyr::filter(age.approx.months <= 40) %>%
-   ggplot(aes(x=age.approx.months, y=uniqueness)) +
-   geom_vline(xintercept=6, lty=2) +
-   geom_smooth(method="lm", color=age.color, linewidth=0.5) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
-                outlier.shape=16, outlier.size=0.5) +
-   labs(x="Age (months)", y="Uniqueness", 
-        title="Functional uniqueness") +
-   theme_classic(base_size=8) +
-   theme(legend.position="none")
-)
+# summarize per diet 
+pathway.uniq.plot.df.per.diet <- pathway.uniq.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+pathway.uniq.plot.df.across.diets <- pathway.uniq.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
 ```
 
 ```{r}
-# pdf("../plots/fxn_uniq_v_age_boxplots.pdf", width=2, height=2)
-# pathway.uniq.v.age.p
-# dev.off()
+# plot
+(pathway.uniq.v.age.mean.SEM.p <- pathway.uniq.plot.df.per.diet %>% 
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3, linewidth=0.5) +
+    geom_pointrange(alpha=0.3, size=0.1, shape=16) +
+    
+    # across diets
+    geom_path(aes(color=NULL), linewidth=0.5, data=pathway.uniq.plot.df.across.diets) +
+    geom_pointrange(aes(color=NULL), size=0.1, shape=16, data=pathway.uniq.plot.df.across.diets) +
+    
+    scale_color_manual(values=diet.palette) +
+    labs(x="Age (months)", y="Uniqueness", color="Diet",
+         title="Functional uniqueness") +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/fxn_uniq_v_age_mean_SEM.pdf", width=2, height=2)
+pathway.uniq.v.age.mean.SEM.p + theme(legend.position="none")
+dev.off()
 ```
 
 # PCA
@@ -310,13 +342,13 @@ frac.var.explained.by.pcs[1:3]
 ```
 
 ```{r}
-(pathway.pca.p <- pca.pathway.log2tpm.df %>% 
-   arrange(desc(age.approx.months)) %>% {
-     ggplot(., aes(x=PC1, y=PC2, color=Diet.5mo.as.AL, size=age.approx.months)) +
-       geom_point(shape=16, alpha=0.8) +
-       scale_color_manual(values=diet.palette) +
-       scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2))
-   })
+pathway.pca.p <- pca.pathway.log2tpm.df %>% 
+  arrange(desc(age.approx.months)) %>% {
+    ggplot(., aes(x=PC1, y=PC2, color=Diet.5mo.as.AL, size=age.approx.months)) +
+      geom_point(shape=16, alpha=0.8) +
+      scale_color_manual(values=diet.palette) +
+      scale_size_continuous(breaks=c(5,10,16,22,28,34,40,46), range=c(0.25,2))
+  }
 ```
 
 ## With barplots
@@ -431,7 +463,9 @@ BCCCCCCD
 ```{r}
 pathway.age.df <- pathway.fixef.df %>% 
   dplyr::filter(fixef == "age.wks.scaled") %>% 
-  merge(pathway.names.df, by.x="feature", by.y="short.clean", all.x=T) # all.x=T for uniqueness
+  merge(pathway.names.uniq.df, by.x="feature", by.y="short.clean", all.x=T) # all.x=T for uniqueness
+
+dim(pathway.age.df)
 ```
 
 Adjust p-values.
@@ -442,6 +476,31 @@ pathway.age.df <- pathway.age.df %>%
   mutate(is.sig = padj < PADJ.THRESH)
 ```
 
+```{r}
+pathway.age.df %>% 
+  dplyr::filter(feature != "Uniqueness") %>% 
+  dplyr::count(is.sig)
+
+pathway.age.df%>% 
+  dplyr::count(is.sig)
+```
+
+```{r}
+139/ (133+139)
+140/ (133+140)
+```
+
+* 51% of pathway features associated with age (with or without uniqueness)
+
+N.B. Uniqueness increases with age:
+
+```{r}
+pathway.age.df %>% 
+  dplyr::filter(feature == "Uniqueness")
+```
+
+padj = 0.003
+
 ## Community-wide versus specialized
 
 ```{r}
@@ -450,101 +509,191 @@ pathway.age.df.w.max.genus.cor <- pathway.age.df %>%
 ```
 
 ```{r}
-age.assoc.pathways <- c(
-  
-  # specialized, increases with age
-  "PWY-622: starch biosynthesis",
-  
-  # community-wide, decreases with age
-  "PWY-1042: glycolysis IV"
-  
-)
+pathway.age.df.w.max.genus.cor %>% 
+  dplyr::filter(str_detect(original.x, "glycolysis IV")) %>% 
+  relocate(original.x, pathway.type)
 
-(age.assoc.comm.v.specialized.histograms <- genus.v.pathway.cor.long.df %>% 
-    dplyr::filter(pathway %in% age.assoc.pathways) %>% 
-    ggplot(aes(cor, fill=pathway.type)) +
-    geom_histogram() +
-    geom_vline(xintercept=0.5, lty=2) +
-    facet_wrap(~pathway.type + pathway, ncol=1, scales="free_y") +
-    labs(x="Correlation with a genus", y="# correlations") +
-    scale_fill_manual(values=pathway.type.palette) +
-    theme_classic(base_size=8) +
-    theme(legend.position="none"))
+pathway.age.df.w.max.genus.cor %>% 
+  dplyr::filter(str_detect(original.x, "DAPLYSINESYN-PWY")) %>% 
+  relocate(original.x, pathway.type, closest.genus)
 ```
 
 ```{r}
-# pdf("../plots/community_wide_v_specialized_pathway_histograms_age_assoc.pdf", height=3, width=1.5)
-# age.assoc.comm.v.specialized.histograms
-# dev.off()
-```
-
-## Barplot
-
-```{r}
-age.assoc.pathways.short <- c(
-  
-  "Uniqueness",
-  
-  # specialized, increases with age
-  "PWY622", 
-  
-  # community-wide, decreases with age
-  "PWY1042"
-  
-)
+(glycolysis.corr.w.genera.hist <- genus.v.pathway.cor.long.df %>% 
+   dplyr::filter(str_detect(pathway, "glycolysis IV")) %>% 
+   ggplot(aes(cor, fill=pathway.type)) +
+   geom_histogram() +
+   geom_vline(xintercept=0.5, lty=2) +
+   facet_wrap(~pathway.type + pathway, ncol=1, scales="free_y") +
+   labs(x="Correlation with a genus", y="# correlations") +
+   scale_fill_manual(values=pathway.type.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
 ```
 
 ```{r}
-(age.effect.pathways.p <- pathway.age.df %>% 
+pdf("../plots/glycolysis_corr_w_genera_hist.pdf", height=2, width=2)
+glycolysis.corr.w.genera.hist
+dev.off()
+```
+
+```{r}
+(lysine.biosynth.corr.w.genera.hist <- genus.v.pathway.cor.long.df %>% 
+   dplyr::filter(str_detect(pathway, "DAPLYSINESYN-PWY")) %>% 
+   ggplot(aes(cor, fill=pathway.type)) +
+   geom_histogram() +
+   geom_vline(xintercept=0.5, lty=2) +
+   facet_wrap(~pathway.type + pathway, ncol=1, scales="free_y") +
+   labs(x="Correlation with a genus", y="# correlations") +
+   scale_fill_manual(values=pathway.type.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/lysine_biosynth_corr_w_genera_hist.pdf", height=2, width=2)
+lysine.biosynth.corr.w.genera.hist
+dev.off()
+```
+
+## Volcano plot
+
+```{r}
+# age.assoc.pathways.short.for.volcano <- pathway.age.df %>% dplyr::filter(is.sig) %>% pull(feature)
+age.assoc.pathways.short.for.volcano <- pathway.age.df %>% slice_min(padj, n=6) %>% pull(feature)
+```
+
+```{r}
+pathway.age.df %>% 
+  dplyr::filter(padj < 0.01) %>% 
+  relocate(after.colon.short.w.ID, original) %>% 
+  arrange(solution) %>% 
+  group_by(sign(solution)) %>% 
+  slice_min(padj, n=3) %>% 
+  ungroup()
+```
+
+```{r}
+(age.effect.pathways.volcano <- pathway.age.df %>% 
+   mutate(neg.log10padj = case_when(padj == 0 ~ 16, TRUE ~ -log10(padj))) %>% 
    mutate(label = case_when(
      feature == "Uniqueness" ~ "Uniqueness",
-     feature %in% age.assoc.pathways.short ~ after.colon.short.w.ID,
+     feature %in% age.assoc.pathways.short.for.volcano ~ after.colon.short.w.ID,
      TRUE ~ ""
    )) %>%
-   ggplot(aes(y=reorder(feature, solution), x=solution, 
-              xmin=solution-std.error, xmax=solution+std.error,
-              label=label)) +
-   geom_col(aes(fill=is.sig)) +
-   geom_linerange(linewidth=0.25) +
-   geom_vline(xintercept=0, lty=2) +
-   geom_text_repel(max.overlaps=Inf, nudge_x=0.01, min.segment.length=0, size=0.36*6) +
-   labs(y="", x="Age effect", 
-        color=sprintf("padj < %.2f?", PADJ.THRESH)) +
-   theme_void(base_size=8) +
-   theme(axis.text.y=element_blank(),
-         legend.position="none") + 
-   scale_fill_manual(values=c(`TRUE`=age.color, `FALSE`="gray80"))
-)
-```
-
-```{r}
-# pdf("../plots/asreml_age_effect_pathway_barplot.pdf", height=3.5, width=2)
-# age.effect.pathways.p
-# dev.off()
-```
-
-## Examples
-
-```{r}
-(glycolysis4.v.age.boxplots.p <- pathway.log2tpm.df["PWY-1042: glycolysis IV", ] %>% 
-   t() %>% 
-   data.frame() %>% 
-   setNames("log2tpm") %>% 
-   rownames_to_column("stool.ID") %>% 
-   merge(stool.meta.annot.df, by="stool.ID") %>% 
-   ggplot(aes(x=age.approx.months, y=log2tpm)) +
-   geom_smooth(method="lm", color=age.color, linewidth=0.5) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
-                outlier.shape=16, outlier.size=0.5) +
-   geom_vline(xintercept=6, lty=2) +
-   labs(x="Age (months)", y="log2(TPM)", title="glycolysis IV (PWY-1042)") +
+   ggplot(aes(x=solution, y=neg.log10padj, color=is.sig, label=label)) +
+   geom_hline(yintercept=2, lty=2) + # padj = 0.01
+   geom_point() +
+   geom_text_repel(nudge_x=0.01, min.segment.length=0, size=0.36*6, max.overlaps=Inf) +
+   labs(x="<-- Decreases with age | Increases with age -->",
+        color="padj < 0.01?") +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
    theme_classic(base_size=8))
 ```
 
 ```{r}
-# pdf("../plots/glycolysis_IV_v_age_boxplots.pdf", height=2, width=2)
-# glycolysis4.v.age.boxplots.p
-# dev.off()
+pdf("../plots/asreml_age_effect_pathways_volcano.pdf", height=2.5, width=2.5)
+age.effect.pathways.volcano + theme(legend.position="none")
+dev.off()
+```
+
+## Examples
+
+Mean ± SEM.
+
+```{r}
+plot_one_pathway_versus_age <- function(this.pathway, type.of.error.bar="sem") {
+  
+  # summarize per diet 
+  plot.df.per.diet <- pathway.log2tpm.df[this.pathway, ] %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("log2tpm") %>% 
+    rownames_to_column("stool.ID") %>% 
+    merge(stool.meta.annot.df, by="stool.ID") %>%
+    dplyr::filter(age.approx.months <= 40) %>% 
+    mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+    
+    # compute mean, SD, and SEM for each age and diet combination
+    group_by(Diet, age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(log2tpm),
+              sd = sd(log2tpm),
+              sem = sd(log2tpm)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3)
+  
+  # summarize across diets
+  plot.df.across.diets <- pathway.log2tpm.df[this.pathway, ] %>% 
+    t() %>% 
+    data.frame() %>% 
+    setNames("log2tpm") %>% 
+    rownames_to_column("stool.ID") %>% 
+    merge(stool.meta.annot.df, by="stool.ID") %>%
+    dplyr::filter(age.approx.months <= 40) %>% 
+    mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+    
+    # compute mean, SD, and SEM across diets
+    group_by(age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(log2tpm),
+              sd = sd(log2tpm),
+              sem = sd(log2tpm)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3)
+  
+  # indicate what to use for error bars
+  plot.df.per.diet <- plot.df.per.diet %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "2sem" ~ 2*sem,
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  plot.df.across.diets <- plot.df.across.diets %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "2sem" ~ 2*sem,
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  # plot
+  plot.df.per.diet %>%
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-error, ymax=mean+error,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3, linewidth=0.5) +
+    geom_pointrange(alpha=0.3, size=0.01, shape=16) +
+    
+    # across diets
+    geom_path(aes(color=NULL), linewidth=0.5, data=plot.df.across.diets) +
+    geom_pointrange(aes(color=NULL), shape=16, size=0.01, data=plot.df.across.diets) +
+  
+    scale_color_manual(values=diet.palette) +
+    labs(x="Age (months)", y="log2(TPM)", color="Diet",
+         title=sprintf("%s", this.pathway)) +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=8)
+}
+```
+
+#### Glycolysis 4
+
+```{r}
+pdf("../plots/glycolysis_v_age_mean_SEM.pdf", height=2, width=2)
+plot_one_pathway_versus_age("PWY-1042: glycolysis IV") +
+  theme(legend.position="none")
+dev.off()
+```
+
+#### L-lysine biosynthesis
+
+```{r}
+pdf("../plots/lysine_biosynth_v_age_mean_SEM.pdf", height=2, width=2)
+plot_one_pathway_versus_age("DAPLYSINESYN-PWY: L-lysine biosynthesis I") +
+  theme(legend.position="none")
+dev.off()
 ```
 
 # Effect of diet
@@ -553,7 +702,7 @@ age.assoc.pathways.short <- c(
 pathway.DR.df <- pathway.fixef.df %>% 
   dplyr::filter(fixef == "Diet.5mo.as.AL") %>% 
   dplyr::filter(fixef.value != "AL") %>% # the AL row doesn't add anything
-  merge(pathway.names.df, by.x="feature", by.y="short.clean", all.x=T) # all.x=T for uniqueness
+  merge(pathway.names.uniq.df, by.x="feature", by.y="short.clean", all.x=T) # all.x=T for uniqueness
 
 dim(pathway.DR.df)
 n_distinct(pathway.DR.df$feature)
@@ -571,40 +720,54 @@ pathway.DR.df <- pathway.DR.df %>%
   merge(DR.padj.df, by="feature") %>% 
   mutate(is.sig = padj < PADJ.THRESH)
 
+pathway.DR.df %>% dplyr::filter(fixef.value == "40") %>% dplyr::count(is.sig)
 dim(pathway.DR.df)
 ```
+
+* 244 of 273 pathways are DR-associated
 
 ## Community-wide versus specialized
 
 ```{r}
-DR.pathways <- c(
-  
-  "OANTIGEN-PWY: O-antigen building blocks biosynthesis (E. coli)",
-  "PWY-2941: L-lysine biosynthesis II",
-  "CITRULBIO-PWY: L-citrulline biosynthesis",
-  "PWY-4984: urea cycle"
-
-  )
+pathway.type.df %>% 
+  dplyr::filter(original == "PWY-2941: L-lysine biosynthesis II") 
 ```
 
-
 ```{r}
-(DR.comm.v.specialized.histograms <- genus.v.pathway.cor.long.df %>%
-   dplyr::filter(pathway %in% DR.pathways) %>% 
+(lysine.biosynth.II.corr.w.genera.hist <- genus.v.pathway.cor.long.df %>% 
+   dplyr::filter(pathway == "PWY-2941: L-lysine biosynthesis II") %>% 
    ggplot(aes(cor, fill=pathway.type)) +
    geom_histogram() +
    geom_vline(xintercept=0.5, lty=2) +
-   facet_wrap(~pathway.type + pathway, nrow=1, scales="free_y") +
+   facet_wrap(~pathway.type + pathway, ncol=1, scales="free_y") +
    labs(x="Correlation with a genus", y="# correlations") +
    scale_fill_manual(values=pathway.type.palette) +
-   scale_x_continuous(breaks=c(-0.5, 0, 0.5)) +
    theme_classic(base_size=8) +
    theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/community_wide_v_specialized_pathway_histograms_DR.pdf", width=5, height=1.5)
-# DR.comm.v.specialized.histograms
+pdf("../plots/lysine_biosynth_II_corr_w_genera_hist.pdf", height=2, width=2)
+lysine.biosynth.II.corr.w.genera.hist
+dev.off()
+```
+
+```{r}
+(urea.cycle.corr.w.genera.hist <- genus.v.pathway.cor.long.df %>% 
+   dplyr::filter(str_detect(pathway, "urea cycle")) %>% 
+   ggplot(aes(cor, fill=pathway.type)) +
+   geom_histogram() +
+   geom_vline(xintercept=0.5, lty=2) +
+   facet_wrap(~pathway.type + pathway, ncol=1, scales="free_y") +
+   labs(x="Correlation with a genus", y="# correlations") +
+   scale_fill_manual(values=pathway.type.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/urea_cycle_corr_w_genera_hist.pdf", height=2, width=2)
+# urea.cycle.corr.w.genera.hist
 # dev.off()
 ```
 
@@ -660,9 +823,9 @@ DR.assoc.pathways.to.highlight.ii <- pathway.DR.effects.feature.order.df %>%
 ```
 
 ```{r}
-# pdf("../plots/asreml_DR_effect_pathway_barplot.pdf", height=3, width=3)
-# DR.effect.pathways.p
-# dev.off()
+pdf("../plots/asreml_DR_effect_pathway_barplot.pdf", height=6, width=3)
+DR.effect.pathways.p
+dev.off()
 ```
 
 ## Magnitude of effects
@@ -698,9 +861,9 @@ pd <- position_dodge2(width=0.1)
 ```
 
 ```{r}
-# pdf("../plots/asreml_diet_overall_effect_pathway_boxplots.pdf", height=2, width=2)
-# diet.effect.size.p
-# dev.off()
+pdf("../plots/asreml_diet_overall_effect_pathway_boxplots.pdf", height=2, width=2)
+diet.effect.size.p
+dev.off()
 ```
 
 ## Similarity of diet coefficients
@@ -742,9 +905,9 @@ my_fn <- function(data, mapping, ...){
 ```
 
 ```{r}
-# pdf("../plots/asreml_diet_similarity_pathway_scatter.pdf", height=4, width=4)
-# cor.DR.effects.p
-# dev.off()
+pdf("../plots/asreml_diet_similarity_pathway_scatter.pdf", height=3, width=3)
+cor.DR.effects.p
+dev.off()
 ```
 
 ## Pathways different between CR and fasting
@@ -788,9 +951,9 @@ pathway.CR.or.fasting.mean.coef.order.df <- pathway.CR.or.fasting.mean.coef.df %
 ```
 
 ```{r}
-# pdf("../plots/pathway_CR_v_fasting_mean_coef.pdf", height=2, width=3)
-# pathway.CR.v.fasting.mean.coef.p
-# dev.off()
+pdf("../plots/pathway_CR_v_fasting_mean_coef.pdf", height=2, width=4)
+pathway.CR.v.fasting.mean.coef.p
+dev.off()
 ```
 
 ## Examples
@@ -816,16 +979,14 @@ pathway.CR.or.fasting.mean.coef.order.df <- pathway.CR.or.fasting.mean.coef.df %
 ```
 
 ```{r}
-# pdf("../plots/urea_cycle_v_diet.pdf", height=1.5, width=1.5)
-# urea.v.diet.p
-# dev.off()
+pdf("../plots/urea_cycle_v_diet.pdf", height=2, width=2)
+urea.v.diet.p
+dev.off()
 ```
 
 
 ```{r}
-# str_subset(rownames(pathway.log2tpm.df), "citrulline")
-
-(citrulline.v.diet.p <- pathway.log2tpm.df["CITRULBIO-PWY: L-citrulline biosynthesis", ] %>% 
+(lysine.biosynth.II.v.diet.p <- pathway.log2tpm.df["PWY-2941: L-lysine biosynthesis II", ] %>% 
   t() %>% 
   data.frame() %>% 
   setNames("log2tpm") %>% 
@@ -837,18 +998,17 @@ pathway.CR.or.fasting.mean.coef.order.df <- pathway.CR.or.fasting.mean.coef.df %
   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
   # facet_wrap(~age.approx.months, nrow=1) +
    stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
-  labs(x="", y="log2(TPM)", title="L-citrulline biosynthesis (CITRULBIO-PWY)") +
+  labs(x="", y="log2(TPM)", title="L-lysine biosynthesis II (PWY-2941)") +
   scale_fill_manual(values=diet.palette) +
   theme_classic(base_size=8) +
   theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/citrulline_biosynth_v_diet.pdf", height=1.5, width=1.5)
-# citrulline.v.diet.p
-# dev.off()
+pdf("../plots/lysine_biosynth_II_v_diet.pdf", height=2, width=2)
+lysine.biosynth.II.v.diet.p
+dev.off()
 ```
-
 
 # Heritability
 
@@ -856,7 +1016,7 @@ Add long pathway names.
 
 ```{r}
 pathway.herit.df <- pathway.herit.df %>% 
-  merge(pathway.names.df, by.x="feature", by.y="short.clean", all.x=T) # all.x=T for uniqueness
+  merge(pathway.names.uniq.df, by.x="feature", by.y="short.clean", all.x=T) # all.x=T for uniqueness
 ```
 
 Adjust p-values.
@@ -872,9 +1032,13 @@ pathway.herit.df %>%
   dplyr::filter(feature != "Uniqueness") %>%
   dplyr::count(is.sig) %>%
   pull(n) %>% prop.table()
+
+pathway.herit.df %>% 
+  dplyr::count(is.sig) %>%
+  pull(n) %>% prop.table()
 ```
 
-* 51% of pathways are heritable
+* 52% of pathways are heritable (with or without uniqueness)
 
 ```{r}
 (mean.herit.for.heritable.pathways <- pathway.herit.df %>% 
@@ -882,9 +1046,14 @@ pathway.herit.df %>%
    dplyr::filter(is.sig) %>% 
    summarise(mean = mean(herit)) %>% 
    pull(mean))
+
+pathway.herit.df %>% 
+  dplyr::filter(is.sig) %>% 
+  summarise(mean = mean(herit)) %>% 
+  pull(mean)
 ```
 
-* Mean heritability is 8.5%
+* Mean heritability for heritable features is 8.4% (with or without uniqueness; bc uniqueness is not heritable, it doesn't matter)
 
 ## Community-wide versus specialized
 
@@ -917,7 +1086,7 @@ herit.pathways <- c(
 ```
 
 ```{r}
-pdf("../plots/community_wide_v_specialized_pathway_histograms_heritable.pdf", width=3, height=1.5)
+pdf("../plots/community_wide_v_specialized_pathway_histograms_heritable.pdf", width=4.5, height=1.8)
 herit.comm.v.specialized.histograms
 dev.off()
 ```
@@ -936,34 +1105,29 @@ herit.pathways.short <- c(
   )
 ```
 
+## Volcano plot
+
 ```{r}
-(humann.herit.p <- pathway.herit.df %>% 
-   dplyr::filter(herit > 5e-7) %>% # omit 9 pathways with zero herit and small error for visual purposes
-   
+(pathway.herit.scatter.p <- pathway.herit.df %>% 
    mutate(label = case_when(
-     feature %in% herit.pathways ~ after.colon.short.w.ID,
+     feature %in% herit.pathways.short ~ after.colon.short.w.ID,
      TRUE ~ ""
    )) %>%
-   
-   ggplot(aes(x=herit, xmin=herit-herit.se, xmax=herit+herit.se,
-              y=reorder(feature, herit), label=label, fill=is.sig)) +
-   geom_col() +
-   geom_linerange(linewidth=0.25) +
+   ggplot(aes(x=herit, y=-log10(padj), color=is.sig, label=label)) +
    geom_vline(xintercept = mean.herit.for.heritable.pathways, 
-              color=genetics.color, lty=2) +
-   geom_text_repel(max.overlaps=Inf, nudge_x=0.01, min.segment.length=0, size=0.36*6) +
-   labs(x="Heritability", y="Pathway", fill="padj < 0.01?") +
-   scale_fill_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
+              color = genetics.color, lty=2) +
+   geom_point(shape=16) +
+   geom_text_repel(nudge_x=0.01, min.segment.length=0, size=0.36*6, max.overlaps=Inf) +
+   labs(x="Heritability", fill="padj < 0.01?") +
+   scale_color_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
    theme_classic(base_size=8) +
-   theme(legend.position="none",
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank()))
+   theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/pathway_heritability_barplot.pdf", height=3, width=1.5)
-# humann.herit.p
-# dev.off()
+pdf("../plots/pathway_heritability_scatter.pdf", height=2.5, width=2.5)
+pathway.herit.scatter.p
+dev.off()
 ```
 
 # All random effects
@@ -976,7 +1140,10 @@ pathway.ranef.df.all.ranef.model %>%
 ```
 
 * 76% of variance remains unexplained
-* Genetics explains mean 5% of variance with all random effects model
+* Genetics explains mean 5.5% of variance with all random effects model
+* DR --> 3.6%
+* Aging --> 3.3%
+* Time --> 2.1%
 
 Adjust p-values within each experimental variable.
 
@@ -1001,9 +1168,27 @@ pathway.ranef.df.all.ranef.model <- pathway.ranef.df.all.ranef.model %>%
 ```
 
 ```{r}
-# pdf("../plots/PVE_all_ranef_pathways.pdf", height=2, width=2)
-# pathway.all.ranef.PVE.p
-# dev.off()
+pdf("../plots/PVE_all_ranef_pathways.pdf", height=2.5, width=2.5)
+pathway.all.ranef.PVE.p
+dev.off()
+```
+
+# Appendix: get closest genus for specialized pathways in microbiome-phenotype heatmap
+
+This heatmap is made in `pheno_assoc_and_mediation.Rmd`. Here, we identify the closest genera to the specialized pathways in this heatmap.
+
+For the following code chunk to work, need to make the object `plot.df.for.tax.and.fxn.heatmap` by running `pheno_assoc_and_mediation.Rmd`.
+
+```{r}
+mb.pheno.heatmap.paths.after.colon.short.w.ID <- plot.df.for.tax.and.fxn.heatmap %>% 
+  dplyr::filter(tax.or.fxn == "pathways") %>% 
+  pull(feature) %>% unique()
+
+pathway.type.df %>% 
+  dplyr::filter(after.colon.short.w.ID %in% mb.pheno.heatmap.paths.after.colon.short.w.ID) %>% 
+  dplyr::filter(pathway.type == "specialized")  %>% 
+  relocate(after.colon.short.w.ID, closest.genus) %>% 
+  arrange(after.colon.short.w.ID)
 ```
 
 # Appendix: universal age-associated pathways
@@ -1034,7 +1219,7 @@ universal.age.assoc.pathways <- c(
 ```
 
 ```{r}
-# pdf("../plots/community_wide_v_specialized_pathway_histograms_univ_age_assoc.pdf", width=6, height=1.5)
-# univ.age.assoc.comm.v.specialized.histograms
-# dev.off()
+pdf("../plots/community_wide_v_specialized_pathway_histograms_univ_age_assoc.pdf", width=6, height=1.5)
+univ.age.assoc.comm.v.specialized.histograms
+dev.off()
 ```

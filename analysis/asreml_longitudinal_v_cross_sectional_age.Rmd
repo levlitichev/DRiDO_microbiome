@@ -1,0 +1,146 @@
+LMM separately per age versus longitudinally.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+
+PADJ.THRESH <- 0.01 
+```
+
+# Import cross-sectional LMM results
+
+```{r}
+herit.df.5mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_5mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 5)
+herit.df.10mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_10mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 10)
+herit.df.16mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_16mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 16)
+herit.df.22mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_5mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 22)
+herit.df.28mo <- read.table(
+  "../results/split_by_age/asreml_kraken_genus_28mo/herit.txt",
+  sep="\t", header=T) %>% 
+  mutate(age = 28)
+
+herit.df.xs <- rbind(
+  herit.df.5mo,
+  herit.df.10mo,
+  herit.df.16mo,
+  herit.df.22mo,
+  herit.df.28mo)
+```
+
+# Import longitudinal LMM results
+
+```{r}
+herit.df.longitud <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+```
+
+# Import longitudinal, downsampled LMM results
+
+```{r}
+herit.df.longitud.downsamp <- read.table(
+  "../results/asreml_kraken_genus_downsampled_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+```
+
+# Merge
+
+```{r}
+herit.df <- rbind(
+  
+  herit.df.xs %>%
+    dplyr::select(feature, herit, LRT.pval, age),
+  
+  herit.df.longitud %>% 
+    dplyr::select(feature, herit, LRT.pval) %>% 
+    mutate(age = "longitudinal"),
+  
+  herit.df.longitud.downsamp %>% 
+    dplyr::select(feature, herit, LRT.pval) %>% 
+    mutate(age = "longitudinal_downsampled")
+)
+```
+
+# Adjust p-values separately per age
+
+```{r}
+herit.df <- herit.df %>% 
+  
+  # exclude community features
+  dplyr::filter(!(feature %in% c("PCoA1", "PCoA2", "PCoA3", "uniq", "Simpson", "Shannon", "Chao1"))) %>%
+  
+  group_by(age) %>% 
+  mutate(LRT.padj = p.adjust(LRT.pval, method="BH")) %>% 
+  ungroup() %>% 
+  mutate(is.sig = LRT.padj < PADJ.THRESH)
+```
+
+```{r}
+herit.df %>% 
+  group_by(age) %>% 
+  dplyr::count(is.sig) %>% 
+  arrange(desc(is.sig))
+```
+
+These numbers are just genera, no community features.
+
+# p-value histograms
+
+Indicate # samples and # mice at each timepoint (added these numbers manually).
+
+```{r}
+n.per.age.df <- data.frame(
+  n.samples = c(
+    `5` = 563, `10` = 509, `16` = 641, `22` = 519, `28` = 367,
+    longitudinal = 2974, longitudinal_downsampled = 516),
+  
+  n.mice = c(
+    `5` = 563, `10` = 509, `16` = 641, `22` = 519, `28` = 367,
+    longitudinal = 904, longitudinal_downsampled = 110))
+```
+
+```{r}
+(longitud.v.cross.sectional.herit.pval.hists <- herit.df %>% 
+   merge(n.per.age.df, by.x="age", by.y="row.names") %>% 
+   mutate(age = factor(age, levels=c("5", "10", "16", "22", "28", "longitudinal", "longitudinal_downsampled"))) %>% 
+   mutate(is.sig = factor(is.sig, levels=c(T, F))) %>% 
+   ggplot(aes(LRT.pval, fill=is.sig)) +
+   geom_histogram(bins=20) +
+   facet_wrap(~age + n.mice + n.samples, labeller=labeller(
+     n.mice = function(x){paste0("# mice = ", x)},
+     n.samples = function(x){paste0("# samples = ", x)}), nrow=1) +
+   labs(x="p-value", y="# genera") +
+   scale_fill_manual(values=c(`TRUE`="royalblue", `FALSE`="gray80")) +
+   scale_x_continuous(breaks=c(0, 0.5, 1)) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/longitudinal_v_cross_sectional_heritability_genera_pval_histograms.pdf", height=2, width=7)
+longitud.v.cross.sectional.herit.pval.hists
+dev.off()
+```
+
+# % significantly heritable
+
+Exclude community features.
+
+```{r}
+herit.df %>% 
+  # dplyr::filter(is.sig) %>%
+  dplyr::count(age, is.sig)
+```
+
+* Very few heritable taxa with cross-sectional analysis

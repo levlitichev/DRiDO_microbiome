@@ -1,7 +1,13 @@
-Will compare MetaPhlAn4 versus Kraken2 + MGBC taxonomic results.
+Will compare MetaPhlAn versus Kraken taxonomic classification and LMM outputs.
+
+1) MetaPhlAn = MetaPhlAn4, genus-level log2(relabs)
+2) Kraken = Kraken2, genus-level CLR, MGBC as reference
 
 * % unclassified
 * Mean difference in relative abundance across all samples
+* Age coefficients, DR coefficients, and heritability estimates
+
+**2024-10-19 update: added comparison of LMM outputs**
 
 # Load libraries
 
@@ -10,6 +16,10 @@ library(tidyverse)
 library(phyloseq)
 library(speedyseq) # faster tax_glom
 library(foreach)
+library(ggrepel)
+library(patchwork)
+
+PADJ.THRESH <- 0.01
 ```
 
 # Import metadata
@@ -22,7 +32,7 @@ lib.meta.df <- read.table(
   "../data/metadata/library_metadata_after_QC_n3213_230620.txt",
   sep="\t", header=T)
 stool.meta.df <- read.table(
-  "../data/metadata/stool_metadata_after_QC_n3124_230620.txt", 
+  "../data/metadata/stool_metadata_after_QC_n3124_240418.txt", 
   sep="\t", header=T)
 mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 ```
@@ -104,7 +114,92 @@ dim(kraken.genus.df)
 
 * 252 genera x 2997 samples
 
-# % unclassified
+# Import LMM outputs
+
+ASReml, time as a random effect.
+
+## Fixed effects
+
+```{r}
+mpa.fixef.df <- read.table(
+  "../results/asreml_metaphlan_genus_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+kraken.fixef.df <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+dim(mpa.fixef.df)
+dim(kraken.fixef.df)
+```
+
+## Heritability
+
+```{r}
+mpa.herit.df <- read.table(
+  "../results/asreml_metaphlan_genus_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+
+kraken.herit.df <- read.table(
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt",
+  sep="\t", header=T)
+
+dim(mpa.herit.df)
+dim(kraken.herit.df)
+```
+
+## Rename "uniq" to "uniqueness"
+
+In the Kraken results, uniqueness is "uniq". I will rename to "Uniqueness" to match the MetaPhlAn results.
+
+```{r}
+kraken.fixef.df <- kraken.fixef.df %>% 
+  mutate(feature = case_when(
+    feature == "uniq" ~ "Uniqueness",
+    TRUE ~ feature))
+
+kraken.herit.df <- kraken.herit.df %>% 
+  mutate(feature = case_when(
+    feature == "uniq" ~ "Uniqueness",
+    TRUE ~ feature))
+```
+
+## Merge
+
+How many features in common?
+
+```{r}
+common.feats <- intersect(mpa.fixef.df$feature, kraken.fixef.df$feature)
+length(common.feats)
+```
+
+* 24, including 3 community features, so 21
+
+```{r}
+common.feats
+```
+
+```{r}
+kraken.v.mpa.fixef.df <- inner_join(
+  kraken.fixef.df %>% dplyr::filter(fixef != "(Intercept"), # ignore intercept
+  mpa.fixef.df %>% dplyr::filter(fixef != "(Intercept"), # ignore intercept 
+  by=join_by(feature, fixef, fixef.value),
+  suffix=c(".kraken", ".mpa"))
+
+dim(kraken.v.mpa.fixef.df)
+```
+
+```{r}
+kraken.v.mpa.herit.df <- inner_join(
+  kraken.herit.df,
+  mpa.herit.df,
+  by=join_by(feature),
+  suffix=c(".kraken", ".mpa"))
+
+dim(kraken.v.mpa.herit.df)
+```
+
+# Compare % unclassified
 
 ```{r}
 perc.unclass.df <- rbind(
@@ -167,12 +262,12 @@ dim(perc.unclass.filt.df)
 ```
 
 ```{r}
-# pdf("../plots/percent_classified_kraken_mgbc_v_mpa4.pdf", width=1.5, height=1.75)
-# perc.classifed.p
-# dev.off()
+pdf("../plots/percent_classified_kraken_mgbc_v_mpa4.pdf", width=1.5, height=1.75)
+perc.classifed.p
+dev.off()
 ```
 
-# Per-sample relabs
+# Compare per-sample relabs
 
 ```{r}
 mpa.v.kraken.genus.relab.df <- merge(
@@ -217,7 +312,257 @@ mpa.v.kraken.mean.relab.diff.df <- mpa.v.kraken.genus.relab.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mpa_v_kraken_relab_diffs.pdf", height=4, width=2)
-# mpa.v.kraken.relab.diff.p
-# dev.off()
+pdf("../plots/mpa_v_kraken_relab_diffs.pdf", height=4, width=3)
+mpa.v.kraken.relab.diff.p
+dev.off()
+```
+
+# Age coefficients
+
+```{r}
+kraken.v.mpa.age.df <- kraken.v.mpa.fixef.df %>% 
+  dplyr::filter(fixef == "age.wks.scaled")
+```
+
+Adjust p-values.
+
+```{r}
+kraken.v.mpa.age.df <- kraken.v.mpa.age.df %>% 
+  mutate(padj.kraken = p.adjust(Pr.chisq..con..kraken, method="BH"),
+         padj.mpa = p.adjust(Pr.chisq..con..mpa, method="BH")) %>% 
+  mutate(is.sig.kraken = padj.kraken < PADJ.THRESH,
+         is.sig.mpa = padj.mpa < PADJ.THRESH)
+```
+
+Indicate if significant in both, neither, or just one.
+
+```{r}
+kraken.v.mpa.age.df <- kraken.v.mpa.age.df %>% 
+  mutate(is.sig = case_when(
+    is.sig.kraken & is.sig.mpa ~ "Both",
+    is.sig.kraken & !is.sig.mpa ~ "Only Kraken",
+    !is.sig.kraken & is.sig.mpa ~ "Only MetaPhlAn",
+    !is.sig.kraken & !is.sig.mpa ~ "Neither"
+  ))
+```
+
+```{r}
+kraken.v.mpa.age.coef.rho <- cor(kraken.v.mpa.age.df$solution.kraken, kraken.v.mpa.age.df$solution.mpa, method="spearman")
+kraken.v.mpa.age.coef.rho.pval <- cor.test(kraken.v.mpa.age.df$solution.kraken, kraken.v.mpa.age.df$solution.mpa, method="spearman")$p.value
+```
+
+```{r}
+(kraken.v.mpa.age.coef.p <- kraken.v.mpa.age.df %>% 
+   ggplot(aes(x=solution.kraken, y=solution.mpa, label=feature, color=is.sig)) +
+   geom_point(shape=16) +
+   geom_abline(slope=1, lty=2) +
+   geom_text_repel(size=0.36*6, max.overlaps=Inf) +
+   labs(x="Age coefficient, Kraken", y="Age coefficient, MetaPhlAn",
+        color="Significant in?",
+        title=sprintf("rho = %.2f, p-value = %2.2e", kraken.v.mpa.age.coef.rho, kraken.v.mpa.age.coef.rho.pval)) +
+   scale_color_manual(values=c(
+     `Only Kraken`="lightskyblue", `Only MetaPhlAn`="lightskyblue3",
+     Both="navy", Neither="gray80")) +
+   theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/kraken_v_metaphlan_age_coefficients.pdf", height=2.5, width=2.5)
+kraken.v.mpa.age.coef.p + theme(legend.position="none")
+dev.off()
+```
+
+# Diet coefficients
+
+```{r}
+kraken.v.mpa.DR.df <- kraken.v.mpa.fixef.df %>% 
+  dplyr::filter(fixef == "Diet.5mo.as.AL") %>% 
+  dplyr::filter(fixef.value != "AL") # the AL row doesn't add anything
+```
+
+Adjust p-values. I think I could call `p.adjust` directly even though each p-value is repeated 4x, but to be safe, I'll compute adjusted p-values for just one diet and then merge them back in.
+
+```{r}
+kraken.v.mpa.DR.padj.df <- kraken.v.mpa.DR.df %>% 
+  dplyr::filter(fixef.value == "40") %>% 
+  mutate(padj.kraken = p.adjust(Pr.chisq..con..kraken, method="BH"),
+         padj.mpa = p.adjust(Pr.chisq..con..mpa, method="BH")) %>% 
+  mutate(is.sig.kraken = padj.kraken < PADJ.THRESH,
+         is.sig.mpa = padj.mpa < PADJ.THRESH) %>% 
+  dplyr::select(feature, padj.kraken, padj.mpa, is.sig.kraken, is.sig.mpa)
+
+kraken.v.mpa.DR.df <- kraken.v.mpa.DR.df %>% 
+  merge(kraken.v.mpa.DR.padj.df, by="feature")
+
+dim(kraken.v.mpa.DR.df)
+```
+
+Indicate if significant in both, neither, or just one.
+
+```{r}
+kraken.v.mpa.DR.df <- kraken.v.mpa.DR.df %>% 
+  mutate(is.sig = case_when(
+    is.sig.kraken & is.sig.mpa & (sign(solution.kraken) == sign(solution.mpa)) ~ "Both, same sign",
+    is.sig.kraken & is.sig.mpa & (sign(solution.kraken) != sign(solution.mpa)) ~ "Both, different sign",
+    is.sig.kraken & !is.sig.mpa ~ "Only Kraken",
+    !is.sig.kraken & is.sig.mpa ~ "Only MetaPhlAn",
+    !is.sig.kraken & !is.sig.mpa ~ "Neither"
+  ))
+```
+
+Calculate correlation for each diet separately.
+
+```{r}
+kraken.v.mpa.CR20.df <- kraken.v.mpa.DR.df %>% dplyr::filter(fixef.value == "20")
+kraken.v.mpa.CR40.df <- kraken.v.mpa.DR.df %>% dplyr::filter(fixef.value == "40")
+kraken.v.mpa.1D.df <- kraken.v.mpa.DR.df %>% dplyr::filter(fixef.value == "1D")
+kraken.v.mpa.2D.df <- kraken.v.mpa.DR.df %>% dplyr::filter(fixef.value == "2D")
+```
+
+```{r}
+kraken.v.mpa.CR20.coef.rho <- cor(kraken.v.mpa.CR20.df$solution.kraken, kraken.v.mpa.CR20.df$solution.mpa, method="spearman")
+kraken.v.mpa.CR20.coef.rho.pval <- cor.test(kraken.v.mpa.CR20.df$solution.kraken, kraken.v.mpa.CR20.df$solution.mpa, method="spearman")$p.value
+
+kraken.v.mpa.CR40.coef.rho <- cor(kraken.v.mpa.CR40.df$solution.kraken, kraken.v.mpa.CR40.df$solution.mpa, method="spearman")
+kraken.v.mpa.CR40.coef.rho.pval <- cor.test(kraken.v.mpa.CR40.df$solution.kraken, kraken.v.mpa.CR40.df$solution.mpa, method="spearman")$p.value
+
+kraken.v.mpa.1D.coef.rho <- cor(kraken.v.mpa.1D.df$solution.kraken, kraken.v.mpa.1D.df$solution.mpa, method="spearman")
+kraken.v.mpa.1D.coef.rho.pval <- cor.test(kraken.v.mpa.1D.df$solution.kraken, kraken.v.mpa.1D.df$solution.mpa, method="spearman")$p.value
+
+kraken.v.mpa.2D.coef.rho <- cor(kraken.v.mpa.2D.df$solution.kraken, kraken.v.mpa.2D.df$solution.mpa, method="spearman")
+kraken.v.mpa.2D.coef.rho.pval <- cor.test(kraken.v.mpa.2D.df$solution.kraken, kraken.v.mpa.2D.df$solution.mpa, method="spearman")$p.value
+```
+
+Pick which features to label.
+
+```{r}
+feats.to.label <- c(
+  "Lactobacillus", "Uniqueness", "Shannon", "Simpson", "Ligilactobacillus",
+  "Limosilactobacillus", "Muribaculum", "Schaederella", "Turicibacter",
+  "Acetatifactor", "Dorea", "Paramuribaculum", "Anaerotruncus")
+```
+
+```{r}
+kraken.v.mpa.CR20.coef.p <- kraken.v.mpa.CR20.df %>% 
+  ggplot(aes(x=solution.kraken, y=solution.mpa, label=feature, color=is.sig)) +
+  geom_point(shape=16) +
+  geom_abline(slope=1, lty=2) +
+  geom_text_repel(size=0.36*5, max.overlaps=Inf) +
+  labs(x="Kraken coefficient", y="MetaPhlAn coefficient",
+       color="Significant in?",
+       title=sprintf("20%% CR, rho = %.2f, p-value = %2.2e",
+                     kraken.v.mpa.CR20.coef.rho, kraken.v.mpa.CR20.coef.rho.pval)) +
+  scale_color_manual(values=c(
+    `Only Kraken`="lightskyblue", `Only MetaPhlAn`="lightskyblue3",
+    `Both, same sign`="navy", Neither="gray80", `Both, different sign`="firebrick")) +
+  theme_classic(base_size=8)
+
+kraken.v.mpa.CR40.coef.p <- kraken.v.mpa.CR40.df %>% 
+  ggplot(aes(x=solution.kraken, y=solution.mpa, label=feature, color=is.sig)) +
+  geom_point(shape=16) +
+  geom_abline(slope=1, lty=2) +
+  geom_text_repel(size=0.36*5, max.overlaps=Inf) +
+  labs(x="Kraken coefficient", y="MetaPhlAn coefficient",
+       color="Significant in?",
+       title=sprintf("40%% CR, rho = %.2f, p-value = %2.2e",
+                     kraken.v.mpa.CR40.coef.rho, kraken.v.mpa.CR40.coef.rho.pval)) +
+  scale_color_manual(values=c(
+    `Only Kraken`="lightskyblue", `Only MetaPhlAn`="lightskyblue3",
+    `Both, same sign`="navy", Neither="gray80", `Both, different sign`="firebrick")) +
+  theme_classic(base_size=8)
+
+kraken.v.mpa.1D.coef.p <- kraken.v.mpa.1D.df %>% 
+  ggplot(aes(x=solution.kraken, y=solution.mpa, label=feature, color=is.sig)) +
+  geom_point(shape=16) +
+  geom_abline(slope=1, lty=2) +
+  geom_text_repel(size=0.36*5, max.overlaps=Inf) +
+  labs(x="Kraken coefficient", y="MetaPhlAn coefficient",
+       color="Significant in?",
+       title=sprintf("1D, rho = %.2f, p-value = %2.2e",
+                     kraken.v.mpa.1D.coef.rho, kraken.v.mpa.1D.coef.rho.pval)) +
+  scale_color_manual(values=c(
+    `Only Kraken`="lightskyblue", `Only MetaPhlAn`="lightskyblue3",
+    `Both, same sign`="navy", Neither="gray80", `Both, different sign`="firebrick")) +
+  theme_classic(base_size=8)
+
+kraken.v.mpa.2D.coef.p <- kraken.v.mpa.2D.df %>% 
+  ggplot(aes(x=solution.kraken, y=solution.mpa, label=feature, color=is.sig)) +
+  geom_point(shape=16) +
+  geom_abline(slope=1, lty=2) +
+  geom_text_repel(size=0.36*5, max.overlaps=Inf) +
+  labs(x="Kraken coefficient", y="MetaPhlAn coefficient",
+       color="Significant in?",
+       title=sprintf("2D, rho = %.2f, p-value = %2.2e",
+                     kraken.v.mpa.2D.coef.rho, kraken.v.mpa.2D.coef.rho.pval)) +
+  scale_color_manual(values=c(
+    `Only Kraken`="lightskyblue", `Only MetaPhlAn`="lightskyblue3",
+    `Both, same sign`="navy", Neither="gray80", `Both, different sign`="firebrick")) +
+  theme_classic(base_size=8)
+```
+
+```{r}
+(kraken.v.mpa.DR.coef.p <- (kraken.v.mpa.CR20.coef.p + theme(legend.position="none")) +
+  (kraken.v.mpa.CR40.coef.p + theme(legend.position="none")) +
+  (kraken.v.mpa.1D.coef.p + theme(legend.position="none")) +
+  (kraken.v.mpa.2D.coef.p + theme(legend.position="none")) +
+  plot_layout(nrow=1))
+```
+
+* According to MetaPhlAn, uniqueness is decreased by 3 of 4 diets
+
+```{r}
+pdf("../plots/kraken_v_metaphlan_diet_coefficients.pdf", height=2.5, width=10)
+kraken.v.mpa.DR.coef.p + theme(legend.position="none")
+dev.off()
+```
+
+# Heritability
+
+Adjust p-values.
+
+```{r}
+kraken.v.mpa.herit.df <- kraken.v.mpa.herit.df %>% 
+  mutate(padj.kraken = p.adjust(LRT.pval.kraken, method="BH"),
+         padj.mpa = p.adjust(LRT.pval.mpa, method="BH")) %>% 
+  mutate(is.sig.kraken = padj.kraken < PADJ.THRESH,
+         is.sig.mpa = padj.mpa < PADJ.THRESH)
+```
+
+Indicate if significant in both, neither, or just one.
+
+```{r}
+kraken.v.mpa.herit.df <- kraken.v.mpa.herit.df %>% 
+  mutate(is.sig = case_when(
+    is.sig.kraken & is.sig.mpa ~ "Both",
+    is.sig.kraken & !is.sig.mpa ~ "Only Kraken",
+    !is.sig.kraken & is.sig.mpa ~ "Only MetaPhlAn",
+    !is.sig.kraken & !is.sig.mpa ~ "Neither"
+  ))
+```
+
+```{r}
+kraken.v.mpa.herit.cor <- cor(kraken.v.mpa.herit.df$herit.kraken, kraken.v.mpa.herit.df$herit.mpa, method="spearman")
+kraken.v.mpa.herit.cor.pval <- cor.test(kraken.v.mpa.herit.df$herit.kraken, kraken.v.mpa.herit.df$herit.mpa, method="spearman")$p.value
+```
+
+```{r}
+(kraken.v.mpa.herit.p <- kraken.v.mpa.herit.df %>% 
+  ggplot(aes(x=herit.kraken, y=herit.mpa, label=feature, color=is.sig)) +
+  geom_point(shape=16) +
+  geom_abline(slope=1, lty=2) +
+  geom_text_repel(size=0.36*6, max.overlaps=Inf) +
+  labs(x="Heritability, Kraken", y="Heritability, MetaPhlAn",
+       color="Significant in?",
+       title=sprintf("rho = %.2f, p-value = %2.2e",
+                     kraken.v.mpa.herit.cor, kraken.v.mpa.herit.cor.pval)) +
+  scale_color_manual(values=c(
+    `Only Kraken`="lightskyblue", `Only MetaPhlAn`="lightskyblue3",
+    `Both`="navy", Neither="gray80")) +
+  theme_classic(base_size=8))å
+```
+
+```{r}
+pdf("../plots/kraken_v_metaphlan_heritability.pdf", height=2.5, width=2.5)
+kraken.v.mpa.herit.p + theme(legend.position="none")
+dev.off()
 ```

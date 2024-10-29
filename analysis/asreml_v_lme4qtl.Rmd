@@ -8,7 +8,7 @@ library(tidyverse)
 
 ```{r}
 lme4qtl.herit.df <- read.table(
-  "../results/lme4qtl_kraken_genus/herit.txt",
+  "../results/lme4qtl_kraken_genus_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
@@ -16,7 +16,7 @@ lme4qtl.herit.df <- read.table(
 
 ```{r}
 asreml.herit.df <- read.table(
-  "../results/asreml_kraken_genus/herit.txt",
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
@@ -50,7 +50,7 @@ asreml.v.lme4qtl.herit.df <- merge(
 ```
 
 ```{r}
-# pdf("../plots/lme4qtl_v_asreml_genus_heritability.pdf", height=2, width=2)
-# asreml.v.lme4qtl.herit.p
-# dev.off()
+pdf("../plots/lme4qtl_v_asreml_genus_heritability_w_time_ranef.pdf", height=2.5, width=2.5)
+asreml.v.lme4qtl.herit.p
+dev.off()
 ```

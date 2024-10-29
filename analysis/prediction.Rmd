@@ -2,10 +2,34 @@
 title: "Prediction"
 ---
 
+Table of contents:
+* Predict age, all mice, genera
+* Predict age, AL mice, genera
+* Predict age, AL mice, species
+* Predict age, AL mice, pathways
+* Train on AL, predict age of DR mice, genera
+* Train on AL, predict age of DR mice, pathways
+* Train on 40% CR, predict age of other mice, genera
+* Train on 40% CR, predict age of other mice, pathways
+* Predict binary DR status, genera (with ROCs)
+* Predict binary DR status, pathways (with ROCs)
+* Predict DR group, genera
+* Predict DR group, pathways
+
+2024-06-27 updates:
+* Added age prediction using species-level data and using all mice (instead of just AL mice)
+* Switched from 70/30 train/test splits to cross-validation
+* Added prediction of binary DR status (AL v. DR)
+
+2024-10-10:
+* Feature importance for DR prediction
+
 ```{r, warning=F, message=F}
 library(tidyverse)
 library(randomForest)
 library(caret)
+library(pROC) # roc function
+library(foreach)
 library(broom) # tidy
 library(ggpubr) # stat_compare_means
 
@@ -42,6 +66,8 @@ stool.meta.annot.df <- stool.meta.annot.df %>%
 
 # Import taxonomic data
 
+## Genera
+
 Will use relative abundances for top 100 most abundant genera.
 
 ```{r}
@@ -62,13 +88,35 @@ genus.annot.df <- genus.data.df.feats.in.rows %>%
 dim(genus.annot.df)
 ```
 
+## Species
+
+Will use relative abundances for top 200 most abundant species.
+
+```{r}
+species.data.df.feats.in.rows <- read.table(
+  "../data/kraken_species_relab_n200x2997.txt",
+  sep="\t", header=T, row.names=1)
+
+species.tax.feats <- rownames(species.data.df.feats.in.rows)
+length(species.tax.feats)
+```
+
+Add annotations.
+
+```{r}
+species.annot.df <- species.data.df.feats.in.rows %>% 
+  t() %>% data.frame() %>% rownames_to_column("stool.ID") %>% 
+  merge(stool.meta.annot.df, by="stool.ID")
+dim(species.annot.df)
+```
+
 # Import pathway data
 
-Will use log2(TPM) abundances for the 252 pathways that passed prevalence filtration.
+Will use log2(TPM) abundances for the 272 pathways that passed prevalence filtration.
 
 ```{r}
 pathway.log2tpm.df.feats.in.rows <- read.table(
-  "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
+  "../results/pathway_log2tpm_filt_w_comm_n273x2997.txt",
   sep="\t", header=T, quote="")
 ```
 
@@ -86,7 +134,6 @@ length(fxn.feats)
 
 * 272 pathways (after prevalence filtration)
 
-
 Add annotations.
 
 ```{r}
@@ -95,6 +142,132 @@ pathway.log2tpm.annot.df <- pathway.log2tpm.df %>%
   merge(stool.meta.annot.df, by="stool.ID")
 dim(pathway.log2tpm.annot.df)
 ```
+
+## Import short and long pathway names
+
+```{r}
+pathway.names.df <- read.table(
+  "../data/metadata/pathway_long_and_short_names_n703.txt",
+  sep="\t", header=T, quote="")
+```
+
+Add additional columns for plotting.
+
+```{r}
+pathway.names.df <- pathway.names.df %>% 
+  mutate(after.colon = str_sub(str_extract(original, "(?=:)(.*)"), 3)) %>% 
+  mutate(after.colon.short = ifelse(
+    nchar(after.colon) > 30, 
+    paste0(str_sub(after.colon, 1, 27), "..."),
+    after.colon)) %>% 
+  mutate(after.colon.short.w.ID = paste0(
+    after.colon.short, " (", short, ")")) %>% 
+  relocate(after.colon.short.w.ID)
+```
+
+# Predict age of *all* mice (slow)
+
+Genera, 10-fold cross validation.
+
+Set "stool.ID" as rownames and remove extraneous columns.
+
+```{r}
+genus.data.df <- genus.annot.df %>% 
+  column_to_rownames("stool.ID") %>% 
+  dplyr::select(age.wks, all_of(tax.feats))
+```
+
+90% train, 10% held-out. N.B. Here we don't stratify by cage (stratification shouldn't improve prediction).
+
+```{r}
+n.folds <- 10
+
+# shuffle IDs
+set.seed(123)
+shuffled.ids <- sample(rownames(genus.data.df))
+
+# figure out how many IDs will be in each held-out group, except the last
+n.per.heldout.group <- floor(length(shuffled.ids) / n.folds)
+
+# create all but last held-out group
+heldout.groups <- list()
+for (ii in seq(n.folds-1)) {
+  
+  this.fold.ids <- shuffled.ids[
+    (1 + (ii-1) * n.per.heldout.group) : (n.per.heldout.group * ii)]
+  
+  heldout.groups[[ii]] <- this.fold.ids
+}
+
+# last held-out group is whatever is left over
+heldout.groups[[n.folds]] <- setdiff(
+  rownames(genus.data.df), unlist(heldout.groups))
+
+# # confirm that held-out groups look good
+# length(unlist(heldout.groups)) # 2997
+# vapply(heldout.groups, FUN=length, FUN.VALUE=1) # all 299 except last one is 306
+```
+
+Run RF on each fold (takes ~5 min).
+
+```{r}
+set.seed(456)
+pred.v.obs.df.age.genus.cv <- foreach(
+  this.heldout.group = heldout.groups,
+  .combine="rbind") %do% {
+    
+    this.test.ids <- this.heldout.group
+    this.train.ids <- setdiff(rownames(genus.data.df), this.test.ids)
+    
+    this.train.df <- genus.data.df[this.train.ids, ]
+    this.test.df <- genus.data.df[this.test.ids, ]
+    
+    this.age.genus.rf.res <- randomForest(
+      age.wks ~ .,
+      data = this.train.df)
+    
+    out.preds.df <- data.frame(
+      pred = predict(this.age.genus.rf.res, newdata=this.test.df),
+      obs = this.test.df$age.wks
+    )
+    
+    return(out.preds.df)
+    
+  }
+```
+
+```{r}
+MAE.age.pred.all.samples.genus.cv <- pred.v.obs.df.age.genus.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  pull(pred.minus.obs) %>% abs() %>% mean()
+
+pred.v.obs.df.age.genus.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  summarise(mae = mean(abs(pred.minus.obs)),
+            sd = sd(abs(pred.minus.obs)))
+```
+
+* MAE (10-fold cross validation) = 17.4 ± 15.4 weeks
+
+```{r}
+(age.prediction.cv.p <- pred.v.obs.df.age.genus.cv %>% {
+  ggplot(., aes(x=obs*0.23, y=pred*0.23)) +
+    geom_jitter(width=0.25, shape=16, color=age.color) +
+    geom_smooth(method="lm", linewidth=0.5, color=age.color) +
+    geom_abline(slope=1, lty=2) +
+    labs(x="Actual age (months)", y="Predicted age (months)",
+         title=sprintf("Age prediction, all samples; MAE = %.2f weeks", MAE.age.pred.all.samples.genus.cv)) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none")
+})
+```
+
+```{r}
+pdf("../plots/age_prediction_all_mice_10_fold_cv.pdf", width=2, height=2)
+age.prediction.cv.p
+dev.off()
+```
+
 
 # Predict age of AL mice
 
@@ -105,175 +278,385 @@ genus.AL.annot.df <- genus.annot.df %>%
   dplyr::filter(Diet == "AL")
 ```
 
-We will train on 70%, test on 30%, and stratify by cage. Separate cages into training and testing.
+Set "stool.ID" as rownames and remove extraneous columns.
 
 ```{r}
-# extract vector of cages for stratification
-AL.cage.vec <- genus.AL.annot.df$Cage
-
-# separate into training and testing
-AL.cages.unique <- unique(AL.cage.vec)
-n.AL.training.cages <- floor(0.7*length(AL.cages.unique))
-
-set.seed(200)
-AL.training.cages <- sample(AL.cages.unique, size=n.AL.training.cages, replace=F)
-AL.testing.cages <- setdiff(AL.cages.unique, AL.training.cages)
-
-# training
-genus.AL.training.data.df.w.age <- genus.AL.annot.df %>% 
-  
-  # subset to cages selected for training
-  dplyr::filter(Cage %in% AL.training.cages) %>% 
-  
-  # keep just age and microbiome features
+genus.AL.data.df <- genus.AL.annot.df %>% 
+  column_to_rownames("stool.ID") %>% 
   dplyr::select(age.wks, all_of(tax.feats))
+```
 
-# testing
-genus.AL.testing.data.df.w.age <- genus.AL.annot.df %>% 
+10-fold cross validation: 90% train, 10% held-out. N.B. Here we don't stratify by cage (stratification shouldn't improve prediction).
+
+```{r}
+n.folds <- 10
+
+# shuffle IDs
+set.seed(123)
+AL.shuffled.ids <- sample(rownames(genus.AL.data.df))
+
+# figure out how many IDs will be in each held-out group, except the last
+AL.n.per.heldout.group <- floor(length(AL.shuffled.ids) / n.folds)
+
+# create all but last held-out group
+AL.heldout.groups <- list()
+for (ii in seq(n.folds-1)) {
   
-  # subset to cages selected for testing
-  dplyr::filter(Cage %in% AL.testing.cages) %>% 
+  this.fold.ids <- AL.shuffled.ids[
+    (1 + (ii-1) * AL.n.per.heldout.group) : (AL.n.per.heldout.group * ii)]
   
-  # keep just age and microbiome features
-    dplyr::select(age.wks, all_of(tax.feats))
+  AL.heldout.groups[[ii]] <- this.fold.ids
+}
 
-nrow(genus.AL.training.data.df.w.age)
-nrow(genus.AL.testing.data.df.w.age)
+# last held-out group is whatever is left over
+AL.heldout.groups[[n.folds]] <- setdiff(
+  rownames(genus.AL.data.df), unlist(AL.heldout.groups))
+
+# confirm that held-out groups look good
+# length(unlist(AL.heldout.groups)) # 573
+# vapply(AL.heldout.groups, FUN=length, FUN.VALUE=1) # all 57 except last one is 60
 ```
 
-* 374 samples used for training, 199 for testing
-
-Train RF with default parameters.
+Run RF on each fold.
 
 ```{r}
-rf.age.AL.genus.training <- randomForest(
-  age.wks ~ .,
-  data=genus.AL.training.data.df.w.age,
-  importance=T)
-```
-
-```{r}
-pred.v.obs.df.age.AL.genus.testing <- data.frame(
-  pred = predict(rf.age.AL.genus.training, newdata=genus.AL.testing.data.df.w.age),
-  obs = genus.AL.testing.data.df.w.age$age.wks) %>% 
-  mutate(sample.type = "testing")
-
-# these are OOB predictions
-pred.v.obs.df.age.AL.genus.training <- data.frame(
-  pred = rf.age.AL.genus.training$predicted,
-  obs = genus.AL.training.data.df.w.age$age.wks) %>% 
-  mutate(sample.type = "training")
-
-pred.v.obs.df.age.AL.genus <- rbind(
-  pred.v.obs.df.age.AL.genus.testing,
-  pred.v.obs.df.age.AL.genus.training) %>% 
-  mutate(pred.minus.obs = pred - obs)
-```
-
-```{r}
-(age.prediction.AL.p <- pred.v.obs.df.age.AL.genus %>% 
-   arrange(desc(sample.type)) %>% {
-     ggplot(., aes(x=obs*0.23, y=pred*0.23, color=sample.type)) +
-       geom_jitter(width=0.25, shape=16) +
-       geom_smooth(method="lm", linewidth=0.5) +
-       geom_abline(slope=1, lty=2) +
-       labs(x="Actual age (months)", y="Predicted age (months)",
-            title="Age prediction") +
-       scale_color_manual(values=c(training="gray80", testing=age.color)) +
-       theme_classic(base_size=8) +
-       theme(legend.position="none")
-   })
+set.seed(456)
+pred.v.obs.df.age.AL.genus.cv <- foreach(
+  this.heldout.group = AL.heldout.groups,
+  .combine="rbind") %do% {
+    
+    this.test.ids <- this.heldout.group
+    this.train.ids <- setdiff(rownames(genus.AL.data.df), this.test.ids)
+    
+    this.train.df <- genus.AL.data.df[this.train.ids, ]
+    this.test.df <- genus.AL.data.df[this.test.ids, ]
+    
+    this.age.genus.AL.rf.res <- randomForest(
+      age.wks ~ .,
+      data = this.train.df)
+    
+    out.preds.df <- data.frame(
+      pred = predict(this.age.genus.AL.rf.res, newdata=this.test.df),
+      obs = this.test.df$age.wks
+    )
+    
+    return(out.preds.df)
+    
+  }
 ```
 
 ```{r}
-# pdf("../plots/age_prediction_100_genera.pdf", width=2, height=2)
-# age.prediction.AL.p
-# dev.off()
+MAE.age.pred.AL.genus.cv <- pred.v.obs.df.age.AL.genus.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  pull(pred.minus.obs) %>% abs() %>% mean()
+
+pred.v.obs.df.age.AL.genus.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  summarise(mae = mean(abs(pred.minus.obs)),
+            sd = sd(abs(pred.minus.obs)))
+```
+
+* MAE (10-fold cross validation) = 16.3 ± 13.2 weeks
+
+```{r}
+(age.prediction.AL.cv.p <- pred.v.obs.df.age.AL.genus.cv %>% {
+  ggplot(., aes(x=obs*0.23, y=pred*0.23)) +
+    geom_jitter(width=0.25, shape=16, color=age.color) +
+    geom_smooth(method="lm", linewidth=0.5, color=age.color) +
+    geom_abline(slope=1, lty=2) +
+    labs(x="Actual age (months)", y="Predicted age (months)",
+         title=sprintf("Age prediction, DO AL; MAE= %.2f weeks",
+                       MAE.age.pred.AL.genus.cv)) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none")
+})
+```
+
+```{r}
+pdf("../plots/age_prediction_AL_10_fold_cv.pdf", width=2, height=2)
+age.prediction.AL.cv.p
+dev.off()
+```
+
+### Feature importance
+
+Ugly to repeat random forest training just to get feature importance, but here we are.
+
+```{r}
+set.seed(456)
+feat.imp.df.age.AL.genus.cv <- foreach(
+  this.heldout.group = AL.heldout.groups,
+  .combine="rbind") %do% {
+    
+    this.test.ids <- this.heldout.group
+    this.train.ids <- setdiff(rownames(genus.AL.data.df), this.test.ids)
+    
+    this.train.df <- genus.AL.data.df[this.train.ids, ]
+    this.test.df <- genus.AL.data.df[this.test.ids, ]
+    
+    this.age.genus.AL.rf.res <- randomForest(
+      age.wks ~ .,
+      data = this.train.df,
+      importance = T)
+    
+    feat.imp.df <- data.frame(this.age.genus.AL.rf.res$importance) %>% 
+      rownames_to_column("feature")
+    
+    return(feat.imp.df)
+    
+  }
+```
+
+
+```{r}
+feat.imp.summarised.df.age.AL.genus.cv <- feat.imp.df.age.AL.genus.cv %>% 
+  group_by(feature) %>% 
+  summarise(mean.perc.inc.MSE = mean(X.IncMSE), .groups="drop") %>% 
+  arrange(desc(mean.perc.inc.MSE))
+
+age.pred.top.10.most.imp.feats <- feat.imp.summarised.df.age.AL.genus.cv %>% 
+  slice_max(mean.perc.inc.MSE, n=10) %>% 
+  pull(feature)
+```
+
+```{r}
+(age.pred.feat.imp.p <- feat.imp.df.age.AL.genus.cv %>% 
+   dplyr::filter(feature %in% age.pred.top.10.most.imp.feats) %>% 
+   ggplot(aes(x=X.IncMSE, y=reorder(feature, X.IncMSE))) +
+   stat_summary(fun="mean", geom="col", fill=age.color) +
+   geom_jitter(height=0.2, shape=16) +
+   labs(x="% increase in MSE", y="Genus",
+        title="10 most important genera for age prediction") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/age_pred_top_10_most_imp_feats.pdf", height=2, width=3)
+age.pred.feat.imp.p
+dev.off()
+```
+
+## Species
+
+```{r}
+species.AL.annot.df <- species.annot.df %>% 
+  dplyr::filter(Diet == "AL")
+```
+
+Set "stool.ID" as rownames and remove extraneous columns.
+
+```{r}
+species.AL.data.df <- species.AL.annot.df %>% 
+  column_to_rownames("stool.ID") %>% 
+  dplyr::select(age.wks, all_of(species.tax.feats))
+```
+
+10-fold cross validation: 90% train, 10% held-out. Use the same held-out cages as for genus prediction.
+
+Run RF on each fold.
+
+```{r}
+set.seed(456)
+pred.v.obs.df.age.AL.species.cv <- foreach(
+  this.heldout.group = AL.heldout.groups,
+  .combine="rbind") %do% {
+    
+    this.test.ids <- this.heldout.group
+    this.train.ids <- setdiff(rownames(species.AL.data.df), this.test.ids)
+    
+    this.train.df <- species.AL.data.df[this.train.ids, ]
+    this.test.df <- species.AL.data.df[this.test.ids, ]
+    
+    this.age.species.AL.rf.res <- randomForest(
+      age.wks ~ .,
+      data = this.train.df)
+    
+    out.preds.df <- data.frame(
+      pred = predict(this.age.species.AL.rf.res, newdata=this.test.df),
+      obs = this.test.df$age.wks
+    )
+    
+    return(out.preds.df)
+    
+  }
+```
+
+```{r}
+MAE.age.pred.AL.species.cv <- pred.v.obs.df.age.AL.species.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  pull(pred.minus.obs) %>% abs() %>% mean()
+
+pred.v.obs.df.age.AL.species.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  summarise(mae = mean(abs(pred.minus.obs)),
+            sd = sd(abs(pred.minus.obs)))
+```
+
+* MAE (10-fold cross validation) = 13.8 ± 11.4 weeks
+
+```{r}
+(age.prediction.AL.species.cv.p <- pred.v.obs.df.age.AL.species.cv %>% {
+  ggplot(., aes(x=obs*0.23, y=pred*0.23)) +
+    geom_jitter(width=0.25, shape=16, color=age.color) +
+    geom_smooth(method="lm", linewidth=0.5, color=age.color) +
+    geom_abline(slope=1, lty=2) +
+    labs(x="Actual age (months)", y="Predicted age (months)",
+         title=sprintf("Age prediction, DO AL, species-level relabs; MAE = %.2f weeks", MAE.age.pred.AL.species.cv)) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none")
+})
+```
+
+* With 10-fold cross-validation, performance looks a lot better for B6 mice
+
+```{r}
+pdf("../plots/age_prediction_AL_species_10_fold_cv.pdf", width=2, height=2)
+age.prediction.AL.species.cv.p
+dev.off()
 ```
 
 ## Pathways
 
 ```{r}
-pathway.AL.log2tpm.annot.df <- pathway.log2tpm.annot.df %>% 
+pathway.log2tpm.AL.annot.df <- pathway.log2tpm.annot.df %>% 
   dplyr::filter(Diet == "AL")
 ```
 
-We can use the stratified cages from the taxonomic prediction.
+Set "stool.ID" as rownames and remove extraneous columns.
 
 ```{r}
-# training
-pathway.AL.training.data.df.w.age <- pathway.AL.log2tpm.annot.df %>% 
-  
-  # subset to cages selected for training
-  dplyr::filter(Cage %in% AL.training.cages) %>% 
-  
-  # keep just age and microbiome features
+pathway.log2tpm.AL.data.df <- pathway.log2tpm.AL.annot.df %>% 
+  column_to_rownames("stool.ID") %>% 
   dplyr::select(age.wks, all_of(fxn.feats))
-
-# testing
-pathway.AL.testing.data.df.w.age <- pathway.AL.log2tpm.annot.df %>% 
-  
-  # subset to cages selected for testing
-  dplyr::filter(Cage %in% AL.testing.cages) %>% 
-  
-  # keep just age and microbiome features
-  dplyr::select(age.wks, all_of(fxn.feats))
-
-dim(pathway.AL.training.data.df.w.age)
-dim(pathway.AL.testing.data.df.w.age)
 ```
 
-Train RF with default parameters.
+10-fold cross validation: 90% train, 10% held-out. Use the same held-out cages as for genus prediction.
+
+Run RF on each fold.
 
 ```{r}
-rf.age.AL.pathway.training <- randomForest(
-  age.wks ~ .,
-  data=pathway.AL.training.data.df.w.age,
-  importance=T)
-```
-
-```{r}
-pred.v.obs.df.age.AL.pathway.testing <- data.frame(
-  pred = predict(rf.age.AL.pathway.training, newdata=pathway.AL.testing.data.df.w.age),
-  obs = pathway.AL.testing.data.df.w.age$age.wks) %>% 
-  mutate(sample.type = "testing")
-
-pred.v.obs.df.age.AL.pathway.training <- data.frame(
-  pred = rf.age.AL.pathway.training$predicted,
-  obs = pathway.AL.training.data.df.w.age$age.wks) %>% 
-  mutate(sample.type = "training")
-
-pred.v.obs.df.age.AL.pathway <- rbind(
-  pred.v.obs.df.age.AL.pathway.testing,
-  pred.v.obs.df.age.AL.pathway.training) %>% 
-  mutate(pred.minus.obs = pred - obs)
+set.seed(456)
+pred.v.obs.df.age.AL.pathways.cv <- foreach(
+  this.heldout.group = AL.heldout.groups,
+  .combine="rbind") %do% {
+    
+    this.test.ids <- this.heldout.group
+    this.train.ids <- setdiff(rownames(pathway.log2tpm.AL.data.df), this.test.ids)
+    
+    this.train.df <- pathway.log2tpm.AL.data.df[this.train.ids, ]
+    this.test.df <- pathway.log2tpm.AL.data.df[this.test.ids, ]
+    
+    this.age.pathway.AL.rf.res <- randomForest(
+      age.wks ~ .,
+      data = this.train.df)
+    
+    out.preds.df <- data.frame(
+      pred = predict(this.age.pathway.AL.rf.res, newdata=this.test.df),
+      obs = this.test.df$age.wks
+    )
+    
+    return(out.preds.df)
+    
+  }
 ```
 
 ```{r}
-(age.prediction.AL.pathway.p <- pred.v.obs.df.age.AL.pathway %>% 
-   arrange(desc(sample.type)) %>%
-   ggplot(aes(x=obs*0.23, y=pred*0.23, color=sample.type)) +
-   geom_jitter(width=0.25, shape=16) +
-   geom_smooth(method="lm", linewidth=0.5) +
-   geom_abline(slope=1, lty=2) +
-   scale_color_manual(values=c(training="gray80", testing=age.color)) +
-   labs(x="Actual age (months)", y="Predicted age (months)",
-        title="Functional prediction") +
+MAE.age.pred.AL.pathways.cv <- pred.v.obs.df.age.AL.pathways.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  pull(pred.minus.obs) %>% abs() %>% mean()
+
+pred.v.obs.df.age.AL.pathways.cv %>% 
+  mutate(pred.minus.obs = pred - obs) %>% 
+  summarise(mae = mean(abs(pred.minus.obs)),
+            sd = sd(abs(pred.minus.obs)))
+```
+
+* Pathway MAE (10-fold cross validation) = 21.9 ± 15.8 weeks
+* Not as good as prediction using taxonomic features
+
+```{r}
+(age.prediction.AL.pathways.cv.p <- pred.v.obs.df.age.AL.pathways.cv %>% {
+  ggplot(., aes(x=obs*0.23, y=pred*0.23)) +
+    geom_jitter(width=0.25, shape=16, color=age.color) +
+    geom_smooth(method="lm", linewidth=0.5, color=age.color) +
+    geom_abline(slope=1, lty=2) +
+    labs(x="Actual age (months)", y="Predicted age (months)",
+         title=sprintf("Age prediction, AL, pathways; MAE = %.2f weeks", MAE.age.pred.AL.pathways.cv)) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none")
+})
+```
+
+
+```{r}
+pdf("../plots/age_prediction_AL_pathways_10_fold_cv.pdf", width=2, height=2)
+age.prediction.AL.pathways.cv.p
+dev.off()
+```
+
+### Feature importance
+
+```{r}
+set.seed(456)
+feat.imp.df.age.AL.pathways.cv <- foreach(
+  this.heldout.group = AL.heldout.groups,
+  .combine="rbind") %do% {
+    
+    this.test.ids <- this.heldout.group
+    this.train.ids <- setdiff(rownames(pathway.log2tpm.AL.data.df), this.test.ids)
+    
+    this.train.df <- pathway.log2tpm.AL.data.df[this.train.ids, ]
+    this.test.df <- pathway.log2tpm.AL.data.df[this.test.ids, ]
+    
+    this.age.pathway.AL.rf.res <- randomForest(
+      age.wks ~ .,
+      data = this.train.df,
+      importance = T)
+    
+    feat.imp.df <- data.frame(this.age.pathway.AL.rf.res$importance) %>% 
+      rownames_to_column("feature")
+    
+    return(feat.imp.df)
+    
+  }
+```
+
+```{r}
+feat.imp.summarised.df.age.AL.pathways.cv <- feat.imp.df.age.AL.pathways.cv %>% 
+  group_by(feature) %>% 
+  summarise(mean.perc.inc.MSE = mean(X.IncMSE), .groups="drop") %>% 
+  arrange(desc(mean.perc.inc.MSE))
+
+age.pred.top.10.most.imp.pathways <- feat.imp.summarised.df.age.AL.pathways.cv %>% 
+  slice_max(mean.perc.inc.MSE, n=10) %>% 
+  pull(feature)
+```
+
+```{r}
+(age.pred.pathways.feat.imp.p <- feat.imp.df.age.AL.pathways.cv %>% 
+   dplyr::filter(feature %in% age.pred.top.10.most.imp.pathways) %>% 
+   
+   # use human-readable pathway name, but make the label small
+   merge(pathway.names.df, by.x="feature", by.y="short.clean") %>% 
+   
+   ggplot(aes(x=X.IncMSE, y=reorder(after.colon.short.w.ID, X.IncMSE))) +
+   stat_summary(fun="mean", geom="col", fill=age.color) +
+   geom_jitter(height=0.2, shape=16) +
+   labs(x="% increase in MSE", y="Pathway",
+        title="10 most important pathways for age prediction") +
    theme_classic(base_size=8) +
-   theme(legend.position="none"))
+   theme(axis.text.y = element_text(size=4)))
 ```
 
 ```{r}
-# pdf("../plots/age_prediction_272_pathways_log2tpm.pdf", width=2, height=2)
-# age.prediction.AL.pathway.p
-# dev.off()
+pdf("../plots/age_pred_top_10_most_imp_pathways.pdf", height=2, width=3)
+age.pred.pathways.feat.imp.p
+dev.off()
 ```
 
 # Train on AL, predict age for DR
 
 ## Genera
-
-We can train on all AL samples now, rather than on the 70% training set as above.
 
 ```{r}
 genus.AL.data.df.w.age <- genus.AL.annot.df %>% 
@@ -380,9 +763,9 @@ DR.v.AL.pred.t.test.per.age.pval.df <- pred.v.obs.df.DR.and.AL %>%
 * Why do we predict higher age at 5 months? Because OOB accuracy will be a little better than testing on never before seen samples. Therefore, the AL samples will be closer to y=x.
 
 ```{r}
-# pdf("../plots/age_prediction_DR_trained_on_AL.pdf", width=2, height=2)
-# AL.v.DR.age.preds.p
-# dev.off()
+pdf("../plots/age_prediction_DR_trained_on_AL.pdf", width=2, height=2)
+AL.v.DR.age.preds.p
+dev.off()
 ```
 
 ## Pathways
@@ -390,26 +773,26 @@ DR.v.AL.pred.t.test.per.age.pval.df <- pred.v.obs.df.DR.and.AL %>%
 Train on AL samples now.
 
 ```{r}
-pathway.AL.data.df.w.age <- pathway.AL.log2tpm.annot.df %>% 
+pathway.log2tpm.AL.data.df.w.age <- pathway.log2tpm.AL.annot.df %>% 
   dplyr::select(age.wks, all_of(fxn.feats)) # keep just age and microbiome features
 ```
 
 ```{r}
 rf.age.AL.pathway <- randomForest(
   age.wks ~ .,
-  data=pathway.AL.data.df.w.age,
+  data=pathway.log2tpm.AL.data.df.w.age,
   importance=T)
 ```
 
 ```{r}
 # subset to DR samples
-pathway.DR.annot.df <- pathway.log2tpm.annot.df %>% 
+pathway.log2tpm.DR.annot.df <- pathway.log2tpm.annot.df %>% 
   dplyr::filter(Diet != "AL")
 
 # keep just microbiome features
-pathway.DR.data.df <- pathway.DR.annot.df %>% 
+pathway.log2tpm.DR.data.df <- pathway.log2tpm.DR.annot.df %>% 
   dplyr::select(all_of(fxn.feats))
-dim(pathway.DR.data.df)
+dim(pathway.log2tpm.DR.data.df)
 ```
 
 Predictions on DR.
@@ -417,12 +800,12 @@ Predictions on DR.
 ```{r}
 age.preds.on.DR.trained.on.AL.pathways <- predict(
   object = rf.age.AL.pathway, 
-  newdata = pathway.DR.data.df)
+  newdata = pathway.log2tpm.DR.data.df)
 
 pathway.DR.pred.df <- data.frame(
   pred = age.preds.on.DR.trained.on.AL.pathways,
-  obs = pathway.DR.annot.df$age.wks,
-  Diet = pathway.DR.annot.df$Diet
+  obs = pathway.log2tpm.DR.annot.df$age.wks,
+  Diet = pathway.log2tpm.DR.annot.df$Diet
 )
 ```
 
@@ -431,7 +814,7 @@ Predictions on AL -- use OOB preds.
 ```{r}
 pathway.AL.pred.df <- data.frame(
   pred = rf.age.AL.pathway$predicted, 
-  obs = pathway.AL.log2tpm.annot.df$age.wks,
+  obs = pathway.log2tpm.AL.annot.df$age.wks,
   Diet = "AL")
 ```
 
@@ -491,9 +874,9 @@ pathway.DR.v.AL.pred.t.test.per.age.pval.df <- pred.v.obs.df.DR.and.AL.pathway %
 ```
 
 ```{r}
-# pdf("../plots/age_prediction_DR_trained_on_AL_pathway.pdf", width=2, height=2)
-# AL.v.DR.age.preds.pathway.p
-# dev.off()
+pdf("../plots/age_prediction_DR_trained_on_AL_pathways.pdf", width=2, height=2)
+AL.v.DR.age.preds.pathway.p
+dev.off()
 ```
 
 # Train on 40% CR, predict age for rest
@@ -552,9 +935,9 @@ genus.not40.annot.df.w.preds.trained.on.40 <- genus.not40.annot.df %>%
 ```
 
 ```{r}
-# pdf("../plots/age_prediction_genera_trained_on_40_boxplots.pdf", height=1.5, width=4)
-# train.40.test.rest.genus.p
-# dev.off()
+pdf("../plots/age_prediction_genera_trained_on_40_boxplots.pdf", height=1.5, width=4)
+train.40.test.rest.genus.p
+dev.off()
 ```
 
 ## Pathways
@@ -611,9 +994,560 @@ pathway.annot.df.w.preds.trained.on.40 <- pathway.not40.log2tpm.annot.df %>%
 ```
 
 ```{r}
-# pdf("../plots/age_prediction_pathways_trained_on_40_boxplots.pdf", height=1.5, width=4)
-# train.40.test.rest.pathway.p
-# dev.off()
+pdf("../plots/age_prediction_pathways_trained_on_40_boxplots.pdf", height=1.5, width=4)
+train.40.test.rest.pathway.p
+dev.off()
+```
+
+# Define functions related to DR prediction
+
+Perform 5-fold cross-validation while stratifying by cage, i.e. each cage is only present in training or testing, not both. Stratifying by cage is important for prediction of DR because the classifier could theoretically achieve good performance simply by learning which mice live together, rather than learning the signature of a particular DR.
+
+```{r}
+get_list_of_heldout_cages_per_fold <- function(this.annot.df, n.folds=5) {
+  
+  # shuffle cages
+  cage.shuffled.vec <- sample(unique(this.annot.df$Cage))
+  
+  # figure out how many cages will be in each held-out group, except the last
+  cages.per.heldout.group <- floor(length(cage.shuffled.vec) / n.folds)
+  
+  # create all but last held-out group
+  list.of.heldout.cages <- list()
+  for (ii in seq(n.folds-1)) {
+    
+    this.fold.cages <- cage.shuffled.vec[
+      (1 + (ii-1) * cages.per.heldout.group) : (cages.per.heldout.group * ii)]
+    
+    list.of.heldout.cages[[ii]] <- this.fold.cages
+  }
+  
+  # length(list.of.heldout.cages[[1]])
+  
+  # last held-out group is whatever is left over
+  list.of.heldout.cages[[n.folds]] <- setdiff(
+    cage.shuffled.vec, unlist(list.of.heldout.cages))
+  
+  return(list.of.heldout.cages)
+  
+  # confirm that held-out groups look good
+  # length(cage.shuffled.vec)
+  # length(unlist(list.of.heldout.cages)) 
+  # vapply(list.of.heldout.cages, FUN=length, FUN.VALUE=1)
+  
+}
+```
+
+Performing binary DR prediction (yes or no) within a single fold and producing coordinates for an ROC.
+
+```{r}
+run_DR_pred_per_fold <- function(this.annot.df, heldout.cages.vec, tax.feats) {
+  
+  this.test.ids <- this.annot.df %>% 
+    dplyr::filter(Cage %in% heldout.cages.vec) %>% 
+    pull(stool.ID)
+  this.train.ids <- setdiff(this.annot.df$stool.ID, this.test.ids)
+  # length(this.test.ids)
+  # length(this.train.ids)
+  
+  this.train.df <- this.annot.df %>% 
+    dplyr::filter(stool.ID %in% this.train.ids) %>% 
+    dplyr::select(DR, all_of(tax.feats))
+  this.test.df <- this.annot.df %>% 
+    dplyr::filter(stool.ID %in% this.test.ids) %>% 
+    dplyr::select(DR, all_of(tax.feats))
+  
+  this.rf.res <- randomForest(
+    DR ~ .,
+    data = this.train.df)
+  
+  # evaluate on test data
+  this.DR.pred.scores <- predict(this.rf.res, this.test.df, type="prob") %>% 
+    data.frame() %>% 
+    pull(Y)
+  
+  # calculate ROC coordinates and AUC
+  this.roc.res <- roc(this.test.df$DR, this.DR.pred.scores,
+                      levels=c("N", "Y"), direction="<")
+  this.roc.coord.df <- coords(this.roc.res)
+  this.auc <- as.numeric(auc(this.roc.res))
+  
+  # add AUC as new column
+  out.df <- this.roc.coord.df %>% 
+    mutate(AUC = this.auc)
+  
+  return(out.df)
+  
+}
+```
+
+Run binary DR prediction across folds and extract ROC coordinates for each fold.
+
+```{r}
+get_roc_coord_for_DR_pred_per_age <- function(this.age, this.annot.df, tax.feats) {
+  
+  # subset to this age
+  this.age.annot.df <- this.annot.df %>% 
+    dplyr::filter(age.approx.months == this.age)
+  
+  # perform cross-validation, stratifying by cage
+  # return which cages are held out in each fold
+  this.age.list.of.heldout.cages.per.fold <- get_list_of_heldout_cages_per_fold(this.age.annot.df)
+  
+  # get ROC coords within each fold
+  this.age.roc.coord.df.cv.strat.by.cage <- foreach(
+    this.fold.ii = seq(length(this.age.list.of.heldout.cages.per.fold)),
+    .combine="rbind") %do% {
+      
+      roc.df <- run_DR_pred_per_fold(
+        this.age.annot.df, 
+        this.age.list.of.heldout.cages.per.fold[[this.fold.ii]],
+        tax.feats)
+      
+      # add fold and age
+      roc.df$fold <- this.fold.ii
+      roc.df$age <- this.age
+      
+      return(roc.df)
+      
+    }
+  
+  return(this.age.roc.coord.df.cv.strat.by.cage)
+  
+}
+```
+
+Convert the default ROC coordinates into a format that will make it easy to calculate mean ROC.
+
+1. Create a vector of evenly spaced x-values for 0 to 1
+2. For each x, identify the largest 1-minus-specificity value that is less than or equal to x (`largest.1.minus.spec.lteq.x`)
+3. For each `largest.1.minus.spec.lteq.x` value, get all corresponding sensitivity values and return the maximum
+
+```{r}
+create_roc_plot_df <- function(roc_coord_df) {
+  
+  # create list of evenly spaced x coordinates
+  x <- seq(from=0, to=1, length=1000)
+  
+  # for each x, identify the largest 1-minus-specificity value that is less than or equal to x
+  largest.1.minus.spec.lteq.x <- vapply(
+    x,
+    FUN=function(one.x) {roc_coord_df %>% dplyr::filter(one.minus.spec <= one.x) %>% pull(one.minus.spec) %>% max()},
+    FUN.VALUE=1)
+  
+  # for each of these 1-minus-specificity values, get the maximum corresponding sensitivity
+  interpolated.sensitivity <- vapply(
+    largest.1.minus.spec.lteq.x,
+    FUN=function(one.1.minus.spec) {roc_coord_df %>% dplyr::filter(one.minus.spec == one.1.minus.spec) %>% pull(sensitivity) %>% max()},
+    FUN.VALUE=1)
+  
+  # should always start at x=0, y=0 and end at x=1, y=1
+  interpolated.sensitivity[1] <- 0
+  interpolated.sensitivity[length(interpolated.sensitivity)] <- 1
+  
+  out.df <- data.frame(
+    x = x,
+    y = interpolated.sensitivity)
+  
+  return(out.df)
+  
+}
+```
+
+# Predict binary DR (with ROCs)
+
+## Genera
+
+Convert Diet to (binary) DR column.
+
+```{r}
+genus.annot.df <- genus.annot.df %>% 
+  mutate(DR = factor(case_when(
+    Diet == "AL" ~ "N",
+    TRUE ~ "Y")))
+
+table(genus.annot.df$DR)
+```
+
+* 573 AL samples, 2424 DR samples
+
+Perform prediction within each age. Return ROC coordinates for each fold.
+
+```{r}
+set.seed(456)
+DR.pred.roc.coords.5mo <- get_roc_coord_for_DR_pred_per_age(5, genus.annot.df, tax.feats)
+DR.pred.roc.coords.10mo <- get_roc_coord_for_DR_pred_per_age(10, genus.annot.df, tax.feats)
+DR.pred.roc.coords.16mo <- get_roc_coord_for_DR_pred_per_age(16, genus.annot.df, tax.feats)
+DR.pred.roc.coords.22mo <- get_roc_coord_for_DR_pred_per_age(22, genus.annot.df, tax.feats)
+DR.pred.roc.coords.28mo <- get_roc_coord_for_DR_pred_per_age(28, genus.annot.df, tax.feats)
+
+DR.pred.roc.coord.df.cv.strat.by.cage <- rbind(
+  DR.pred.roc.coords.5mo,
+  DR.pred.roc.coords.10mo,
+  DR.pred.roc.coords.16mo,
+  DR.pred.roc.coords.22mo,
+  DR.pred.roc.coords.28mo)
+
+table(DR.pred.roc.coord.df.cv.strat.by.cage$age)
+```
+
+Create one minus specificity column because that's what we actually plot.
+
+```{r}
+DR.pred.roc.coord.df.cv.strat.by.cage <- DR.pred.roc.coord.df.cv.strat.by.cage %>%
+  mutate(one.minus.spec = 1-specificity)
+```
+
+Create interpolated ROCs to make it easy to create a mean ROC.
+
+```{r}
+# takes ~15 seconds
+DR.pred.roc.plot.df.cv.strat.by.cage <- DR.pred.roc.coord.df.cv.strat.by.cage %>% 
+  group_by(age, fold, AUC) %>% 
+  group_modify(~ create_roc_plot_df(.x)) %>% 
+  ungroup()
+```
+
+Calculate mean AUC per age.
+
+```{r}
+DR.pred.mean.AUC.per.age.cv.strat.by.cage <- DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+  distinct(age, fold, AUC) %>%
+  group_by(age) %>% 
+  summarise(mean.AUC = mean(AUC), .groups="drop")
+```
+
+Create mean ROC.
+
+```{r}
+DR.pred.mean.roc.plot.df.cv.strat.by.cage <- DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+  
+  group_by(age, x) %>% 
+  summarise(y = mean(y), .groups="drop") %>% 
+  
+  # add mean AUC (helpful for plotting)
+  left_join(DR.pred.mean.AUC.per.age.cv.strat.by.cage, by="age") %>% 
+  
+  # make it pretty 
+  mutate(mean.AUC.str = sprintf("Mean AUC = %.2f", mean.AUC))
+```
+
+Plot!
+
+```{r}
+(DR.pred.roc.curves.cv.strat.by.cage <- DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+   
+   # add mean AUC per age
+   left_join(DR.pred.mean.AUC.per.age.cv.strat.by.cage, by="age") %>% 
+   
+   # make it pretty
+   mutate(mean.AUC.str = sprintf("Mean AUC = %.2f", mean.AUC)) %>% 
+   
+   arrange(fold) %>% 
+   
+   ggplot(aes(x=x, y=y, group=fold)) +
+   geom_abline(slope=1, lty=2) +
+   geom_path(alpha=0.3) +
+   geom_path(aes(group=NULL), linewidth=1, color=diet.color,
+             data=DR.pred.mean.roc.plot.df.cv.strat.by.cage) +
+   theme_classic(base_size=8) +
+   labs(x="1 - Specificity", y="Sensitivity") +
+   facet_wrap(~ age + mean.AUC.str, nrow=1) +
+   scale_x_continuous(breaks=c(0, 0.5, 1)) +
+   theme(strip.text=element_text(size=6, margin=ggplot2::margin(0,0,0,0,unit="cm"))))
+```
+
+```{r}
+pdf("../plots/ROCs_for_DR_pred.pdf", width=4.5, height=1.5)
+DR.pred.roc.curves.cv.strat.by.cage
+dev.off()
+```
+
+### Feature importance
+
+Extracting feature importance requires a different function.
+
+```{r}
+get_feat_imp_for_DR_pred_per_fold <- function(this.annot.df, heldout.cages.vec, tax.feats) {
+  
+  this.test.ids <- this.annot.df %>% 
+    dplyr::filter(Cage %in% heldout.cages.vec) %>% 
+    pull(stool.ID)
+  this.train.ids <- setdiff(this.annot.df$stool.ID, this.test.ids)
+  
+  this.train.df <- this.annot.df %>% 
+    dplyr::filter(stool.ID %in% this.train.ids) %>% 
+    dplyr::select(DR, all_of(tax.feats))
+  this.test.df <- this.annot.df %>% 
+    dplyr::filter(stool.ID %in% this.test.ids) %>% 
+    dplyr::select(DR, all_of(tax.feats))
+  
+  this.rf.res <- randomForest(
+    DR ~ .,
+    data = this.train.df,
+    importance = T)
+  
+  # extract importance
+  this.imp.df <- data.frame(this.rf.res$importance)
+
+  return(this.imp.df)
+  
+}
+```
+
+```{r}
+get_feat_imp_for_DR_pred_per_age <- function(this.age, this.annot.df, tax.feats) {
+  
+  # subset to this age
+  this.age.annot.df <- this.annot.df %>% 
+    dplyr::filter(age.approx.months == this.age)
+  
+  # perform cross-validation, stratifying by cage
+  # return which cages are held out in each fold
+  this.age.list.of.heldout.cages.per.fold <- get_list_of_heldout_cages_per_fold(this.age.annot.df)
+  
+  # get feature importance df for each fold
+  this.age.feat.imp.df.cv.strat.by.cage <- foreach(
+    this.fold.ii = seq(length(this.age.list.of.heldout.cages.per.fold)),
+    .combine="rbind") %do% {
+      
+      feat.imp.df <- get_feat_imp_for_DR_pred_per_fold(
+        this.age.annot.df, 
+        this.age.list.of.heldout.cages.per.fold[[this.fold.ii]],
+        tax.feats)
+      
+      # add fold and age
+      feat.imp.df$fold <- this.fold.ii
+      feat.imp.df$age <- this.age
+      
+      # move rownames to new column
+      feat.imp.df <- rownames_to_column(feat.imp.df, "feature")
+      
+      return(feat.imp.df)
+      
+    }
+  
+}
+```
+
+```{r}
+set.seed(456)
+DR.pred.feat.imp.5mo <- get_feat_imp_for_DR_pred_per_age(5, genus.annot.df, tax.feats)
+DR.pred.feat.imp.10mo <- get_feat_imp_for_DR_pred_per_age(10, genus.annot.df, tax.feats)
+DR.pred.feat.imp.16mo <- get_feat_imp_for_DR_pred_per_age(16, genus.annot.df, tax.feats)
+DR.pred.feat.imp.22mo <- get_feat_imp_for_DR_pred_per_age(22, genus.annot.df, tax.feats)
+DR.pred.feat.imp.28mo <- get_feat_imp_for_DR_pred_per_age(28, genus.annot.df, tax.feats)
+
+DR.pred.feat.imp.df <- rbind(
+  DR.pred.feat.imp.5mo,
+  DR.pred.feat.imp.10mo,
+  DR.pred.feat.imp.16mo,
+  DR.pred.feat.imp.22mo,
+  DR.pred.feat.imp.28mo)
+
+table(DR.pred.feat.imp.df$age)
+```
+
+Determine which features are most important, across post-randomization ages.
+
+```{r}
+DR.pred.feat.imp.summarised.df <- DR.pred.feat.imp.df %>% 
+  dplyr::filter(age >= 10) %>% 
+  group_by(feature) %>% 
+  summarise(MeanMeanDecreaseAccuracy = mean(MeanDecreaseAccuracy), .groups="drop") %>% 
+  arrange(desc(MeanMeanDecreaseAccuracy))
+
+DR.pred.top.10.most.imp.feats <- DR.pred.feat.imp.summarised.df %>% 
+  slice_max(MeanMeanDecreaseAccuracy, n=10) %>% 
+  pull(feature)
+
+DR.pred.top.20.most.imp.feats <- DR.pred.feat.imp.summarised.df %>% 
+  slice_max(MeanMeanDecreaseAccuracy, n=20) %>% 
+  pull(feature)
+```
+
+Plot collapsing across age. 
+
+```{r}
+(DR.pred.feat.imp.p <- DR.pred.feat.imp.df %>% 
+   dplyr::filter(age >= 10) %>% 
+   dplyr::filter(feature %in% DR.pred.top.10.most.imp.feats) %>% 
+   ggplot(aes(x=MeanDecreaseAccuracy, y=reorder(feature, MeanDecreaseAccuracy))) +
+   stat_summary(fun="mean", geom="col", fill=diet.color) +
+   geom_jitter(height=0.1, shape=16) +
+   labs(x="Mean decrease in accuracy", y="Genus",
+        title="10 most important genera for binary DR prediction") +
+   theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/binary_DR_pred_top_10_most_imp_feats.pdf", height=2.5, width=3)
+DR.pred.feat.imp.p
+dev.off()
+```
+
+## Pathways
+
+Convert Diet to DR column.
+
+```{r}
+pathway.log2tpm.annot.df <- pathway.log2tpm.annot.df %>% 
+  mutate(DR = factor(case_when(
+    Diet == "AL" ~ "N",
+    TRUE ~ "Y")))
+
+table(pathway.log2tpm.annot.df$DR)
+```
+
+Perform prediction within each age. Return ROC coordinates for each fold.
+
+```{r}
+set.seed(456)
+pathway.DR.pred.roc.coords.5mo <- get_roc_coord_for_DR_pred_per_age(5, pathway.log2tpm.annot.df, fxn.feats)
+pathway.DR.pred.roc.coords.10mo <- get_roc_coord_for_DR_pred_per_age(10, pathway.log2tpm.annot.df, fxn.feats)
+pathway.DR.pred.roc.coords.16mo <- get_roc_coord_for_DR_pred_per_age(16, pathway.log2tpm.annot.df, fxn.feats)
+pathway.DR.pred.roc.coords.22mo <- get_roc_coord_for_DR_pred_per_age(22, pathway.log2tpm.annot.df, fxn.feats)
+pathway.DR.pred.roc.coords.28mo <- get_roc_coord_for_DR_pred_per_age(28, pathway.log2tpm.annot.df, fxn.feats)
+
+pathway.DR.pred.roc.coord.df.cv.strat.by.cage <- rbind(
+  pathway.DR.pred.roc.coords.5mo,
+  pathway.DR.pred.roc.coords.10mo,
+  pathway.DR.pred.roc.coords.16mo,
+  pathway.DR.pred.roc.coords.22mo,
+  pathway.DR.pred.roc.coords.28mo)
+
+table(pathway.DR.pred.roc.coord.df.cv.strat.by.cage$age)
+```
+
+Create one minus specificity column because that's what we actually plot.
+
+```{r}
+pathway.DR.pred.roc.coord.df.cv.strat.by.cage <- pathway.DR.pred.roc.coord.df.cv.strat.by.cage %>%
+  mutate(one.minus.spec = 1-specificity)
+```
+
+Create interpolated ROCs to make it easy to create a mean ROC.
+
+```{r}
+# takes ~15 sec
+pathway.DR.pred.roc.plot.df.cv.strat.by.cage <- pathway.DR.pred.roc.coord.df.cv.strat.by.cage %>% 
+  group_by(age, fold, AUC) %>% 
+  group_modify(~ create_roc_plot_df(.x)) %>% 
+  ungroup()
+```
+
+Calculate mean AUC per age.
+
+```{r}
+pathway.DR.pred.mean.AUC.per.age.cv.strat.by.cage <- pathway.DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+  distinct(age, fold, AUC) %>%
+  group_by(age) %>% 
+  summarise(mean.AUC = mean(AUC), .groups="drop")
+```
+
+Create mean ROC.
+
+```{r}
+pathway.DR.pred.mean.roc.plot.df.cv.strat.by.cage <- pathway.DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+  
+  group_by(age, x) %>% 
+  summarise(y = mean(y), .groups="drop") %>% 
+  
+  # add mean AUC (helpful for plotting)
+  left_join(pathway.DR.pred.mean.AUC.per.age.cv.strat.by.cage, by="age") %>% 
+  
+  # make it pretty 
+  mutate(mean.AUC.str = sprintf("Mean AUC = %.2f", mean.AUC))
+```
+
+Plot.
+
+```{r}
+(pathway.DR.pred.roc.curves.cv.strat.by.cage <- pathway.DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+   
+   # add mean AUC per age
+   left_join(pathway.DR.pred.mean.AUC.per.age.cv.strat.by.cage, by="age") %>% 
+   
+   # make it look pretty
+   mutate(mean.AUC.str = sprintf("Mean AUC = %.2f", mean.AUC)) %>% 
+   
+   arrange(fold) %>% 
+   
+   ggplot(aes(x=x, y=y, group=fold)) +
+   geom_abline(slope=1, lty=2) +
+   geom_path(alpha=0.3) +
+   geom_path(aes(group=NULL), linewidth=1, color=diet.color,
+             data=pathway.DR.pred.mean.roc.plot.df.cv.strat.by.cage) +
+   theme_classic(base_size=8) +
+   labs(x="1 - Specificity", y="Sensitivity") +
+   facet_wrap(~ age + mean.AUC.str, nrow=1) +
+   scale_x_continuous(breaks=c(0, 0.5, 1)) +
+   theme(strip.text=element_text(size=6, margin=ggplot2::margin(0,0,0,0,unit="cm"))))
+```
+
+```{r}
+pdf("../plots/ROCs_for_DR_pred_pathways.pdf", width=4.5, height=1.5)
+pathway.DR.pred.roc.curves.cv.strat.by.cage
+dev.off()
+```
+
+### Feature importance
+
+```{r}
+set.seed(456)
+DR.pred.path.imp.5mo <- get_feat_imp_for_DR_pred_per_age(5, pathway.log2tpm.annot.df, fxn.feats)
+DR.pred.path.imp.10mo <- get_feat_imp_for_DR_pred_per_age(10, pathway.log2tpm.annot.df, fxn.feats)
+DR.pred.path.imp.16mo <- get_feat_imp_for_DR_pred_per_age(16, pathway.log2tpm.annot.df, fxn.feats)
+DR.pred.path.imp.22mo <- get_feat_imp_for_DR_pred_per_age(22, pathway.log2tpm.annot.df, fxn.feats)
+DR.pred.path.imp.28mo <- get_feat_imp_for_DR_pred_per_age(28, pathway.log2tpm.annot.df, fxn.feats)
+
+DR.pred.path.imp.df <- rbind(
+  DR.pred.path.imp.5mo,
+  DR.pred.path.imp.10mo,
+  DR.pred.path.imp.16mo,
+  DR.pred.path.imp.22mo,
+  DR.pred.path.imp.28mo)
+
+table(DR.pred.path.imp.df$age)
+```
+
+Determine which features are most important, across post-randomization ages.
+
+```{r}
+DR.pred.path.imp.summarised.df <- DR.pred.path.imp.df %>% 
+  dplyr::filter(age >= 10) %>% 
+  group_by(feature) %>% 
+  summarise(MeanMeanDecreaseAccuracy = mean(MeanDecreaseAccuracy), .groups="drop") %>% 
+  arrange(desc(MeanMeanDecreaseAccuracy))
+
+DR.pred.top.10.most.imp.paths <- DR.pred.path.imp.summarised.df %>% 
+  slice_max(MeanMeanDecreaseAccuracy, n=10) %>% 
+  pull(feature)
+```
+
+Plot collapsing across age. 
+
+```{r}
+(DR.pred.path.imp.p <- DR.pred.path.imp.df %>% 
+   dplyr::filter(age >= 10) %>% 
+   dplyr::filter(feature %in% DR.pred.top.10.most.imp.paths) %>% 
+   
+   # use human-readable pathway name, but make the label small
+   merge(pathway.names.df, by.x="feature", by.y="short.clean") %>% 
+   
+   ggplot(aes(x=MeanDecreaseAccuracy, y=reorder(after.colon.short.w.ID, MeanDecreaseAccuracy))) +
+   stat_summary(fun="mean", geom="col", fill=diet.color) +
+   geom_jitter(height=0.1, shape=16) +
+   labs(x="Mean decrease in accuracy", y="Pathway",
+        title="10 most important pathways for binary DR prediction") +
+   theme_classic(base_size=8) +
+   theme(axis.text.y = element_text(size=4)))
+```
+
+```{r}
+pdf("../plots/binary_DR_pred_top_10_most_imp_paths.pdf", height=2.5, width=3)
+DR.pred.path.imp.p
+dev.off()
 ```
 
 # Predict diet
@@ -716,12 +1650,12 @@ all.rf.diet.t.test.df <- all.rf.diet.accuracy.df %>%
 ```
 
 ```{r}
-# pdf("../plots/diet_prediction_accuracy_v_age_genera.pdf", width=2, height=2)
-# diet.pred.v.age.p
-# dev.off()
+pdf("../plots/diet_prediction_accuracy_v_age_genera.pdf", width=2, height=2)
+diet.pred.v.age.p
+dev.off()
 ```
 
-### Accuracy by diet
+### Plot accuracy versus diet
 
 ```{r}
 no.5mo.rf.diet.pred.df <- all.rf.diet.pred.df %>% 
@@ -744,9 +1678,9 @@ no.5mo.rf.diet.pred.df <- all.rf.diet.pred.df %>%
 ```
 
 ```{r}
-# pdf("../plots/diet_prediction_accuracy_v_diet_post_randomiz.pdf", width=2, height=2)
-# diet.pred.v.diet.p
-# dev.off()
+pdf("../plots/diet_prediction_accuracy_v_diet_post_randomiz.pdf", width=2, height=2)
+diet.pred.v.diet.p
+dev.off()
 ```
 
 ## Pathways
@@ -846,12 +1780,12 @@ all.rf.diet.pathway.t.test.df <- all.rf.diet.pathway.accuracy.df %>%
 ```
 
 ```{r}
-# pdf("../plots/diet_prediction_accuracy_v_age_pathway.pdf", width=2, height=2)
-# diet.pred.v.age.pathway.p
-# dev.off()
+pdf("../plots/diet_prediction_accuracy_v_age_pathway.pdf", width=2, height=2)
+diet.pred.v.age.pathway.p
+dev.off()
 ```
 
-### Accuracy by diet
+### Plot accuracy versus diet
 
 ```{r}
 no.5mo.rf.diet.pathway.pred.df <- all.rf.diet.pathway.pred.df %>% 
@@ -873,9 +1807,9 @@ no.5mo.rf.diet.pathway.pred.df <- all.rf.diet.pathway.pred.df %>%
 ```
 
 ```{r}
-# pdf("../plots/diet_prediction_accuracy_v_diet_post_randomiz_pathway.pdf", width=2, height=2)
-# diet.pathway.pred.v.diet.p
-# dev.off()
+pdf("../plots/diet_prediction_accuracy_v_diet_post_randomiz_pathways.pdf", width=2, height=2)
+diet.pathway.pred.v.diet.p
+dev.off()
 ```
 
 ## Is accuracy better for genera than pathways?

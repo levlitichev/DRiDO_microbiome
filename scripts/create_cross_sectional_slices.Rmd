@@ -1,0 +1,274 @@
+Create cross-sectional slices of the data at specific points in time.
+
+We will create 3 slices:
+* Slice 1 (2018 Q1) = 573 samples collected from November 20, 2017 to March 5, 2018
+* Slice 2 (2018 Q3) = 424 samples collected from April 30, 2018 to August 13, 2018
+* Slice 3 (2019 Q1) = 381 samples collected from October 22, 2018 to February 11, 2019
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(lubridate)
+library(patchwork) # plot_layout
+
+cohort.color.palette <- c(
+  G22W1 = "royalblue",
+  G22W2 = "royalblue4",
+  G23W1 = "peachpuff",
+  G23W2 = "peachpuff3",
+  G24W1 = "purple",
+  G24W2 = "purple4",
+  G26W1 = "maroon",
+  G26W2 = "maroon4",
+  G27W1 = "seagreen",
+  G27W2 = "seagreen3",
+  G28W1 = "darkorange",
+  G28W2 = "darkorange4")
+```
+
+# Import data
+
+```{r}
+genus.data.df <- read.table(
+  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
+  sep="\t", header=T, row.names=1)
+```
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
+  sep="\t", header=T)
+mouse.meta.df <- read.csv(
+  "../data/metadata/AnimalData_Processed_20230712.csv") %>% 
+  mutate(Cage = paste0("c", HID))
+
+stool.meta.annot.df <- merge(
+  stool.meta.df, mouse.meta.df, 
+  by.x="mouse.ID", by.y="MouseID")
+
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  
+  # pre-randomization timepoints should be considered AL
+  mutate(Diet.5mo.as.AL = case_when(
+    age.approx.months == 5 ~ "AL",
+    TRUE ~ as.character(Diet))) %>% 
+  mutate(Diet.5mo.as.AL = factor(Diet.5mo.as.AL, levels=c(
+      "AL", "1D", "2D", "20", "40"))) %>% 
+  
+  # convert to date type
+  mutate(collection.date = ymd(date.stool.collection.approx)) %>%
+
+  # create new column with days since first stool collection  
+  mutate(days.from.first.stool.collection = time_length(
+    collection.date - min(collection.date), unit="day")) %>% 
+  
+  # create new column for quarter
+  mutate(quarter.stool.collection = round_date(collection.date, "quarter"))
+```
+
+# Take cross-sectional slices
+
+```{r}
+start.2018.Q1 <- ymd("2017-11-20")
+end.2018.Q1 <- ymd("2018-03-05")
+
+start.2018.Q3 <- ymd("2018-04-30")
+end.2018.Q3 <- ymd("2018-08-13")
+
+start.2019.Q1 <- ymd("2018-10-22")
+end.2019.Q1 <- ymd("2019-02-11")
+```
+
+Rename the slices based on the number of days from the start of the experiment, rather than date.
+
+```{r}
+start.of.experiment <- min(stool.meta.annot.df$collection.date)
+
+start.2018.Q1.in.days <- time_length(
+  start.2018.Q1 - start.of.experiment, unit="day")
+end.2018.Q1.in.days <- time_length(
+  end.2018.Q1 - start.of.experiment, unit="day")
+
+start.2018.Q3.in.days <- time_length(
+  start.2018.Q3 - start.of.experiment, unit="day")
+end.2018.Q3.in.days <- time_length(
+  end.2018.Q3 - start.of.experiment, unit="day")
+
+start.2019.Q1.in.days <- time_length(
+  start.2019.Q1 - start.of.experiment, unit="day")
+end.2019.Q1.in.days <- time_length(
+  end.2019.Q1 - start.of.experiment, unit="day")
+```
+
+```{r}
+stool.meta.annot.df.2018.Q1 <- stool.meta.annot.df %>% 
+  dplyr::filter(
+    (date.stool.collection.approx >= start.2018.Q1) & (
+      date.stool.collection.approx <= end.2018.Q1))
+
+stool.meta.annot.df.2018.Q3 <- stool.meta.annot.df %>% 
+  dplyr::filter(
+    (date.stool.collection.approx >= start.2018.Q3) & (
+      date.stool.collection.approx <= end.2018.Q3))
+
+stool.meta.annot.df.2019.Q1 <- stool.meta.annot.df %>% 
+  dplyr::filter(
+    (date.stool.collection.approx >= start.2019.Q1) & (
+      date.stool.collection.approx <= end.2019.Q1))
+```
+
+```{r}
+stool.meta.annot.df.2018.Q1 %>% nrow()
+stool.meta.annot.df.2018.Q3 %>% nrow()
+stool.meta.annot.df.2019.Q1 %>% nrow()
+```
+
+* 573, 424, and 381 samples per slice
+
+```{r}
+genus.data.df.2018.Q1 <- genus.data.df[, stool.meta.annot.df.2018.Q1$stool.ID]
+genus.data.df.2018.Q3 <- genus.data.df[, stool.meta.annot.df.2018.Q3$stool.ID]
+genus.data.df.2019.Q1 <- genus.data.df[, stool.meta.annot.df.2019.Q1$stool.ID]
+```
+
+# Characteristics of the cross-sectional slices
+
+Age:
+
+```{r}
+# Mean, min, max, 25%ile, 75%ile
+summary(stool.meta.annot.df.2018.Q1$age.wks)
+summary(stool.meta.annot.df.2018.Q3$age.wks)
+summary(stool.meta.annot.df.2019.Q1$age.wks)
+
+# SD
+sd(stool.meta.annot.df.2018.Q1$age.wks)
+sd(stool.meta.annot.df.2018.Q3$age.wks)
+sd(stool.meta.annot.df.2019.Q1$age.wks)
+```
+
+Cohort:
+
+```{r}
+(num.samples.per.cohort.in.each.slice.heatmap <- rbind(
+  stool.meta.annot.df.2018.Q1 %>% 
+    dplyr::count(Cohort) %>% 
+    mutate(Slice=1),
+  stool.meta.annot.df.2018.Q3 %>% 
+    dplyr::count(Cohort) %>% 
+    mutate(Slice=2),
+  stool.meta.annot.df.2019.Q1 %>% 
+    dplyr::count(Cohort) %>% 
+    mutate(Slice=3)) %>% 
+   ggplot(aes(x=Cohort, y=Slice, fill=n)) +
+   geom_tile() +
+   theme_classic(base_size=10))
+```
+
+* All cohorts are well-represented in all 3 slices
+
+Batch:
+
+```{r}
+(num.samples.per.batch.in.each.slice.heatmap <- rbind(
+  stool.meta.annot.df.2018.Q1 %>% 
+    dplyr::count(ext.batch) %>% 
+    mutate(Slice=1),
+  stool.meta.annot.df.2018.Q3 %>% 
+    dplyr::count(ext.batch) %>% 
+    mutate(Slice=2),
+  stool.meta.annot.df.2019.Q1 %>% 
+    dplyr::count(ext.batch) %>% 
+    mutate(Slice=3)) %>% 
+   ggplot(aes(x=ext.batch, y=Slice, fill=n)) +
+   geom_tile() +
+   labs(x="DNA extraction batch") +
+   theme_classic(base_size=10))
+```
+
+Cage:
+
+```{r}
+(num.samples.per.cage.in.each.slice.heatmap <- rbind(
+  stool.meta.annot.df.2018.Q1 %>% 
+    dplyr::count(Cage) %>% 
+    mutate(Slice=1),
+  stool.meta.annot.df.2018.Q3 %>% 
+    dplyr::count(Cage) %>% 
+    mutate(Slice=2),
+  stool.meta.annot.df.2019.Q1 %>% 
+    dplyr::count(Cage) %>% 
+    mutate(Slice=3)) %>% 
+   ggplot(aes(x=Cage, y=Slice, fill=n)) +
+   geom_tile() +
+   theme_classic(base_size=10) +
+   theme(axis.text.x = element_text(angle=90)) +
+   labs(x="Cage"))
+```
+
+* Good representation of all cages
+
+```{r}
+info.about.xs.slices.heatmap <- (num.samples.per.cohort.in.each.slice.heatmap) +
+  (num.samples.per.batch.in.each.slice.heatmap) +
+  (num.samples.per.cage.in.each.slice.heatmap) +
+  plot_layout(ncol=1)
+```
+
+```{r}
+pdf("../plots/heatmaps_with_info_about_cross_sectional_slices.pdf", width=8, height=4)
+info.about.xs.slices.heatmap
+dev.off()
+```
+
+# Plot cross-sectional slices
+
+Plot the number of samples versus age and time, colored by cohort.
+
+```{r}
+(day.of.experiment.v.age.dots.p <- stool.meta.annot.df %>% 
+   dplyr::count(age.approx.months, Cohort, days.from.first.stool.collection) %>% 
+   ggplot(aes(x=days.from.first.stool.collection,
+              y=fct_rev(factor(age.approx.months)),
+              size=n, color=Cohort)) +
+   annotate("rect",
+     xmin=c(start.2018.Q1.in.days, start.2018.Q3.in.days, start.2019.Q1.in.days),
+     xmax=c(end.2018.Q1.in.days, end.2018.Q3.in.days, end.2019.Q1.in.days),
+     ymin=-Inf, ymax=Inf,
+     alpha=0.1) +
+   geom_point() +
+   theme_classic(base_size=8) +
+   scale_color_manual(values=cohort.color.palette) +
+   scale_size(range=c(0.5, 3)) +
+   labs(x="Day of Experiment", y="Age (months)",
+        size="# stool samples"))
+```
+
+```{r}
+pdf("../plots/day_of_experiment_v_age_dots_w_slices.pdf", height=1.4, width=2.2)
+day.of.experiment.v.age.dots.p + theme(legend.position="none")
+dev.off()
+```
+
+# Export data slices
+
+```{r}
+genus.data.df.2018.Q1 %>%
+  rownames_to_column("feature") %>%
+  write.table(sprintf(
+    "../results/cross_sectional_slices/kraken_genus_clr_filt_w_comm_slice1_n107x%i.txt",
+    ncol(genus.data.df.2018.Q1)), sep="\t", quote=F, row.names=F)
+
+genus.data.df.2018.Q3 %>%
+  rownames_to_column("feature") %>%
+  write.table(sprintf(
+    "../results/cross_sectional_slices/kraken_genus_clr_filt_w_comm_slice2_n107x%i.txt",
+    ncol(genus.data.df.2018.Q3)), sep="\t", quote=F, row.names=F)
+
+genus.data.df.2019.Q1 %>%
+  rownames_to_column("feature") %>%
+  write.table(sprintf(
+    "../results/cross_sectional_slices/kraken_genus_clr_filt_w_comm_slice3_n107x%i.txt",
+    ncol(genus.data.df.2019.Q1)), sep="\t", quote=F, row.names=F)
+```

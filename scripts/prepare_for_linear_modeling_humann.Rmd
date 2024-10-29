@@ -1,4 +1,4 @@
-We'll prepare 3 datasets at once: DO AL samples, B6 samples, and human samples.
+We'll prepare 4 datasets at once: DO samples, DO AL samples, B6 samples, and human samples.
 
 Input: genus relabs and pathway RPK
 Output: genus log2(relabs) and pathway log2(TPM), plus community features, after prevalence filtering
@@ -201,6 +201,32 @@ First need to replace zeros. Will use the feature-specific non-zero minimum valu
 
 ## DO
 
+### Genus
+
+```{r}
+DO.zero.replacement.per.genus <- apply(DO.genus.relab.df, MARGIN=1, FUN=function(x) {min(x[x != 0]) / 2})
+```
+
+```{r}
+DO.genus.relab.mat.no.zeros <- foreach(this.genus = rownames(DO.genus.relab.df), .combine="rbind") %do% {
+  
+  this.genus.vec <- as.numeric(DO.genus.relab.df[this.genus, ])
+  this.genus.vec[this.genus.vec == 0] <- DO.zero.replacement.per.genus[[this.genus]]
+  
+  return(this.genus.vec)
+  
+}
+
+DO.genus.relab.df.no.zeros <- data.frame(DO.genus.relab.mat.no.zeros)
+rownames(DO.genus.relab.df.no.zeros) <- rownames(DO.genus.relab.df)
+colnames(DO.genus.relab.df.no.zeros) <- colnames(DO.genus.relab.df)
+```
+
+```{r}
+DO.genus.log2relab.df <- log2(DO.genus.relab.df.no.zeros)
+dim(DO.genus.log2relab.df)
+```
+
 ### Pathways
 
 ```{r}
@@ -389,6 +415,20 @@ human.pathway.log2tpm.df <- log2(human.pathway.tpm.df.no.zeros)
 
 # Calculate alpha diversity
 
+## DO
+
+### Genus
+
+```{r}
+DO.genus.alpha.div.long.df <- data.frame(
+  Shannon = diversity(DO.genus.relab.df, index="shannon", MARGIN=2),
+  Simpson = diversity(DO.genus.relab.df, index="simpson", MARGIN=2),
+  InvSimpson = diversity(DO.genus.relab.df, index="invsimpson", MARGIN=2),
+  Observed = specnumber(DO.genus.relab.df, MARGIN=2)) %>% 
+  rownames_to_column("stool.ID") %>% 
+  pivot_longer(-stool.ID, names_to="metric")
+```
+
 ## DO AL
 
 ### Genus
@@ -438,6 +478,18 @@ For taxonomy, we'll use Bray-Curtis on relabs.
 For pathways, we'll use Euclidean on log2(TPM).
 
 ## DO
+
+### Genus
+
+```{r}
+DO.genus.relab.bc.dist.mat <- DO.genus.relab.df %>% 
+  t() %>% vegdist(method="bray") %>% 
+  as.matrix()
+diag(DO.genus.relab.bc.dist.mat) <- NA
+DO.genus.uniq.df <- data.frame(
+  uniqueness=apply(DO.genus.relab.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)})) %>% 
+  rownames_to_column("stool.ID")
+```
 
 ### Pathways
 
@@ -576,6 +628,15 @@ Use relab and TPM data.
 ## DO
 
 ```{r}
+DO.genera.to.keep <- rownames(DO.genus.relab.df)[(rowSums(DO.genus.relab.df > MIN.RELAB.ABUNDANCE) / ncol(DO.genus.relab.df)) > MIN.PREVALENCE]
+
+nrow(DO.genus.relab.df)
+length(DO.genera.to.keep)
+```
+
+* 376 --> 254 genera
+
+```{r}
 DO.pathways.to.keep <- rownames(DO.pathway.tpm.df)[(rowSums(DO.pathway.tpm.df > MIN.TPM.ABUNDANCE) / ncol(DO.pathway.tpm.df)) > MIN.PREVALENCE]
 
 nrow(DO.pathway.tpm.df)
@@ -649,6 +710,38 @@ length(human.pathways.to.keep)
 Easiest to do this when all dataframes are in long form. 
 
 ## DO
+
+### Genus
+
+```{r}
+DO.genus.all.feats.long.df <- rbind(
+  
+  # log2(relab)
+  DO.genus.log2relab.df %>% 
+    rownames_to_column("feature") %>% 
+    dplyr::filter(feature %in% DO.genera.to.keep) %>% 
+    pivot_longer(-feature, names_to="stool.ID"),
+  
+  # alpha div
+  DO.genus.alpha.div.long.df %>% 
+    dplyr::rename(feature = metric) %>% 
+    dplyr::select(feature, stool.ID, value),
+  
+  # uniq
+  DO.genus.uniq.df %>% 
+    mutate(feature = "Uniqueness") %>% 
+    dplyr::rename(value = uniqueness) %>% 
+    dplyr::select(feature, stool.ID, value)
+  
+)
+```
+
+```{r}
+DO.genus.all.feats.wide.df <- DO.genus.all.feats.long.df %>% 
+  pivot_wider(id_cols=feature, names_from=stool.ID, values_from=value)
+
+dim(DO.genus.all.feats.wide.df)
+```
 
 ### Pathways
 
@@ -973,12 +1066,30 @@ dim(B6.pathway.all.feats.wide.out.df)
 dim(human.pathway.all.feats.wide.out.df)
 ```
 
+## Long and short pathway names
+
+```{r}
+pathway.names.df %>%
+  dplyr::select(original, short, short.clean) %>%
+  write.table(sprintf(
+    "../data/metadata/pathway_long_and_short_names_n%i.txt", nrow(pathway.names.df)),
+    sep="\t", row.names=F, quote=F)
+```
+
 ## DO
+
+```{r}
+DO.genus.all.feats.wide.df %>%
+  write.table(sprintf(
+    "../results/metaphlan_genus_log2relab_filt_w_comm_n%ix%i.txt",
+    nrow(.), ncol(.)-1),
+    sep="\t", row.names=F, quote=F)
+```
 
 ```{r}
 DO.pathway.all.feats.wide.out.df %>%
   write.table(sprintf(
-    "../results/DO_pathway_log2tpm_filt_w_comm_n%ix%i.txt",
+    "../results/pathway_log2tpm_filt_w_comm_n%ix%i.txt",
     nrow(.), ncol(.)-1),
     sep="\t", row.names=F, quote=F)
 ```

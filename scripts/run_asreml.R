@@ -1,11 +1,10 @@
-# Run a linear model for all features with the following specification:
-
-# y_mb ~ age (f) + diet (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r) 
-
-# this script is fast enough to run locally, i.e. no need for a cluster (~10 min for 100 features)
+# 2024-06-27: Script now accepts fixed and random formulas as arguments.
+# Run a linear mixed model for all features.
+# This script is fast enough to run locally, i.e. no need for a cluster (<5 minutes for 100 features and 3000 samples)
 
 # load libraries
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(asreml))
 suppressPackageStartupMessages(library(foreach)) # for parallel for-loop
 suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
@@ -13,25 +12,48 @@ suppressPackageStartupMessages(library(doParallel)) # for parallel for-loop
 # activating ASReml in the parallel for loop is a problem
 asreml.license.offline(10)
 
-# change working directory
-setwd("~/DRiDO_microbiome_github/scripts/")
-
 # check available cores with detectCores()
 cl <- makeCluster(6)
 registerDoParallel(cl)
 
-### --- INPUTS --- ###
+### --- COMMAND LINE INPUTS --- ###
 
-# specify output directory
-out.dir <- "../results/asreml_kraken_genus/"
-stopifnot(dir.exists(out.dir))
+# read in command line arguments
+args <- commandArgs(trailingOnly=TRUE)
+if (length(args) != 5) {
+  for (ii in seq(length(args))) {cat(sprintf("args[%i]: %s\n", ii, args[ii]))}
+  stop(sprintf(
+    "Must provide 5 command line arguments. length(args) = %i",
+    length(args)), call.=F)
+}
 
-# import microbiome data
-mb.df <- read.table(
-  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
-  # "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
-  sep="\t", header=T, row.names=1)
-# mb.df[1:5, 1:3]
+# first argument is microbiome data, e.g. ../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt
+mb.df <- read.table(args[1], sep="\t", header=T, row.names=1)
+# mb.df[1:5, 1:5]
+
+# second argument is output directory, e.g. ../results/asreml_kraken_genus/
+# it must already exist
+out.dir <- args[2]
+if (!dir.exists(out.dir)) {
+  stop(sprintf("Output directory must already exist. out.dir: %s", out.dir))
+}
+
+# third argument is the right hand side of the fixed effect formula
+# e.g. "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled"
+fixef.formula.RHS <- args[3]
+cat(sprintf("Fixed effects: %s\n", fixef.formula.RHS))
+
+# fourth argument is the random effect formula
+# e.g. "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
+ranef.formula.str <- args[4]
+cat(sprintf("Random effects: %s\n", ranef.formula.str))
+
+# fifth argument is the random effect formula excluding genetics (this is needed to perform LRT)
+# e.g. "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
+ranef.formula.no.genetics.str <- args[5]
+cat(sprintf("Random effects without genetics: %s\n", ranef.formula.no.genetics.str))
+
+### --- OTHER INPUTS --- ###
 
 # import kinship matrix
 kinship.df <- read.csv(
@@ -65,6 +87,13 @@ mb.scaled.df <- mb.df %>%
   rownames_to_column("stool.ID")
 # dim(mb.scaled.df)
 
+# create new columns related to date of stool collection
+stool.meta.annot.df <- stool.meta.annot.df %>% 
+  mutate(collection.date = ymd(date.stool.collection.approx)) %>% 
+  mutate(quarter.collection.date = round_date(collection.date, "quarter")) %>% 
+  mutate(days.from.first.stool.collection = time_length(
+    collection.date - min(collection.date), unit="day"))
+
 # add metadata to microbiome data
 mb.scaled.annot.df <- merge(
   mb.scaled.df,
@@ -87,6 +116,7 @@ kinship.mat <- as.matrix(kinship.df[mice.to.keep, mice.to.keep])
 final.mb.annot.df <- mb.scaled.annot.df %>% 
   dplyr::filter(mouse.ID %in% mice.to.keep)
 # dim(final.mb.annot.df)
+cat(sprintf("Number of samples after filtering: %i\n", nrow(final.mb.annot.df)))
 
 # minor metadata tweaks
 final.mb.annot.df <- final.mb.annot.df %>% 
@@ -96,8 +126,9 @@ final.mb.annot.df <- final.mb.annot.df %>%
     age.approx.months == 5 ~ "AL",
     TRUE ~ as.character(Diet))) %>% 
   
-  # scale age
-  mutate(age.wks.scaled=scale(age.wks)) %>% 
+  # scale age and chronological time
+  mutate(age.wks.scaled = scale(age.wks),
+         time.scaled = scale(days.from.first.stool.collection)) %>% 
   
   # convert to factors
   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40")),
@@ -105,7 +136,8 @@ final.mb.annot.df <- final.mb.annot.df %>%
          Cohort=factor(Cohort),
          Cage=factor(Cage),
          Batch=factor(ext.batch),
-         Mouse=factor(mouse.ID, levels=mice.to.keep))
+         Mouse=factor(mouse.ID, levels=mice.to.keep),
+         Quarter.Date=factor(quarter.collection.date))
 
 # multiply kinship by 2
 kinship.mat.x2 <- kinship.mat*2
@@ -116,13 +148,9 @@ run_one_feat_age_and_DR_fixed <- function(this.feat, this.df) {
   
   cat(this.feat, "\n")
   
-  fixef.formula <- as.formula(paste(
-    this.feat, "~ age.wks.scaled + Diet.5mo.as.AL"
-  ))
+  fixef.formula <- as.formula(paste(this.feat, fixef.formula.RHS))
   
-  ranef.formula <- as.formula(paste(
-    "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch"
-  ))
+  ranef.formula <- as.formula(ranef.formula.str)
   
   # fit model
   this.model <- asreml(
@@ -131,7 +159,14 @@ run_one_feat_age_and_DR_fixed <- function(this.feat, this.df) {
     data = this.df)
   
   # estimate standard error for genetic heritability
-  genetic.herit.se <- vpredict(this.model, h2 ~ V4 / (V1 + V2 + V3 + V4 + V5 + V6))[["SE"]]
+  # for vpredict, we need to create a formula that looks like "h2 ~ V2 / (V1 + V2 + V3)"
+  # where V2 corresponds to the variance explaned by the genetics term
+  num.ranef <- length(this.model$vparameters)
+  stopifnot("vm(Mouse, kinship.mat.x2)" %in% names(this.model$vparameters))
+  ii.for.genetics.ranef <- which(names(this.model$vparameters) == "vm(Mouse, kinship.mat.x2)")
+  denom.for.vpredict <- paste0("V", seq(num.ranef), collapse=" + ")
+  formula.str.for.vpredict <- sprintf("h2 ~ V%i / (%s)", ii.for.genetics.ranef, denom.for.vpredict)
+  genetic.herit.se <- vpredict(this.model, as.formula(formula.str.for.vpredict))[["SE"]]
   
   # get fixed effect coefficients
   this.fixef.df <- data.frame(summary(this.model, coef=T)$coef.fixed)
@@ -141,9 +176,7 @@ run_one_feat_age_and_DR_fixed <- function(this.feat, this.df) {
   
   # run model without genetics
   # need to provide kinship matrix to ide even though we're not going to use it
-  ranef.formula.no.genetics <- as.formula(paste(
-    "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
-  ))
+  ranef.formula.no.genetics <- as.formula(paste(ranef.formula.no.genetics.str))
   
   this.model.no.genetics <- asreml(
     fixed = fixef.formula,
@@ -183,7 +216,6 @@ run_one_feat_age_and_DR_fixed <- function(this.feat, this.df) {
   saveRDS(out.list, file=out.path)
   
 }
-
 
 # run all
 asreml.options(trace=F, workspace="1gb")

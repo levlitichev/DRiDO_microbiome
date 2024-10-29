@@ -5,7 +5,6 @@ For the top 6 age-specific QTL results, plot:
 
 ```{r, warning=F, message=F}
 library(tidyverse)
-library(qtl2)
 
 manhattan.palette <- c(signif="firebrick", odd="skyblue", even="royalblue")
 

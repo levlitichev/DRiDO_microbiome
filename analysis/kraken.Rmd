@@ -1,6 +1,11 @@
 ---
-title: "Analysis of Kraken results after aggregating by stool ID"
+title: "Analysis of taxonomic results based on Kraken"
 ---
+
+**2024-10-19 updates:**
+- Time is a random effect instead of fixed effect
+- Plotting individual genera against age using mean ± SEM, instead of boxplots
+- Added comparison of number of significant features for genus versus species
 
 # Load libraries
 
@@ -8,6 +13,7 @@ title: "Analysis of Kraken results after aggregating by stool ID"
 library(tidyverse)
 library(foreach)
 library(phyloseq)
+library(cowplot) # plot_grid
 library(speedyseq) # faster tax_glom
 library(patchwork) # for mega PCoA
 library(ggpubr) # for t-tests
@@ -85,41 +91,43 @@ dim(kraken.tax.df)
 
 ## Age and DR as fixed effects
 
-Model: y_mb ~ age (f) + diet (f) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+Model: y_mb ~ age (f) + diet (f) + time(r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 
 ```{r}
 fixef.df <- read.table(
-  "../results/asreml_kraken_genus/fixef.txt",
+  "../results/asreml_kraken_genus_w_time_ranef/fixef.txt",
   sep="\t", header=T)
 
 ranef.df <- read.table(
-  "../results/asreml_kraken_genus/ranef.txt",
+  "../results/asreml_kraken_genus_w_time_ranef/ranef.txt",
   sep="\t", header=T)
 
 herit.df <- read.table(
-  "../results/asreml_kraken_genus/herit.txt",
+  "../results/asreml_kraken_genus_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
 ## All random effects
 
-Model: y_mb ~ age (r) + diet (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
-
-```{r}
-# all.ranef.model.out.paths <- list.files("../results/asreml_kraken_genus_all_ranef/", pattern=".txt", full.names=T)
-# 
-# ranef.df.all.ranef.model <- foreach(this.path=all.ranef.model.out.paths, .combine="rbind") %do% {
-#   read.table(this.path, sep="\t", header=T)
-# }
-# 
-# ranef.df.all.ranef.model %>% 
-#   write.table("../results/asreml_kraken_genus_all_ranef/ranef.txt", 
-#               sep="\t", quote=F, row.names=F)
-```
+Model: y_mb ~ age (r) + diet (r) + time (r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
 
 ```{r}
 ranef.df.all.ranef.model <- read.table(
-  "../results/asreml_kraken_genus_all_ranef/ranef.txt",
+  "../results/asreml_kraken_genus_all_ranef_w_time/ranef.txt",
+  sep="\t", header=T)
+```
+
+## Species
+
+Model: y_mb ~ age (f) + diet (f) + time(r) + [genetics] (r) + mouse (r) + batch (r) + cohort (r) + cage (r)
+
+```{r}
+species.fixef.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/fixef.txt",
+  sep="\t", header=T)
+
+species.herit.df <- read.table(
+  "../results/asreml_kraken_species_w_time_ranef/herit.txt",
   sep="\t", header=T)
 ```
 
@@ -138,24 +146,29 @@ nsamples(agg.physeq)
 
 * 2997 samples
 
-# Aggregate to genera
+# Aggregate
 
 ```{r}
 agg.physeq.genus <- agg.physeq %>% tax_glom(taxrank="genus")
+agg.physeq.species <- agg.physeq %>% tax_glom(taxrank="species")
 ```
 
 ```{r}
 ntaxa(agg.physeq)
 ntaxa(agg.physeq.genus)
+ntaxa(agg.physeq.species)
 ```
 
 * 1303 taxa --> 252 genera
+* 1303 taxa --> 1093 species
 
 ```{r}
 sum(otu_table(agg.physeq.genus)) / sum(otu_table(agg.physeq))
+sum(otu_table(agg.physeq.species)) / sum(otu_table(agg.physeq))
 ```
 
 * 85% of reads could be assigned to genus level
+* 80% of reads could be assigned to species level
 
 # Compute distances
 
@@ -182,47 +195,65 @@ alpha.div.long.df.genus <- alpha.div.df.genus %>%
 
 ## Shannon
 
-Versus diet.
+Versus age.
 
 ```{r}
-(shannon.v.diet.p <- alpha.div.long.df.genus %>% 
+# summarize per diet 
+shannon.plot.df.per.diet <- alpha.div.long.df.genus %>% 
    dplyr::filter(metric == "Shannon") %>% 
-   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples for consistency with the versus age plot
-   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-   ggplot(aes(x=Diet.5mo.as.AL, y=value, fill=Diet.5mo.as.AL)) +
-   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
-   stat_compare_means(method="t.test", label="p.signif", ref.group="AL") +
-   labs(x="", y="Shannon index") +
-   scale_fill_manual(values=diet.palette) +
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+shannon.plot.df.across.diets <- alpha.div.long.df.genus %>% 
+   dplyr::filter(metric == "Shannon") %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3)
+```
+
+```{r}
+(shannon.v.age.mean.SEM.p <- shannon.plot.df.per.diet %>% 
+   ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+              color=Diet)) +
+   
+   # per diet
+   geom_path(alpha=0.3, linewidth=0.5) +
+   geom_pointrange(alpha=0.3, size=0.1, shape=16) +
+   
+   # across diets
+   geom_path(aes(color=NULL), linewidth=0.5, data=shannon.plot.df.across.diets) +
+   geom_pointrange(aes(color=NULL), size=0.1, shape=16, data=shannon.plot.df.across.diets) +
+   
+   scale_color_manual(values=diet.palette) +
+   labs(x="Age (months)", y="Shannon index", title="Shannon") +
+   geom_vline(xintercept=6, lty=2) +
    theme_classic(base_size=8) +
    theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/shannon_v_diet.pdf", width=2, height=2)
-# shannon.v.diet.p
-# dev.off()
-```
-
-Versus age.
-
-```{r}
-(shannon.v.age.p <- alpha.div.long.df.genus %>% 
-   dplyr::filter(metric == "Shannon") %>% 
-   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
-   ggplot(aes(x=age.approx.months, y=value)) +
-   geom_smooth(method="lm", color="gray80", linewidth=0.5) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color,
-                outlier.shape=16, outlier.size=0.25) +
-   geom_vline(xintercept=6, lty=2) +
-   labs(title="Alpha diversity", x="Age (mo)", y="Shannon index") +
-   theme_classic(base_size=8))
-```
-
-```{r}
-# pdf("../plots/shannon_v_age.pdf", width=2, height=2)
-# shannon.v.age.p
-# dev.off()
+pdf("../plots/shannon_v_age_mean_SEM.pdf", height=2, width=2)
+shannon.v.age.mean.SEM.p
+dev.off()
 ```
 
 ## Simpson
@@ -230,22 +261,62 @@ Versus age.
 Versus age.
 
 ```{r}
-(simpson.v.age.p <- alpha.div.long.df.genus %>% 
+# summarize per diet 
+simpson.plot.df.per.diet <- alpha.div.long.df.genus %>% 
    dplyr::filter(metric == "Simpson") %>% 
    dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
-   ggplot(aes(x=age.approx.months, y=value)) +
-   geom_smooth(method="lm", color="gray80", linewidth=0.5) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color,
-                outlier.shape=16, outlier.size=0.25) +
-   geom_vline(xintercept=6, lty=2) +
-   labs(title="Alpha diversity", x="Age (mo)", y="Simpson index") +
-   theme_classic(base_size=8))
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+simpson.plot.df.across.diets <- alpha.div.long.df.genus %>% 
+   dplyr::filter(metric == "Simpson") %>% 
+   dplyr::filter(age.approx.months <= 40) %>% # omit the few 46 month samples
+  
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd(value)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this age combination
+  dplyr::filter(n >= 3)
 ```
 
 ```{r}
-# pdf("../plots/simpson_v_age.pdf", width=2, height=2)
-# simpson.v.age.p
-# dev.off()
+(simpson.v.age.mean.SEM.p <- simpson.plot.df.per.diet %>% 
+   ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+              color=Diet)) +
+   
+   # per diet
+   geom_path(alpha=0.3, linewidth=0.5) +
+   geom_pointrange(alpha=0.3, size=0.1, shape=16) +
+   
+   # across diets
+   geom_path(aes(color=NULL), linewidth=0.5, data=simpson.plot.df.across.diets) +
+   geom_pointrange(aes(color=NULL), size=0.1, shape=16, data=simpson.plot.df.across.diets) +
+   
+   scale_color_manual(values=diet.palette) +
+   labs(x="Age (months)", y="Simpson index", title="Simpson") +
+   geom_vline(xintercept=6, lty=2) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+pdf("../plots/simpson_v_age_mean_SEM.pdf", height=2, width=2)
+simpson.v.age.mean.SEM.p
+dev.off()
 ```
 
 # PCoA
@@ -377,16 +448,15 @@ BCCCCCCD
 ```
 
 ```{r}
-# pdf("../plots/full_pcoa_w_barplots.pdf", height=5, width=5)
-# mega.pcoa
-# dev.off()
+pdf("../plots/full_pcoa_w_barplots.pdf", height=5, width=5)
+mega.pcoa
+dev.off()
 ```
 
 ```{r}
-# library(cowplot) # plot_grid
-# pdf("../plots/full_pcoa_legend.pdf", height=3, width=1)
-# plot_grid(get_legend(full.pcoa.p))
-# dev.off()
+pdf("../plots/full_pcoa_legend.pdf", height=3, width=1)
+plot_grid(get_legend(full.pcoa.p))
+dev.off()
 ```
 
 ## Just young and old, AL versus 40% CR
@@ -441,9 +511,9 @@ AL.CR.10mo.28mo.new.ordination.centroids.df <- agg.pcoa.genus.bc.df.just.young.v
 We see that 40% CR pulls both young and old samples to the left and up, and age also pulls samples left and up
   
 ```{r}
-# pdf("../plots/pcoa_AL_v_40CR_10mo_v_28mo.pdf", height=2, width=2)
-# AL.CR.10mo.28mo.new.ordination.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/pcoa_AL_v_40CR_10mo_v_28mo.pdf", height=2, width=2)
+AL.CR.10mo.28mo.new.ordination.p + theme(legend.position="none")
+dev.off()
 ```
 
 # Uniqueness
@@ -469,26 +539,61 @@ agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients["age.appr
 ```
 
 ```{r}
-(uniq.v.age.p <- agg.genus.uniq.bc.df %>% 
-   dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
-   ggplot(aes(x=age.approx.months, y=uniqueness)) +
-   geom_vline(xintercept=6, lty=2) +
-   geom_smooth(method="lm", color=age.color, linewidth=0.5) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
-                outlier.shape=16, outlier.size=0.5) +
-   labs(x="Age (months)", y="Uniqueness", 
-        title="Taxonomic uniqueness") +
-   # , slope = %.1e, p-value = %.1e",
-   #        agg.genus.uniq.bc.lm.beta, agg.genus.uniq.bc.lm.pval)
-   theme_classic(base_size=8) +
-   theme(legend.position="none")
-)
+# summarize per diet 
+uniq.plot.df.per.diet <- agg.genus.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+uniq.plot.df.across.diets <- agg.genus.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
 ```
 
 ```{r}
-# pdf("../plots/tax_uniq_v_age_boxplots.pdf", width=2, height=2)
-# uniq.v.age.p
-# dev.off()
+# plot
+(uniq.v.age.mean.SEM.p <- uniq.plot.df.per.diet %>% 
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3, linewidth=0.5) +
+    geom_pointrange(alpha=0.3, size=0.01) +
+    
+    # across diets
+    geom_path(aes(color=NULL), linewidth=0.5, data=uniq.plot.df.across.diets) +
+    geom_pointrange(aes(color=NULL), size=0.01, data=uniq.plot.df.across.diets) +
+    
+    scale_color_manual(values=diet.palette) +
+    labs(x="Age (months)", y="Uniqueness", color="Diet",
+         title="Uniqueness") +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/tax_uniq_v_age_mean_SEM.pdf", width=2, height=2)
+uniq.v.age.mean.SEM.p + theme(legend.position="none")
+dev.off()
 ```
 
 ## Versus diet
@@ -511,31 +616,6 @@ agg.genus.uniq.bc.lm.beta <- agg.genus.uniq.bc.lm.summary$coefficients["age.appr
 ```{r}
 # pdf("../plots/tax_uniq_v_diet_boxplots.pdf", width=1.5, height=1.5)
 # uniq.v.diet.across.ages.p
-# dev.off()
-```
-
-## Versus age, facet by diet
-
-```{r}
-(uniq.v.age.split.by.diet.p <- agg.genus.uniq.bc.df %>% 
-   dplyr::filter(age.approx.months <= 40) %>% 
-   mutate(Diet=factor(Diet, levels=c("AL", "1D", "2D", "20", "40"))) %>%
-   ggplot(aes(x=age.approx.months, y=uniqueness)) +
-   geom_vline(xintercept=6, lty=2) +
-   geom_smooth(method="lm", se=F, color=age.color) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
-                outlier.shape=16, outlier.size=0.5) +
-   labs(x="Age (months)", y="Uniqueness", 
-        title="Taxonomic uniqueness, split by dietary group") +
-   facet_wrap(~Diet, nrow=1) +
-   theme_classic(base_size=8) +
-   theme(legend.position="none") 
-)
-```
-
-```{r}
-# pdf("../plots/tax_uniq_v_age_facet_by_diet_boxplots.pdf", height=2, width=6)
-# uniq.v.age.split.by.diet.p
 # dev.off()
 ```
 
@@ -576,27 +656,139 @@ uniq.annot.df.n.mice.per.cage <- uniq.df.n.mice.per.cage %>%
   merge(stool.meta.annot.df, by="stool.ID")
 ```
 
+Mean ± SEM.
+
 ```{r}
-(uniq.v.age.fixed.n.per.cage.p <- uniq.annot.df.n.mice.per.cage %>%
-   dplyr::filter(age.approx.months <= 40) %>% 
-   ggplot(aes(x=age.approx.months, y=uniqueness)) +
-   geom_vline(xintercept=6, lty=2) +
-   geom_smooth(method="lm", se=F, color=age.color) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
-                outlier.shape=16, outlier.size=0.5) +
+# summarize per diet 
+uniq.n.mice.per.cage.plot.df.per.diet <- uniq.annot.df.n.mice.per.cage %>% 
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each age, diet, and n combination
+  group_by(Diet, age.approx.months, n.per.cage) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+uniq.n.mice.per.cage.plot.df.across.diets <- uniq.annot.df.n.mice.per.cage %>% 
+  
+  # compute mean and SD across diets and n.per.cage
+  group_by(age.approx.months, n.per.cage) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+```
+
+Wide plot.
+
+```{r}
+(uniq.v.age.fixed.n.per.cage.mean.SEM.p <- uniq.n.mice.per.cage.plot.df.per.diet %>% 
+   ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+              color=Diet)) +
+   
+   # per diet
+   geom_path(alpha=0.3, linewidth=0.5) +
+   geom_pointrange(alpha=0.3, size=0.1, shape=16) +
+   
+   # across diets
+   geom_path(aes(color=NULL), linewidth=0.5, data=uniq.n.mice.per.cage.plot.df.across.diets) +
+   geom_pointrange(aes(color=NULL), size=0.1, shape=16, data=uniq.n.mice.per.cage.plot.df.across.diets) +
+   
+   scale_color_manual(values=diet.palette) +
    labs(x="Age (months)", y="Uniqueness", 
         title="Taxonomic uniqueness, downsampled to n mice per cage") +
-   facet_wrap(~n.per.cage, nrow=1,
+   facet_wrap(~n.per.cage, ncol=1,
               labeller=labeller(n.per.cage=function(x) {sprintf("n=%s", x)})) +
+   geom_vline(xintercept=6, lty=2) +
    theme_classic(base_size=8) +
-   theme(legend.position="none")
-)
+   theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/tax_uniq_v_age_fixed_n_per_cage.pdf", height=2, width=6)
-# uniq.v.age.fixed.n.per.cage.p
-# dev.off()
+pdf("../plots/tax_uniq_v_age_fixed_n_per_cage_mean_SEM.pdf", height=6, width=2)
+uniq.v.age.fixed.n.per.cage.mean.SEM.p
+dev.off()
+```
+
+## Species
+
+```{r}
+agg.species.bc.dist <- agg.physeq.species %>%
+  transform_sample_counts(function(x) x/sum(x)) %>%
+  phyloseq::distance(method="bray")
+
+agg.species.bc.dist.mat <- agg.species.bc.dist %>% as.matrix
+diag(agg.species.bc.dist.mat) <- NA
+agg.species.uniq.bc.df <- data.frame(
+  uniqueness=apply(agg.species.bc.dist.mat, MARGIN=2, FUN=function(x) {min(x, na.rm=T)}),
+  stool.ID=sample_names(agg.physeq.genus)) %>%
+  merge(stool.meta.annot.df, by="stool.ID")
+```
+
+```{r}
+# summarize per diet 
+species.uniq.plot.df.per.diet <- agg.species.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+  
+  # compute mean and SD for each age and diet combination
+  group_by(Diet, age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+
+# summarize across diets
+species.uniq.plot.df.across.diets <- agg.species.uniq.bc.df %>% 
+  dplyr::filter(age.approx.months <= 40) %>% # omit few 46 month samples
+  
+  # compute mean and SD across diets
+  group_by(age.approx.months) %>% 
+  summarise(n=n(),
+            mean = mean(uniqueness),
+            sd = sd(uniqueness),
+            sem = sd(uniqueness)/sqrt(n()), .groups="drop") %>% 
+  
+  # make sure we have at least 3 observations at this date and age combination
+  dplyr::filter(n >= 3)
+```
+
+```{r}
+# plot
+(species.uniq.v.age.mean.SEM.p <- species.uniq.plot.df.per.diet %>% 
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-sem, ymax=mean+sem,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3, linewidth=0.5) +
+    geom_pointrange(alpha=0.3, size=0.1, shape=16) +
+    
+    # across diets
+    geom_path(aes(color=NULL), linewidth=0.5, data=species.uniq.plot.df.across.diets) +
+    geom_pointrange(aes(color=NULL), size=0.1, shape=16, data=species.uniq.plot.df.across.diets) +
+    
+    scale_color_manual(values=diet.palette) +
+    labs(x="Age (months)", y="Uniqueness", color="Diet",
+         title="Uniqueness") +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=8))
+```
+
+```{r}
+pdf("../plots/tax_species_uniq_v_age_mean_SEM.pdf", width=2, height=2)
+species.uniq.v.age.mean.SEM.p + theme(legend.position="none")
+dev.off()
 ```
 
 # Effect of age
@@ -616,14 +808,19 @@ age.df <- age.df %>%
 
 ```{r}
 age.df %>% 
+  dplyr::filter(!(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))) %>%
+  dplyr::count(is.sig)
+
+age.df %>% 
   dplyr::count(is.sig)
 ```
 
 ```{r}
-78 / (78 + 29)
+61 / (61 + 39)
+65 / (65 + 42)
 ```
 
-* Majority (73%) of taxonomic features are significantly associated with age
+* Majority (61%) of taxonomic features are significantly associated with age (with or without community features)
 
 ```{r}
 age.df %>% 
@@ -633,41 +830,40 @@ age.df %>%
 
 * p-value histogram makes sense
 
-## Barplot
+## Volcano plot
 
 ```{r}
 age.genera.to.label <- c(
-  "Bifidobacterium", "Turicibacter", "Alistipes", 
+  "Bifidobacterium", "EnterococcusD", "Ligilactobacillus", 
+  "Turicibacter", "Escherichia", "Dubosiella",
   "uniq", "Shannon", "Simpson",
-  "ASF356", "UMGS268", "UBA9475"
+  "ASF356", "CAG475", "UBA3700NOV",
+  "UMGS268", "UBA7182", "CAG273"
 )
 ```
 
 ```{r}
-(age.effect.genera.p <- age.df %>% 
+(age.effect.genera.volcano <- age.df %>% 
+   mutate(neg.log10padj = case_when(padj == 0 ~ 16, TRUE ~ -log10(padj))) %>% 
+   # mutate(label=case_when(is.sig == TRUE ~ feature, TRUE ~ "")) %>%
    mutate(label = case_when(
      feature %in% age.genera.to.label ~ feature,
      TRUE ~ ""
-   )) %>% 
-   ggplot(aes(y=reorder(feature, solution), x=solution, 
-              xmin=solution-std.error, xmax=solution+std.error,
-              label=label)) +
-   geom_col(aes(fill=is.sig)) + 
-   geom_linerange() +
-   geom_vline(xintercept=0, lty=2) +
-   geom_text_repel(nudge_x=0.01, min.segment.length=0, size=0.36*6) +
-   labs(y="", x="Age effect", color="padj < 0.01?") +
-   theme_void(base_size=8) +
-   theme(axis.text.y=element_blank(),
-         legend.position="none") + 
-   scale_fill_manual(values=c(`TRUE`=age.color, `FALSE`="gray80"))
-)
+   )) %>%
+   ggplot(aes(x=solution, y=neg.log10padj, color=is.sig, label=label)) +
+   geom_hline(yintercept=2, lty=2) + # padj = 0.01
+   geom_point() +
+   geom_text_repel(nudge_x=0.01, min.segment.length=0, size=0.36*6, max.overlaps=Inf) +
+   labs(x="<-- Decreases with age | Increases with age -->",
+        y="-log10(padj)", color="padj < 0.01?") +
+   scale_color_manual(values=c(`TRUE`=age.color, `FALSE`="gray80")) +
+   theme_classic(base_size=8))
 ```
 
 ```{r}
-# pdf("../plots/asreml_age_effect_genera_barplot.pdf", height=3.5, width=2)
-# age.effect.genera.p
-# dev.off()
+pdf("../plots/asreml_age_effect_genera_volcano.pdf", height=2.5, width=2.5)
+age.effect.genera.volcano + theme(legend.position="none")
+dev.off()
 ```
 
 # Effect of DR
@@ -693,8 +889,11 @@ DR.df <- DR.df %>%
   merge(DR.padj.df, by="feature") %>% 
   mutate(is.sig = padj < PADJ.THRESH)
 
+DR.df %>% dplyr::filter(fixef.value == "40") %>% dplyr::count(is.sig)
 dim(DR.df)
 ```
+
+* 100 of 107 genus-level features tested
 
 ## Barplots
 
@@ -791,9 +990,9 @@ pd <- position_dodge2(width=0.1)
 40% > 20% = 2D > 1D
 
 ```{r}
-# pdf("../plots/asreml_diet_overall_effect_genus_boxplots.pdf", height=2, width=2)
-# diet.effect.size.p
-# dev.off()
+pdf("../plots/asreml_diet_overall_effect_genus_boxplots.pdf", height=2, width=2)
+diet.effect.size.p
+dev.off()
 ```
 
 ## Similarity of diet coefficients
@@ -835,9 +1034,9 @@ my_fn <- function(data, mapping, ...){
 ```
 
 ```{r}
-# pdf("../plots/asreml_diet_similarity_genus_scatter.pdf", height=4, width=4)
-# cor.DR.effects.p
-# dev.off()
+pdf("../plots/asreml_diet_similarity_genus_scatter.pdf", height=4, width=4)
+cor.DR.effects.p
+dev.off()
 ```
 
 ## Affected by CR but not fasting, and vice versa
@@ -875,9 +1074,9 @@ genus.CR.or.fasting.mean.coef.order.df <- genus.CR.or.fasting.mean.coef.df %>%
 ```
 
 ```{r}
-# pdf("../plots/genus_CR_v_fasting_mean_coef.pdf", height=2, width=3)
-# genus.CR.v.fasting.mean.coef.p
-# dev.off()
+pdf("../plots/genus_CR_v_fasting_mean_coef.pdf", height=2, width=3)
+genus.CR.v.fasting.mean.coef.p
+dev.off()
 ```
 
 # Heritability
@@ -909,14 +1108,14 @@ herit.df %>%
 ```
 
 * 66% of genera are heritable
-* 64.5% of features are heritable (including the community features)
+* 64.5% of genus-level features are heritable (including the community features)
 
 ```{r}
-# herit.df %>%
-#   dplyr::filter(!(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))) %>%
-#   dplyr::filter(is.sig) %>%
-#   summarise(mean = mean(herit)) %>%
-#   pull(mean)
+herit.df %>%
+  dplyr::filter(!(feature %in% c("uniq", "PCoA1", "PCoA2", "PCoA3", "Shannon", "Simpson", "Chao1"))) %>%
+  dplyr::filter(is.sig) %>%
+  summarise(mean = mean(herit)) %>%
+  pull(mean)
 
 (mean.herit.for.heritable.feats <- herit.df %>% 
    dplyr::filter(is.sig) %>% 
@@ -926,25 +1125,35 @@ herit.df %>%
 
 * Mean heritability (whether or not we keep community features is 11.1%)
 
+Volcano plot.
+
 ```{r}
-(genus.herit.p <- herit.df %>% 
-   ggplot(aes(x=herit, xmin=herit-herit.se, xmax=herit+herit.se,
-              y=reorder(feature, herit), fill=is.sig)) +
-   geom_col() +
-   geom_linerange(linewidth=0.25) +
-   geom_vline(xintercept = mean.herit.for.heritable.feats, 
-              color=genetics.color, lty=2) +
-   labs(x="Heritability", y="Genus", fill="padj < 0.01?") +
-   scale_fill_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
-   theme_classic(base_size=8) +
-   theme(legend.position="none",
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank()))
+herit.genera.to.label <- c(
+  "Lactobacillus", "Parvibacter", "ErysipelatoclostridiaceaeNOV",
+  "ASF356", "Ileibacterium", "EnterococcusD")
 ```
 
 ```{r}
-# pdf("../plots/genus_heritability_barplot.pdf", height=3, width=1.5)
-# genus.herit.p
+(genus.herit.scatter.p <- herit.df %>% 
+   mutate(label = case_when(
+     feature %in% herit.genera.to.label ~ feature,
+     TRUE ~ ""
+   )) %>%
+   ggplot(aes(x=herit, y=-log10(padj), color=is.sig, label=label)) +
+   geom_hline(yintercept=2, lty=2) + # padj = 0.01
+   geom_vline(xintercept = mean.herit.for.heritable.feats, 
+              color = genetics.color, lty=2) +
+   geom_point(shape=16) +
+   geom_text_repel(nudge_x=0.01, min.segment.length=0, size=0.36*6, max.overlaps=Inf) +
+   labs(x="Heritability", fill="padj < 0.01?") +
+   scale_color_manual(values=c(`TRUE`=genetics.color, `FALSE`="gray80")) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
+```
+
+```{r}
+# pdf("../plots/genus_heritability_scatter.pdf", height=2.5, width=2.5)
+# genus.herit.scatter.p
 # dev.off()
 ```
 
@@ -959,6 +1168,8 @@ ranef.df.all.ranef.model %>%
 
 * 63% of variance remains unexplained
 * Genetics explain mean 7.5% of variance
+* DR --> 6.5%
+* Age --> 4.7%
 
 Adjust p-values within each experimental variable.
 
@@ -983,110 +1194,332 @@ ranef.df.all.ranef.model <- ranef.df.all.ranef.model %>%
 ```
 
 ```{r}
-# pdf("../plots/PVE_all_ranef_genera.pdf", height=2, width=2)
-# genus.all.ranef.PVE.p
-# dev.off()
+pdf("../plots/PVE_all_ranef_genera.pdf", height=2, width=2)
+genus.all.ranef.PVE.p
+dev.off()
+```
+
+# Genus v. species LMM results
+
+Extract species-level results and adjust p-values.
+
+```{r}
+# age
+species.age.df <- species.fixef.df %>% 
+  dplyr::filter(fixef == "age.wks.scaled")
+species.age.df <- species.age.df %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+
+# DR
+species.DR.df <- species.fixef.df %>% 
+  dplyr::filter(fixef == "Diet.5mo.as.AL") %>% 
+  dplyr::filter(fixef.value != "AL") # the AL row doesn't add anything
+species.DR.padj.df <- species.DR.df %>% 
+  dplyr::filter(fixef.value == "40") %>% 
+  mutate(padj = p.adjust(Pr.chisq..con., method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH) %>% 
+  dplyr::select(feature, padj, is.sig)
+species.DR.df <- species.DR.df %>% 
+  merge(species.DR.padj.df, by="feature")
+
+# heritability
+species.herit.df <- species.herit.df %>% 
+  mutate(padj = p.adjust(LRT.pval, method="BH")) %>% 
+  mutate(is.sig = padj < PADJ.THRESH)
+```
+
+Calculate proportion of significant features.
+
+```{r}
+(frac.sig.df <- data.frame(
+  effect = c("Age", "Age", "DR", "DR", "Genetics", "Genetics"),
+  g.or.s = c("genus", "species", "genus", "species", "genus", "species"),
+  n.sig = c(
+    age.df %>% dplyr::filter(is.sig) %>% nrow,
+    species.age.df %>% dplyr::filter(is.sig) %>% nrow,
+    DR.df %>% dplyr::filter(fixef.value == "40") %>% dplyr::filter(is.sig) %>% nrow,
+    species.DR.padj.df %>% dplyr::filter(is.sig) %>% nrow,
+    herit.df %>% dplyr::filter(is.sig) %>% nrow,
+    species.herit.df %>% dplyr::filter(is.sig) %>% nrow
+  )
+) %>% 
+  mutate(n.feats = case_match(
+    g.or.s,
+    "genus" ~ nrow(age.df),
+    "species" ~ nrow(species.age.df))) %>% 
+  mutate(frac.sig = n.sig / n.feats))
+```
+
+```{r}
+(age.frac.sig.p <- frac.sig.df %>% 
+   dplyr::filter(effect == "Age") %>% 
+   ggplot(aes(x=g.or.s, y=frac.sig)) +
+   geom_col(fill=age.color) +
+   labs(x=NULL, y="Fraction of features with padj < 0.01") +
+   ylim(0, 1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)))
+```
+
+```{r}
+pdf("../plots/age_fraction_sig_feats_genus_v_species.pdf", height=1.8, width=1.4)
+age.frac.sig.p
+dev.off()
+```
+
+```{r}
+(DR.frac.sig.p <- frac.sig.df %>% 
+   dplyr::filter(effect == "DR") %>% 
+   ggplot(aes(x=g.or.s, y=frac.sig)) +
+   geom_col(fill=diet.color) +
+   labs(x=NULL, y="Fraction of features with padj < 0.01") +
+   ylim(0, 1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)))
+```
+
+```{r}
+pdf("../plots/DR_fraction_sig_feats_genus_v_species.pdf", height=1.8, width=1.4)
+DR.frac.sig.p
+dev.off()
+```
+
+```{r}
+(genetics.frac.sig.p <- frac.sig.df %>% 
+   dplyr::filter(effect == "Genetics") %>% 
+   ggplot(aes(x=g.or.s, y=frac.sig)) +
+   geom_col(fill=genetics.color) +
+   labs(x=NULL, y="Fraction of features with padj < 0.01") +
+   ylim(0, 1) +
+   theme_classic(base_size=8) +
+   theme(axis.text.x=element_text(angle=90, hjust=1)))
+```
+
+```{r}
+pdf("../plots/genetics_fraction_sig_feats_genus_v_species.pdf", height=1.8, width=1.4)
+genetics.frac.sig.p
+dev.off()
 ```
 
 # Example plots
 
-## Bifidobacterium versus age
+## Versus age (mean ± SEM)
 
 ```{r}
-(bifido.v.age.p <- agg.physeq.genus %>%
+plot_one_genus_versus_age <- function(this.genus, type.of.error.bar="sem") {
+  
+  # summarize per diet 
+  plot.df.per.diet <- agg.physeq.genus %>% 
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == this.genus) %>% 
+    mutate(Diet=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+    
+    # compute mean, SD, and SEM for each age and diet combination
+    group_by(Diet, age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(Abundance),
+              sd = sd(Abundance),
+              sem = sd(Abundance)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3)
+  
+  # summarize across diets
+  plot.df.across.diets <- agg.physeq.genus %>% 
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == this.genus) %>% 
+    
+    # compute mean, SD, and SEM across diets
+    group_by(age.approx.months) %>% 
+    summarise(n=n(),
+              mean = mean(Abundance),
+              sd = sd(Abundance),
+              sem = sd(Abundance)/sqrt(n()), .groups="drop") %>% 
+    
+    # make sure we have at least 3 observations at this date and age combination
+    dplyr::filter(n >= 3)
+  
+  # indicate what to use for error bars
+  plot.df.per.diet <- plot.df.per.diet %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "2sem" ~ 2*sem,
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  plot.df.across.diets <- plot.df.across.diets %>% 
+    mutate(error = case_when(
+      type.of.error.bar == "2sem" ~ 2*sem,
+      type.of.error.bar == "sem" ~ sem,
+      type.of.error.bar == "sd" ~ sd)) 
+  
+  # plot
+  plot.df.per.diet %>%
+    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-error, ymax=mean+error,
+               color=Diet)) +
+    
+    # per diet
+    geom_path(alpha=0.3, linewidth=0.5) +
+    geom_pointrange(alpha=0.3, size=0.01, shape=16) +
+    
+    # across diets
+    geom_path(aes(color=NULL), linewidth=0.5, data=plot.df.across.diets) +
+    geom_pointrange(aes(color=NULL), shape=16, size=0.01, data=plot.df.across.diets) +
+  
+    scale_color_manual(values=diet.palette) +
+    labs(x="Age (months)", y="Relative abundance (%)", color="Diet",
+         title=sprintf("%s", this.genus)) +
+    geom_vline(xintercept=6, lty=2) +
+    theme_classic(base_size=8)
+}
+```
+
+### Bifidobacterium
+
+```{r}
+pdf("../plots/bifido_versus_age_mean_SEM.pdf", height=2, width=2)
+plot_one_genus_versus_age("Bifidobacterium", type.of.error.bar="sem") + theme(legend.position="none")
+dev.off()
+```
+
+### Ligilactobacillus
+
+```{r}
+pdf("../plots/ligilacto_versus_age_mean_SEM.pdf", height=2, width=2)
+plot_one_genus_versus_age("Ligilactobacillus", type.of.error.bar="sem") + theme(legend.position="none")
+dev.off()
+```
+
+### UBA11957
+
+```{r}
+pdf("../plots/UBA11957_versus_age_mean_SEM.pdf", height=2, width=2)
+plot_one_genus_versus_age("UBA11957", type.of.error.bar="sem") + theme(legend.position="none")
+dev.off()
+```
+
+## Versus diet
+
+### UMGS1815
+
+```{r}
+(UMGS1815.v.diet.p <- agg.physeq.genus %>% 
    transform_sample_counts(function(x) x/sum(x)) %>% 
    psmelt %>% 
-   mutate(log10relab=log10(Abundance)) %>% 
-   dplyr::filter(genus == "Bifidobacterium") %>% 
-   dplyr::filter(age.approx.months <= 40) %>%
-   ggplot(aes(x=age.approx.months, y=log10relab)) +
-   geom_smooth(method="lm", color=age.color, linewidth=0.5) +
-   geom_boxplot(aes(group=age.approx.months), fill=age.color, 
-                outlier.shape=16, outlier.size=0.5) +
-   geom_vline(xintercept=6, lty=2) +
-   labs(x="Age (months)", y="log10(relab)", title="Bifidobacterium") +
-   theme_classic(base_size=8)
-)
+   dplyr::filter(age.approx.months <= 40) %>% 
+   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+   dplyr::filter(genus == "UMGS1815") %>% 
+   ggplot(aes(x=Diet.5mo.as.AL, y=Abundance, fill=Diet.5mo.as.AL)) +
+   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
+   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
+   labs(x="", y="Relative abundance (%)", title="UMGS1815") +
+   scale_fill_manual(values=diet.palette) +
+   theme_classic(base_size=8) +
+   theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/bifidobacterium_relab_v_age_boxplots_w_slope.pdf", width=2, height=2)
-# bifido.v.age.p
-# dev.off()
+pdf("../plots/UMGS1815_v_diet_boxplots.pdf", width=2, height=2)
+UMGS1815.v.diet.p
+dev.off()
 ```
 
-
-## Ligilactobacillus versus diet
+### Ligilactobacillus
 
 ```{r}
 (ligilacto.v.diet.p <- agg.physeq.genus %>% 
    transform_sample_counts(function(x) x/sum(x)) %>% 
    psmelt %>% 
    dplyr::filter(age.approx.months <= 40) %>% 
-   mutate(log10relab=log10(Abundance)) %>% 
    mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
    dplyr::filter(genus == "Ligilactobacillus") %>% 
-   ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
+   ggplot(aes(x=Diet.5mo.as.AL, y=Abundance, fill=Diet.5mo.as.AL)) +
    geom_boxplot(outlier.shape=16, outlier.size=0.5) +
    stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
-   labs(x="", y="log10(relab)", title="Ligilactobacillus") +
+   labs(x="", y="Relative abundance (%)", title="Ligilactobacillus") +
    scale_fill_manual(values=diet.palette) +
    theme_classic(base_size=8) +
    theme(legend.position="none"))
 ```
 
 ```{r}
-pdf("../plots/ligilactobacillus_v_diet_boxplots.pdf", width=1.5, height=1.5)
+pdf("../plots/ligilactobacillus_v_diet_boxplots.pdf", width=2, height=2)
 ligilacto.v.diet.p
 dev.off()
 ```
 
-## Emergencia versus diet
+### Emergencia
 
 ```{r}
+median.emergencia.relab.in.AL <- agg.physeq.genus %>% 
+  transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+  psmelt %>% 
+  dplyr::filter(age.approx.months <= 40) %>% 
+  dplyr::filter(genus == "Emergencia") %>% 
+  dplyr::filter(Diet.5mo.as.AL == "AL") %>% 
+  mutate(log10relab=log10(Abundance)) %>%
+  pull(log10relab) %>% median()
+
 (emergencia.v.diet.p <- agg.physeq.genus %>% 
-   transform_sample_counts(function(x) x/sum(x)) %>% 
-   psmelt %>% 
-   dplyr::filter(age.approx.months <= 40) %>% 
-   dplyr::filter(genus == "Emergencia") %>% 
-   mutate(log10relab=log10(Abundance)) %>% 
-   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-   ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
-   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
-   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
-   labs(x="Diet", y="log10(relative abundance)", title="Emergencia") +
-   scale_fill_manual(values=diet.palette) +
-   theme_classic(base_size=8) +
-   theme(legend.position="none"))
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == "Emergencia") %>% 
+    mutate(log10relab=log10(Abundance)) %>%
+    mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>%
+    ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
+    geom_hline(yintercept=median.emergencia.relab.in.AL, lty=2, color="gray50",
+               linewidth=0.5) +
+    geom_boxplot(outlier.shape=16, outlier.size=0.5, linewidth=0.25) +
+    stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
+    labs(x="Diet", y="log10(relative abundance)", title="Emergencia") +
+    scale_fill_manual(values=diet.palette) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/emergencia_v_diet_boxplots.pdf", width=2, height=2)
-# emergencia.v.diet.p
-# dev.off()
+pdf("../plots/emergencia_v_diet_boxplots.pdf", width=1.5, height=1.5)
+emergencia.v.diet.p
+dev.off()
 ```
 
-## Roseburia versus diet
+### Roseburia
 
 ```{r}
+median.roseburia.relab.in.AL <- agg.physeq.genus %>% 
+  transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+  psmelt %>% 
+  dplyr::filter(age.approx.months <= 40) %>% 
+  dplyr::filter(genus == "Roseburia") %>% 
+  dplyr::filter(Diet.5mo.as.AL == "AL") %>% 
+  mutate(log10relab=log10(Abundance)) %>%
+  pull(log10relab) %>% median()
+
 (roseburia.v.diet.p <- agg.physeq.genus %>% 
-   transform_sample_counts(function(x) x/sum(x)) %>% 
-   psmelt %>% 
-   dplyr::filter(age.approx.months <= 40) %>% 
-   dplyr::filter(genus == "Roseburia") %>% 
-   mutate(log10relab=log10(Abundance)) %>% 
-   mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
-   ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
-   geom_boxplot(outlier.shape=16, outlier.size=0.5) +
-   stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
-   labs(x="Diet", y="log10(relative abundance)", title="Roseburia") +
-   scale_fill_manual(values=diet.palette) +
-   theme_classic(base_size=8) +
-   theme(legend.position="none"))
+    transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+    psmelt %>% 
+    dplyr::filter(age.approx.months <= 40) %>% 
+    dplyr::filter(genus == "Roseburia") %>%
+    mutate(log10relab=log10(Abundance)) %>%
+    mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+    ggplot(aes(x=Diet.5mo.as.AL, y=log10relab, fill=Diet.5mo.as.AL)) +
+    geom_hline(yintercept=median.roseburia.relab.in.AL, lty=2, color="gray50",
+               linewidth=0.5) +
+    geom_boxplot(outlier.shape=16, outlier.size=0.5, linewidth=0.25) +
+    stat_compare_means(ref.group="AL", label="p.signif", method="t.test") +
+    labs(x="Diet", y="log10(relative abundance)", title="Roseburia") +
+    scale_fill_manual(values=diet.palette) +
+    theme_classic(base_size=8) +
+    theme(legend.position="none"))
 ```
 
 ```{r}
-# pdf("../plots/roseburia_v_diet_boxplots.pdf", width=2, height=2)
-# roseburia.v.diet.p
-# dev.off()
+pdf("../plots/roseburia_v_diet_boxplots.pdf", width=1.5, height=1.5)
+roseburia.v.diet.p
+dev.off()
 ```

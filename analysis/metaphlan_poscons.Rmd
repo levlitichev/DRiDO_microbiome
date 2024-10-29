@@ -8,6 +8,7 @@ MetaPhlAn database version: mpa_vOct22_CHOCOPhlAnSGB_202212
 library(tidyverse)
 library(readxl)
 library(RColorBrewer)
+library(cowplot) # plot_grid, get_legend
 ```
 
 # Import MetaPhlAn results
@@ -38,7 +39,7 @@ species.df <- mpa.df %>%
 ```{r}
 seq.meta.df <- read.table("../data/metadata/sequencing_metadata_after_QC_n3473_230620.txt", sep="\t", header=T)
 lib.meta.df <- read.table("../data/metadata/library_metadata_after_QC_n3213_230620.txt", sep="\t", header=T)
-stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_230620.txt", sep="\t", header=T)
+stool.meta.df <- read.table("../data/metadata/stool_metadata_after_QC_n3124_240418.txt", sep="\t", header=T)
 mouse.meta.df <- read.csv("../data/metadata/AnimalData_Processed_20230712.csv")
 ```
 
@@ -146,6 +147,11 @@ expected.df <- expected.df %>%
   ))
 ```
 
+```{r}
+species.in.poscons <- sort(unique(expected.df$species))
+```
+
+
 # Merge observed with expected
 
 First, pivot the MetaPhlAn data to be longer.
@@ -189,7 +195,6 @@ mpa.poscon.obs.v.expected.df <- mpa.poscon.obs.v.expected.df %>%
 # Plot
 
 ```{r}
-species.in.poscons <- sort(unique(expected.df$species))
 length(species.in.poscons)
 ```
 
@@ -214,19 +219,15 @@ names(poscon.species.palette) <- levels(mpa.poscon.obs.v.expected.df$agg.species
 ```
 
 ```{r}
-# pdf("../plots/poscon_barplots_metaphlan.pdf", height=2, width=5)
-# mpa.poscon.barplots.p + theme(legend.position="none")
-# dev.off()
+pdf("../plots/poscon_barplots_metaphlan.pdf", height=2, width=5)
+mpa.poscon.barplots.p + theme(legend.position="none")
+dev.off()
 ```
 
 Export the legend.
 
 ```{r}
-# library(grid)
-# library(cowplot)
-# 
-# pdf("../plots/poscon_barplots_metaphlan_legend.pdf", height=2, width=2)
-# grid.newpage()
-# grid.draw(cowplot::get_legend(mpa.poscon.barplots.p))
-# dev.off()
+pdf("../plots/poscon_barplots_metaphlan_legend.pdf", height=2, width=2)
+plot_grid(get_legend(mpa.poscon.barplots.p))
+dev.off()
 ```

@@ -1,0 +1,91 @@
+Split data by age.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+```
+
+# Import data
+
+```{r}
+genus.data.df <- read.table(
+  "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt",
+  sep="\t", header=T, row.names=1)
+```
+
+# Import metadata
+
+```{r}
+stool.meta.df <- read.table(
+  "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
+  sep="\t", header=T)
+```
+
+# Split by age
+
+5, 10, 16, 22, and 28 months.
+
+```{r}
+stool.IDs.5mo <- stool.meta.df %>% 
+  dplyr::filter(age.approx.months == 5) %>%
+  pull(stool.ID)
+stool.IDs.10mo <- stool.meta.df %>% 
+  dplyr::filter(age.approx.months == 10) %>%
+  pull(stool.ID)
+stool.IDs.16mo <- stool.meta.df %>% 
+  dplyr::filter(age.approx.months == 16) %>%
+  pull(stool.ID)
+stool.IDs.22mo <- stool.meta.df %>% 
+  dplyr::filter(age.approx.months == 22) %>%
+  pull(stool.ID)
+stool.IDs.28mo <- stool.meta.df %>% 
+  dplyr::filter(age.approx.months == 28) %>%
+  pull(stool.ID)
+
+length(stool.IDs.5mo)
+length(stool.IDs.10mo)
+length(stool.IDs.16mo)
+length(stool.IDs.22mo)
+length(stool.IDs.28mo)
+```
+
+```{r}
+genus.data.df.5mo <- genus.data.df[, stool.IDs.5mo]
+genus.data.df.10mo <- genus.data.df[, stool.IDs.10mo]
+genus.data.df.16mo <- genus.data.df[, stool.IDs.16mo]
+genus.data.df.22mo <- genus.data.df[, stool.IDs.22mo]
+genus.data.df.28mo <- genus.data.df[, stool.IDs.28mo]
+```
+
+# Export
+
+```{r}
+# genus.data.df.5mo %>%
+#   rownames_to_column("feature") %>%
+#   write.table(sprintf(
+#     "../results/split_by_age/kraken_genus_clr_filt_w_comm_5mo_n%ix%i.txt",
+#     nrow(genus.data.df.5mo), ncol(genus.data.df.5mo)), sep="\t", quote=F, row.names=F)
+# 
+# genus.data.df.10mo %>%
+#   rownames_to_column("feature") %>%
+#   write.table(sprintf(
+#     "../results/split_by_age/kraken_genus_clr_filt_w_comm_10mo_n%ix%i.txt",
+#     nrow(genus.data.df.10mo), ncol(genus.data.df.10mo)), sep="\t", quote=F, row.names=F)
+# 
+# genus.data.df.16mo %>%
+#   rownames_to_column("feature") %>%
+#   write.table(sprintf(
+#     "../results/split_by_age/kraken_genus_clr_filt_w_comm_16mo_n%ix%i.txt",
+#     nrow(genus.data.df.16mo), ncol(genus.data.df.16mo)), sep="\t", quote=F, row.names=F)
+# 
+# genus.data.df.22mo %>%
+#   rownames_to_column("feature") %>%
+#   write.table(sprintf(
+#     "../results/split_by_age/kraken_genus_clr_filt_w_comm_22mo_n%ix%i.txt",
+#     nrow(genus.data.df.22mo), ncol(genus.data.df.22mo)), sep="\t", quote=F, row.names=F)
+# 
+# genus.data.df.28mo %>%
+#   rownames_to_column("feature") %>%
+#   write.table(sprintf(
+#     "../results/split_by_age/kraken_genus_clr_filt_w_comm_28mo_n%ix%i.txt",
+#     nrow(genus.data.df.28mo), ncol(genus.data.df.28mo)), sep="\t", quote=F, row.names=F)
+```

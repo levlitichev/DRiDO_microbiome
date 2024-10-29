@@ -2,6 +2,8 @@ Microbiome-phenotype longitudinal association and mediation analysis.
 
 Cross-sectional association analysis at the very end.
 
+**2024-10-17 update: added export of supplementary tables**
+
 # Load libraries
 
 ```{r, warning=F, message=F}
@@ -58,7 +60,7 @@ genus.df <- read.table(
   "../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt", 
   sep="\t", header=T, row.names=1)
 pathway.df <- read.table(
-  "../results/DO_pathway_log2tpm_filt_w_comm_n273x2997.txt",
+  "../results/pathway_log2tpm_filt_w_comm_n273x2997.txt",
   sep="\t", header=T, row.names=1)
 pheno.df <- read.table(
   "../results/phenotype_values_closest_to_each_stool_ID_within_100_days_n2915x210_230811.txt", sep="\t", header=T)
@@ -75,36 +77,12 @@ full.df <- pheno.df %>%
 dim(full.df)
 ```
 
-# Create better pathway names for plotting
-
-Import long pathway names.
+## Import short and long pathway names
 
 ```{r}
-pathway.original.names <- read.table(
-  "../data/pathabundance_tpm_agg_by_stool_ID_n422x2997.txt", 
-  sep="\t", header=T, quote="", row.names=1) %>% rownames()
-```
-
-```{r}
-pathway.names.df <- data.frame(original = pathway.original.names) %>% 
-  
-  # extract the pathway ID (before the colon)
-  mutate(short = str_extract(original, "(.*):")) %>% 
-  mutate(short = str_sub(short, 1, nchar(short)-1)) %>% 
-  
-  # remove punctuation
-  mutate(short.clean = str_replace_all(short, "[:punct:]", "")) %>% 
-  
-  # for some reason, + not included in punct?
-  mutate(short.clean = str_replace_all(short.clean, "\\+", "")) %>%
-  
-  # prefix with X if it starts with a number
-  mutate(short.clean = case_when(
-    str_detect(short.clean, "^[:digit:]") ~ paste0("X", short.clean),
-    TRUE ~ short.clean)) %>% 
-  
-  arrange(short.clean) %>% 
-  relocate(short.clean) 
+pathway.names.df <- read.table(
+  "../data/metadata/pathway_long_and_short_names_n703.txt",
+  sep="\t", header=T, quote="")
 ```
 
 Add additional columns for plotting.
@@ -122,6 +100,13 @@ pathway.names.df <- pathway.names.df %>%
 ```
 
 We need `short.clean` and `after.colon.short.w.ID`.
+
+`original` is unique, but `short.clean` is not. Let's make the mapping one-to-one. Not sure which original pathway name is best to keep, so will choose randomly.
+
+```{r}
+pathway.names.uniq.df <- pathway.names.df %>% 
+  distinct(short.clean, .keep_all=T)
+```
 
 # Import association results
 
@@ -195,9 +180,9 @@ fxn.pheno.res.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_pval_histogram_tax.pdf", width=2, height=2)
-# tax.mb.pheno.assoc.pval.hist
-# dev.off()
+pdf("../plots/mb_pheno_assoc_pval_histogram_tax.pdf", width=2, height=2)
+tax.mb.pheno.assoc.pval.hist
+dev.off()
 ```
 
 ```{r}
@@ -213,9 +198,9 @@ fxn.pheno.res.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_pval_histogram_fxn.pdf", width=2, height=2)
-# fxn.mb.pheno.assoc.pval.hist
-# dev.off()
+pdf("../plots/mb_pheno_assoc_pval_histogram_fxn.pdf", width=2, height=2)
+fxn.mb.pheno.assoc.pval.hist
+dev.off()
 ```
 
 * Both functional and taxonomic features have very nice-looking p-value distributions
@@ -242,7 +227,7 @@ all.genus.feats <- rownames(genus.df)
 all.pathway.feats <- rownames(pathway.df)
 ```
 
-Make sure taxonomic uniqueness is always "uniq"
+Make sure taxonomic uniqueness is always "uniq".
 
 ```{r}
 tax.pheno.res.df <- tax.pheno.res.df %>% 
@@ -350,6 +335,136 @@ fxn.assoc.mediation.merged.df %>%
 
 * For 40% CR, 1.3% of taxonomic and 0.8% of functional associations are hits
 
+# Export supplementary tables
+
+Little ugly, but we'll separate the merged tables into the association and mediation results again.
+
+## Taxonomic associations
+
+```{r}
+tax.pheno.assoc.out.df <- tax.assoc.mediation.merged.df %>% 
+  
+  # subset to just association columns
+  dplyr::select(feature, feature.type, pheno, domain, trait, mb.coef, age.coef, DR.1D.coef, DR.2D.coef, DR.20.coef, DR.40.coef, mb.pval, assoc_padj) %>% 
+  
+  # deduplicate rows (they are duplicated because there is a different mediation result for each of 4 diets)
+  distinct() %>% 
+  
+  # redo `is.community.feat` for consistency with other tables
+  dplyr::rename(is.community.feat = feature.type) %>% 
+  mutate(is.community.feat = case_match(is.community.feat, "community" ~ "Y", "individual" ~ "N")) %>% 
+  
+  # rename assoc_padj
+  dplyr::rename(mb.padj = assoc_padj) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically by pheno, then microbiome feature
+  arrange(pheno, feature)
+```
+
+```{r}
+tax.pheno.assoc.out.df %>%
+  write.table("../supp_tables/table15.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Functional assocations
+
+Add long pathway names.
+
+```{r}
+fxn.pheno.assoc.out.df <- fxn.assoc.mediation.merged.df %>% 
+  
+  # subset to just association columns
+  dplyr::select(pheno, domain, trait, feature, feature.type, mb.coef, age.coef, DR.1D.coef, DR.2D.coef, DR.20.coef, DR.40.coef, mb.pval, assoc_padj) %>% 
+  
+  # deduplicate rows (they are duplicated because there is a different mediation result for each of 4 diets)
+  distinct() %>% 
+  
+  # redo `is.community.feat` for consistency with other tables
+  dplyr::rename(is.community.feat = feature.type) %>% 
+  mutate(is.community.feat = case_match(is.community.feat, "community" ~ "Y", "individual" ~ "N")) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename 'original' to 'full.pathway.name' and move after 'feature' column
+  dplyr::rename(full.pathway.name = original) %>% 
+  relocate(full.pathway.name, .after=feature) %>% 
+  
+  # rename assoc_padj
+  dplyr::rename(mb.padj = assoc_padj) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically by pheno, then microbiome feature
+  arrange(pheno, feature)
+```
+
+```{r}
+fxn.pheno.assoc.out.df %>%
+  write.table("../supp_tables/table16.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Taxonomic mediation
+
+```{r}
+tax.pheno.mediation.out.df <- tax.assoc.mediation.merged.df %>% 
+  
+  # subset to just mediation columns
+  dplyr::select(feature, feature.type, pheno, domain, trait, diet, n, ACME_est, ACME_p, ACME_padj, ADE_est, ADE_p, prop.med) %>% 
+  
+  # redo `is.community.feat` for consistency with other tables
+  dplyr::rename(is.community.feat = feature.type) %>% 
+  mutate(is.community.feat = case_match(is.community.feat, "community" ~ "Y", "individual" ~ "N")) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically by pheno, then microbiome feature, then diet
+  arrange(pheno, feature, diet)
+```
+
+```{r}
+tax.pheno.mediation.out.df %>%
+  write.table("../supp_tables/table17.txt", sep="\t", quote=F, row.names=F)
+```
+
+## Functional mediation
+
+```{r}
+fxn.pheno.mediation.out.df <- fxn.assoc.mediation.merged.df %>% 
+  
+  # subset to just mediation columns
+  dplyr::select(feature, feature.type, pheno, domain, trait, diet, n, ACME_est, ACME_p, ACME_padj, ADE_est, ADE_p, prop.med) %>% 
+  
+  # redo `is.community.feat` for consistency with other tables
+  dplyr::rename(is.community.feat = feature.type) %>% 
+  mutate(is.community.feat = case_match(is.community.feat, "community" ~ "Y", "individual" ~ "N")) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename 'original' to 'full.pathway.name' and move after 'feature' column
+  dplyr::rename(full.pathway.name = original) %>% 
+  relocate(full.pathway.name, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically by pheno, then microbiome feature, then diet
+  arrange(pheno, feature, diet)
+```
+
+```{r}
+fxn.pheno.mediation.out.df %>%
+  write.table("../supp_tables/table18.txt", sep="\t", quote=F, row.names=F)
+```
+
 # Proportion mediated
 
 ```{r}
@@ -415,9 +530,9 @@ assoc.v.mediation.tax.feats.barplot <- num.sig.tax.assoc.p +
 ```
 
 ```{r}
-# pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
-# assoc.v.mediation.tax.feats.barplot
-# dev.off()
+pdf("../plots/assoc_v_mediation_tax_feats_barplots.pdf", width=2.5, height=1.5)
+assoc.v.mediation.tax.feats.barplot
+dev.off()
 ```
 
 ## Functional
@@ -457,9 +572,9 @@ assoc.v.mediation.fxn.feats.barplot <- num.sig.fxn.assoc.p +
 ```
 
 ```{r}
-# pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
-# assoc.v.mediation.fxn.feats.barplot
-# dev.off()
+pdf("../plots/assoc_v_mediation_fxn_feats_barplots.pdf", width=2.5, height=1.5)
+assoc.v.mediation.fxn.feats.barplot
+dev.off()
 ```
 
 # Domains with the most associations
@@ -500,9 +615,9 @@ frac.hits.per.domain.df <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_frac_hits_per_domain_barplot.pdf", height=2, width=3)
-# frac.hits.per.domain.p
-# dev.off()
+pdf("../plots/mb_pheno_assoc_frac_hits_per_domain_barplot.pdf", height=2, width=3)
+frac.hits.per.domain.p
+dev.off()
 ```
 
 # Heatmaps
@@ -544,9 +659,9 @@ bw.tax.feats <- c(
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_bw_select_tax_feats_heatmap.pdf", height=2, width=4)
-# tax.bw.assoc.heatmap
-# dev.off()
+pdf("../plots/mb_pheno_assoc_bw_select_tax_feats_heatmap.pdf", height=2, width=4)
+tax.bw.assoc.heatmap
+dev.off()
 ```
 
 ## Significant by both association and mediation (40% CR)
@@ -628,9 +743,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
-# tax.and.fxn.heatmap.tall
-# dev.off()
+pdf("../plots/signif_assoc_and_med40_heatmap_tall_tax_and_fxn.pdf", height=6, width=4.5)
+tax.and.fxn.heatmap.tall
+dev.off()
 ```
 
 # Examples
@@ -650,9 +765,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/paramuribaculum_v_percfat_split_by_diet.pdf", height=1, width=4)
-# paramuribaculum.v.percfat.split.by.diet.p
-# dev.off()
+pdf("../plots/paramuribaculum_v_percfat_split_by_diet.pdf", height=1, width=4)
+paramuribaculum.v.percfat.split.by.diet.p
+dev.off()
 ```
 
 ## Akkermansia versus energy expenditure
@@ -670,9 +785,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/akkermansia_v_EE.pdf", height=1.25, width=3.5)
-# akkermansia.v.MetCageEE.p
-# dev.off()
+pdf("../plots/akkermansia_v_EE.pdf", height=1.25, width=3.5)
+akkermansia.v.MetCageEE.p
+dev.off()
 ```
 
 ## Methionine pathway versus VCO2
@@ -690,9 +805,9 @@ plot.df.for.tax.and.fxn.heatmap <- rbind(
 ```
 
 ```{r}
-# pdf("../plots/PWY7977_v_MetCageVCO2.pdf", height=1.25, width=3.5)
-# PWY7977.v.MetCageVCO2.p
-# dev.off()
+pdf("../plots/PWY7977_v_MetCageVCO2.pdf", height=1.25, width=3.5)
+PWY7977.v.MetCageVCO2.p
+dev.off()
 ```
 
 # Cross-sectional microbiome-phenotype associations
@@ -777,6 +892,68 @@ fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>%
   ungroup()
 ```
 
+## Export supplementary tables
+
+### Taxonomic
+
+```{r}
+tax.pheno.assoc.xs.out.df <- tax.pheno.res.xs.df %>% 
+  
+  # subset to columns that I want
+  dplyr::select(feature, pheno, domain, trait, n, age, pval, padj) %>% 
+  
+  # create `is.community.feat` column and move after 'feature' column
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  relocate(is.community.feat, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically by pheno, then microbiome feature
+  arrange(pheno, feature)
+```
+
+```{r}
+tax.pheno.assoc.xs.out.df %>% 
+  write.table("../supp_tables/table19.txt", sep="\t", quote=F, row.names=F)
+```
+
+### Functional
+
+```{r}
+fxn.pheno.assoc.xs.out.df <- fxn.pheno.res.xs.df %>% 
+  
+  # subset to columns that I want
+  dplyr::select(feature, pheno, domain, trait, n, age, pval, padj) %>% 
+  
+  # create `is.community.feat` column and move after 'feature' column
+  mutate(is.community.feat = case_when(
+    feature %in% community.features ~ "Y",
+    TRUE ~ "N")) %>% 
+  relocate(is.community.feat, .after=feature) %>% 
+  
+  # add long pathway name
+  merge(pathway.names.uniq.df %>% dplyr::select(original, short.clean),
+        by.x="feature", by.y="short.clean", all.x=T) %>% 
+  
+  # rename 'original' to 'full.pathway.name' and move after 'feature' column
+  dplyr::rename(full.pathway.name = original) %>% 
+  relocate(full.pathway.name, .after=feature) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  # sort alphabetically by pheno, then microbiome feature
+  arrange(pheno, feature)
+```
+
+```{r}
+fxn.pheno.assoc.xs.out.df %>% 
+  write.table("../supp_tables/table20.txt", sep="\t", quote=F, row.names=F)
+```
+
 ## Domains with the most associations
 
 ```{r}
@@ -810,7 +987,7 @@ fxn.pheno.res.xs.df <- fxn.pheno.res.xs.df %>%
 ```
 
 ```{r}
-# pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
-# frac.xs.hits.per.domain.barplots
-# dev.off()
+pdf("../plots/mb_pheno_assoc_frac_xs_hits_per_domain_barplot.pdf", height=2, width=2)
+frac.xs.hits.per.domain.barplots
+dev.off()
 ```

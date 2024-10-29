@@ -1,0 +1,155 @@
+We have three timepoints:
+
+1. Baseline: two weeks after germ-free mice received a young or old FMT and were housed in isocages
+2. 2 weeks cohousing: two weeks of Y FMT recipients being cohoused with O FMT recipients
+3. 1 month cohousing
+
+# Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(phyloseq)
+library(speedyseq) # faster tax_glom
+
+separation.palette <- c(
+  Y = "skyblue",
+  O = "firebrick",
+  CY = "mediumpurple",
+  CO = "violetred"
+)
+```
+
+# Import metadata
+
+```{r}
+meta.df <- read.table(
+  "../data/metadata/germfree_cohousing_metadata.txt", sep="\t", header=T)
+head(meta.df)
+```
+
+```{r}
+meta.df <- meta.df %>% 
+  
+  # convert timepoint.short to a factor
+  mutate(timepoint.short = factor(
+    timepoint.short, levels=c("B", "C2", "C4"))) %>% 
+  
+  # create metadata that does not know about future treatment status
+  # (e.g. at baseline, CY mice are just Y)
+  mutate(current.group = case_when(
+    timepoint.short == "B" & group == "CY" ~ "Y",
+    timepoint.short == "B" & group == "CO" ~ "O",
+    TRUE ~ group)) %>% 
+  mutate(current.group = factor(current.group, levels=c(
+      "Y", "O", "CY", "CO")))
+```
+
+# Import taxonomy
+
+```{r}
+tax.df <- read.table("../data/germfree_cohousing_taxonomy.tsv", sep="\t", header=T)
+```
+
+# Import counts
+
+```{r}
+counts.df <- read.table(
+  "../data/germfree_cohousing_feature_table.tsv", 
+  sep="\t", header=T, row.names=1)
+dim(counts.df)
+```
+
+* 5041 taxa x 131 samples
+
+# Create phyloseq object
+
+Arrange samples in the same order in counts and metadata.
+
+```{r}
+# # confirm that all samples from metadata are also in counts, and vice versa
+# meta.df$sample.id %in% colnames(counts.df)
+# colnames(counts.df) %in% meta.df$sample.id
+```
+
+```{r}
+physeq <- phyloseq(
+  counts.df %>% as.matrix() %>% otu_table(taxa_are_rows=T),
+  meta.df %>% column_to_rownames("sample.id") %>% sample_data(),
+  tax.df %>% column_to_rownames("Feature.ID") %>% as.matrix() %>% tax_table()
+)
+```
+
+# Aggregate to genera
+
+```{r}
+physeq.genus <- physeq %>% tax_glom(taxrank="genus")
+ntaxa(physeq.genus)
+sum(otu_table(physeq.genus)) / sum(otu_table(physeq))
+```
+
+* 191 genera
+* 92.6% of counts could be assigned to a genus
+
+# PCoA
+
+Bray-Curtis distance on genus-level relabs.
+
+```{r}
+pcoa.res <- physeq.genus %>%
+  
+  # compute relative abundance
+  transform_sample_counts(function(x) 100*x/sum(x)) %>%
+  
+  # perform PCoA using Bray-Curtis distance
+  ordinate(method="MDS", distance="bray")
+
+pcoa.genus.df <- plot_ordination(physeq.genus, pcoa.res, type="samples", justDF=T)
+```
+
+Calculate centroids.
+
+```{r}
+pcoa.centroids.df <- pcoa.genus.df %>% 
+  group_by(current.group, timepoint.short) %>% 
+  summarise(Axis.1 = mean(Axis.1),
+            Axis.2 = mean(Axis.2),
+            .groups="drop")
+```
+
+Add lines between centroids for Y to CY and for O to CO.
+
+```{r}
+(pcoa.lines.bw.centroids.df <- pcoa.centroids.df %>% 
+   dplyr::filter(str_detect(timepoint.short, "^C")) %>% 
+   group_by(timepoint.short) %>% 
+   summarise(Axis.1_Y = Axis.1[current.group == "Y"],
+             Axis.1.end_Y = Axis.1[current.group == "CY"],
+             Axis.1_O = Axis.1[current.group == "O"],
+             Axis.1.end_O = Axis.1[current.group == "CO"],
+             Axis.2_Y = Axis.2[current.group == "Y"],
+             Axis.2.end_Y = Axis.2[current.group == "CY"],
+             Axis.2_O = Axis.2[current.group == "O"],
+             Axis.2.end_O = Axis.2[current.group == "CO"]) %>% 
+   pivot_longer(starts_with("Axis"), names_to=c("Axis", "age"), names_sep="_") %>% 
+   pivot_wider(id_cols=c(timepoint.short, age), names_from="Axis"))
+```
+
+```{r}
+(germfree.cohousing.pcoa.p <- pcoa.genus.df %>% 
+   ggplot(aes(x=Axis.1, y=Axis.2, color=current.group)) +
+   geom_point(shape=16, alpha=0.3) +
+   geom_point(data=pcoa.centroids.df, size=5, shape="+") +
+   facet_wrap(~timepoint.short, ncol=1) +
+   theme_classic(base_size=8) +
+   labs(x=sprintf("PCoA1 (%.1f%%)", 100*pcoa.res$values$Relative_eig[1]), 
+        y=sprintf("PCoA2 (%.1f%%)", 100*pcoa.res$values$Relative_eig[2]),
+        color="Group") +
+   scale_color_manual(values=separation.palette))
+```
+
+```{r}
+pdf("../plots/germfree_cohousing_pcoa.pdf", width=2, height=4.5)
+germfree.cohousing.pcoa.p + theme(legend.position="none")
+dev.off()
+```
+

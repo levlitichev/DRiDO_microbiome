@@ -165,9 +165,9 @@ Plot.
 ```
 
 ```{r}
-# pdf("../plots/cohousing_pcoa_just_baseline_and_cohousing.pdf", height=2, width=4)
-# pcoa.BC.p
-# dev.off()
+pdf("../plots/cohousing_pcoa_just_baseline_and_cohousing.pdf", height=2, width=4)
+pcoa.BC.p
+dev.off()
 ```
 
 # Distance to controls
@@ -256,11 +256,52 @@ Plot just distance to age-matched controls.
 ```
 
 ```{r}
-# pdf("../plots/cohousing_dist_to_uncohoused_controls.pdf", height=2, width=3)
-# dist.uncohoused.p
-# dev.off()
+pdf("../plots/cohousing_dist_to_uncohoused_controls.pdf", height=2, width=3)
+dist.uncohoused.p
+dev.off()
 ```
 
+# Compute t-test statistics manually
+
+## exCY, B v. C
+
+```{r}
+t.test(
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "B") %>% pull(dist),
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "C") %>% pull(dist))
+```
+
+## exCY, B v. S2
+
+```{r}
+t.test(
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "B") %>% pull(dist),
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "S2") %>% pull(dist))
+```
+
+## exCY, B v. S4
+
+```{r}
+t.test(
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "B") %>% pull(dist),
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "S4") %>% pull(dist))
+```
+
+## exCY, B v. S6
+
+```{r}
+t.test(
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "B") %>% pull(dist),
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "S6") %>% pull(dist))
+```
+
+## exCY, B v. S8
+
+```{r}
+t.test(
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "B") %>% pull(dist),
+  genus.bc.dist.to.uncohoused.df %>% dplyr::filter(dist.from == "exCY") %>% dplyr::filter(timepoint.short.x == "S8") %>% pull(dist))
+```
 
 # Uniqueness
 
@@ -297,9 +338,27 @@ Plot by `current.group` (across timepoints).
 ```
 
 ```{r}
-# pdf("../plots/cohousing_uniq_by_group.pdf", width=2, height=2)
-# uniq.by.group.p
-# dev.off()
+pdf("../plots/cohousing_uniq_by_group.pdf", width=2, height=2)
+uniq.by.group.p
+dev.off()
+```
+
+```{r}
+t.test(
+  genus.uniq.bc.df %>% dplyr::filter(current.group == "Y") %>% pull(uniqueness),
+  genus.uniq.bc.df %>% dplyr::filter(current.group == "O") %>% pull(uniqueness))
+```
+
+```{r}
+t.test(
+  genus.uniq.bc.df %>% dplyr::filter(current.group == "Y") %>% pull(uniqueness),
+  genus.uniq.bc.df %>% dplyr::filter(current.group == "CY") %>% pull(uniqueness))
+```
+
+```{r}
+t.test(
+  genus.uniq.bc.df %>% dplyr::filter(current.group == "Y") %>% pull(uniqueness),
+  genus.uniq.bc.df %>% dplyr::filter(current.group == "exCY") %>% pull(uniqueness))
 ```
 
 # Random forest age prediction
@@ -388,7 +447,7 @@ accuracy.trained.on.baseline.df <- pred.v.actual.trained.on.baseline.df %>%
 ```
 
 ```{r}
-# pdf("../plots/cohousing_rf_accuracy_trained_on_baseline.pdf", height=2, width=2.5)
-# pred.v.actual.trained.on.baseline.p
-# dev.off()
+pdf("../plots/cohousing_rf_accuracy_trained_on_baseline.pdf", height=2, width=2.5)
+pred.v.actual.trained.on.baseline.p
+dev.off()
 ```
