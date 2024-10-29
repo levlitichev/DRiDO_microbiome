@@ -35,7 +35,7 @@
 | →`run_mediation_one_diet_one_pheno.R` | |
 | 2. `aggregate_mediation_results.R` | |
 
-### Analysis and producing plots (within `analysis/`)
+### Analysis and producing plots (within `analysis`)
 
 N.B. `kraken.Rmd`, `humann.Rmd`, and `prediction.Rmd` account for >50% of the figure panels in the manuscript.
 
