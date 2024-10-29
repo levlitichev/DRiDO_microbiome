@@ -40,9 +40,9 @@ taxonomic data and perform several basic analyses.
 - `data` contains the inputs to `scripts` and `analysis`, including
   metadata
 
-See [here](TOC.html) for more details about the overall workflow.
+See [here](TOC.md) for more details about the overall workflow.
 
-See [here](script_used_for_each_figure_panel.html) for which script was used to produce every figure panel in the manuscript.
+See [here](script_used_for_each_figure_panel.md) for which script was used to produce every figure panel in the manuscript.
 
 Note that there are multiple layers of metadata: sequencing metadata,
 library metadata, and stool metadata are stored separately. Multiple
