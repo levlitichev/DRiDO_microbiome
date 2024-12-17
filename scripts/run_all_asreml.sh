@@ -25,7 +25,7 @@ in_path="../results/kraken_genus_clr_filt_w_comm_n107x2997_231017.txt"
 out_dir="../results/asreml_kraken_genus_w_time_fixef/"
 mkdir $out_dir
 Rscript run_asreml.R $in_path $out_dir \
-  "~ age.wks.scaled + Diet.5mo.as.AL" \
+  "~ age.wks.scaled + Diet.5mo.as.AL + time.scaled" \
   "~ vm(Mouse, kinship.mat.x2) + ide(Mouse) + Cohort + Cage + Batch" \
   "~ ide(Mouse, kinship.mat.x2) + Cohort + Cage + Batch"
 Rscript collate_asreml.R $out_dir
