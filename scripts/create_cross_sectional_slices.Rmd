@@ -134,7 +134,7 @@ genus.data.df.2019.Q1 <- genus.data.df[, stool.meta.annot.df.2019.Q1$stool.ID]
 
 # Characteristics of the cross-sectional slices
 
-Age:
+Age (weeks):
 
 ```{r}
 # Mean, min, max, 25%ile, 75%ile
@@ -147,6 +147,18 @@ sd(stool.meta.annot.df.2018.Q1$age.wks)
 sd(stool.meta.annot.df.2018.Q3$age.wks)
 sd(stool.meta.annot.df.2019.Q1$age.wks)
 ```
+
+Age (months):
+
+```{r}
+summary(stool.meta.annot.df.2018.Q1$age.wks) / 4.34524
+summary(stool.meta.annot.df.2018.Q3$age.wks) / 4.34524
+summary(stool.meta.annot.df.2019.Q1$age.wks) / 4.34524
+```
+Age in months: mean, 25th percentile, 75th percentile
+* Slice 1: 11.1, 4.8, 15.9 months
+* Slice 2: 17.2, 10.1, 22.1 months
+* Slice 3: 20.5, 15.9, 22.1 months
 
 Cohort:
 
