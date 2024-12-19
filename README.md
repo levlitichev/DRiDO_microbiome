@@ -2,7 +2,7 @@ DRiDO Microbiome Study
 ================
 
 *Author*: Lev Litichevskiy  
-*Last updated*: October 28, 2024
+*Last updated*: December 18, 2024
 
 This repository contains code and data that can be used to reproduce
 figures from the Dietary Restriction in Diversity Outbred mice (DRiDO)
@@ -24,6 +24,7 @@ L Litichevskiy, M Considine, J Gill, V Shandar, … A Di Francesco, GA Churchill
 - Pathways: `data/pathabundance_tpm_agg_by_stool_ID_n422x2997.txt`
   - TPM (transcripts-per-million) abundances
   - That is, normalized for gene length and sequencing depth
+- fastq files available on SRA: [PRJNA1054518](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA1054518)
 
 ### Tutorial
 
@@ -49,6 +50,8 @@ library metadata, and stool metadata are stored separately. Multiple
 sequencing IDs (`seq.ID`) can correspond to the same library ID
 (`lib.ID`), and multiple library IDs can correspond to the same stool
 sample (`stool.ID`). Mice contributed one or more stool samples.
+
+Note also that library and stool metadata is embedded in the SRA metadata, but sequencing metadata is not. This is because individual SRA runs correspond to (unique) library IDs. In the unlikely event that a user will need to know which sequencing IDs correspond to each SRA run (i.e. SRR accession), we have made available a [mapping](https://github.com/levlitichev/DRiDO_microbiome/blob/main/data/metadata/library_metadata_after_QC_n3213_230620.txt) between SRR accessions and sequencing IDs. Only a small number of libraries / SRA runs (n=259) correspond to multiple sequencing IDs, i.e. these libraries were sequenced multiple times.
 
 ## 4. System requirements
 
