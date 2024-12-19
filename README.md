@@ -51,7 +51,7 @@ sequencing IDs (`seq.ID`) can correspond to the same library ID
 (`lib.ID`), and multiple library IDs can correspond to the same stool
 sample (`stool.ID`). Mice contributed one or more stool samples.
 
-Note also that library and stool metadata is embedded in the SRA metadata, but sequencing metadata is not. This is because individual SRA runs correspond to (unique) library IDs. In the unlikely event that a user will need to know which sequencing IDs correspond to each SRA run (i.e. SRR accession), we have made available a [mapping](https://github.com/levlitichev/DRiDO_microbiome/blob/main/data/metadata/library_metadata_after_QC_n3213_230620.txt) between SRR accessions and sequencing IDs. Only a small number of libraries / SRA runs (n=259) correspond to multiple sequencing IDs, i.e. these libraries were sequenced multiple times.
+Note also that library and stool metadata is embedded in the SRA metadata, but sequencing metadata is not. This is because individual SRA runs correspond to (unique) library IDs. In the unlikely event that a user will need to know which sequencing IDs correspond to each SRA run (i.e. SRR accession), we have made available a [mapping](https://github.com/levlitichev/DRiDO_microbiome/blob/main/data/metadata/SRR_accession_to_seq_IDs_n3213.txt) between SRR accessions and sequencing IDs. Only a small number of libraries / SRA runs (n=259) correspond to multiple sequencing IDs, i.e. these libraries were sequenced multiple times.
 
 ## 4. System requirements
 
