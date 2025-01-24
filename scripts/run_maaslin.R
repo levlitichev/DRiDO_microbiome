@@ -1,48 +1,22 @@
-**2024-04-18: Added chronological time to DO model.**
+# **2024-04-18: Added chronological time to DO model.**
+# Already prepared matrices of features that I want to test, including community features.
+# No prevalence filter, no transformation, no normalization. The only thing I need to do before running the LMMs is scale all features so the coefficients for the community features are on the same as those for the individual features.
 
-Already prepared matrices of features that I want to test, including community features.
-
-No prevalence filter, no transformation, no normalization. The only thing I need to do before running the LMMs is scale all features so the coefficients for the community features are on the same as those for the individual features.
-
-```{r, warning=F, message=F}
 library(tidyverse)
 library(Maaslin2)
 library(lubridate) # to deal with date of stool collection
-```
 
-# Import metadata
+##### Import metadata #####
 
-DO.
+## DO
 
-```{r}
 DO.stool.meta.df <- read.table(
   "../data/metadata/stool_metadata_after_QC_no_controls_n2997_240418.txt", 
   sep="\t", header=T)
 DO.mouse.meta.df <- read.csv(
   "../data/metadata/AnimalData_Processed_20230712.csv")
-```
 
-Calculate days since first stool collection.
-
-```{r}
-DO.stool.meta.df <- DO.stool.meta.df %>% 
-  
-  # convert to date type
-  mutate(date.stool.collection.approx = lubridate::ymd(date.stool.collection.approx)) %>% 
-  
-  # calculate days since first overall stool collection
-  mutate(days.from.first.stool.collection = time_length(
-    date.stool.collection.approx - min(date.stool.collection.approx), unit="day"))
-```
-
-```{r}
-DO.meta.df <- DO.stool.meta.df %>% 
-  merge(DO.mouse.meta.df, by.x="mouse.ID", by.y="MouseID")
-```
-
-Subset to AL.
-
-```{r}
+# Subset to AL
 DO.AL.meta.df <- DO.meta.df %>% 
   
   dplyr::filter(Diet == "AL") %>% 
@@ -56,11 +30,9 @@ DO.AL.meta.df <- DO.meta.df %>%
   mutate(Time = days.from.first.stool.collection) %>% 
   mutate(Cage = paste0("c", HID)) %>% 
   mutate(Batch = ext.batch)
-```
 
-B6.
+## B6
 
-```{r}
 B6.meta.df <- read.table(
   "../data/metadata/B6_sample_metadata.txt",
   sep="\t", header=T) %>% 
@@ -71,11 +43,9 @@ B6.meta.df <- read.table(
   # sort by id, then set as rownames
   arrange(id) %>% 
   column_to_rownames("id")
-```
 
-Humans.
+## Humans
 
-```{r}
 human.meta.df <- read.table(
   "../data/metadata/CMD_human_sample_metadata_n4101.txt",
   sep="\t", header=T) %>% 
@@ -83,22 +53,19 @@ human.meta.df <- read.table(
   # sort by sample_id, then set as rownames
   arrange(sample_id) %>% 
   column_to_rownames("sample_id")
-```
 
-# DO AL
+##### Run models #####
 
-Model: y_mb ~ age + time + (1|mouse.ID) + (1|Cohort) + (1|Cage) + (1|Batch)
+## DO AL
+## Model: y_mb ~ age + time + (1|mouse.ID) + (1|Cohort) + (1|Cage) + (1|Batch)
 
-## Genus
+# Genus
 
-```{r}
 DO.AL.genus.df.feats.in.rows <- read.table(
   "../results/DO_AL_genus_log2relab_filt_w_comm_n253x573.txt",
   sep="\t", header=T, row.names=1)
-dim(DO.AL.genus.df.feats.in.rows)
-```
+# dim(DO.AL.genus.df.feats.in.rows)
 
-```{r}
 DO.AL.genus.df <- DO.AL.genus.df.feats.in.rows %>% 
   
   # transpose because MaAsLin2 wants samples in the rows
@@ -115,14 +82,9 @@ DO.AL.genus.df <- DO.AL.genus.df.feats.in.rows %>%
   arrange(stool.ID) %>% 
   column_to_rownames("stool.ID")
 
-dim(DO.AL.genus.df)
-```
-
-```{r}
+# dim(DO.AL.genus.df)
 # rownames(DO.AL.genus.df) == rownames(DO.AL.meta.df)
-```
 
-```{r}
 maaslin.res.DO.AL.genus <- Maaslin2(
   input_data = DO.AL.genus.df,
   input_metadata = DO.AL.meta.df,
@@ -134,18 +96,15 @@ maaslin.res.DO.AL.genus <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
-```
 
-## Pathways
 
-```{r}
+# Pathways
+
 DO.AL.pathway.df.feats.in.rows <- read.table(
   "../results/DO_AL_pathway_log2tpm_filt_w_comm_n263x573.txt",
   sep="\t", header=T, quote="", row.names=1)
-dim(DO.AL.pathway.df.feats.in.rows)
-```
+# dim(DO.AL.pathway.df.feats.in.rows)
 
-```{r}
 DO.AL.pathway.df <- DO.AL.pathway.df.feats.in.rows %>% 
   
   # transpose because MaAsLin2 wants samples in the rows
@@ -162,14 +121,9 @@ DO.AL.pathway.df <- DO.AL.pathway.df.feats.in.rows %>%
   arrange(stool.ID) %>% 
   column_to_rownames("stool.ID")
 
-dim(DO.AL.pathway.df)
-```
-
-```{r}
+# dim(DO.AL.pathway.df)
 # rownames(DO.AL.pathway.df) == rownames(DO.AL.meta.df)
-```
 
-```{r}
 maaslin.res.DO.AL.pathway <- Maaslin2(
   input_data = DO.AL.pathway.df,
   input_metadata = DO.AL.meta.df,
@@ -181,22 +135,17 @@ maaslin.res.DO.AL.pathway <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
-```
 
-# B6
+## B6
+## Model: y_mb ~ age + (1|cage)
 
-Model: y_mb ~ age + (1|cage)
+# Genus
 
-## Genus
-
-```{r}
 B6.genus.df.feats.in.rows <- read.table(
   "../results/B6_genus_log2relab_filt_w_comm_n267x141.txt",
   sep="\t", check.names=F, header=T, row.names=1)
-dim(B6.genus.df.feats.in.rows)
-```
+# dim(B6.genus.df.feats.in.rows)
 
-```{r}
 B6.genus.df <- B6.genus.df.feats.in.rows %>% 
   
   # transpose because MaAsLin2 wants samples in the rows
@@ -213,14 +162,9 @@ B6.genus.df <- B6.genus.df.feats.in.rows %>%
   arrange(id) %>% 
   column_to_rownames("id")
 
-dim(B6.genus.df)
-```
-
-```{r}
+# dim(B6.genus.df)
 # rownames(B6.genus.df) == rownames(B6.meta.df)
-```
 
-```{r}
 maaslin.res.B6.genus <- Maaslin2(
   input_data = B6.genus.df,
   input_metadata = B6.meta.df,
@@ -232,18 +176,14 @@ maaslin.res.B6.genus <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
-```
 
-## Pathways
+# Pathways
 
-```{r}
 B6.pathway.df.feats.in.rows <- read.table(
   "../results/B6_pathway_log2tpm_filt_w_comm_n234x141.txt",
   sep="\t", check.names=F, header=T, quote="", row.names=1)
-dim(B6.pathway.df.feats.in.rows)
-```
+# dim(B6.pathway.df.feats.in.rows)
 
-```{r}
 B6.pathway.df <- B6.pathway.df.feats.in.rows %>% 
   
   # transpose because MaAsLin2 wants samples in the rows
@@ -260,14 +200,9 @@ B6.pathway.df <- B6.pathway.df.feats.in.rows %>%
   arrange(id) %>% 
   column_to_rownames("id")
 
-dim(B6.pathway.df)
-```
-
-```{r}
+# dim(B6.pathway.df)
 # rownames(B6.pathway.df) == rownames(B6.meta.df)
-```
 
-```{r}
 maaslin.res.B6.pathway <- Maaslin2(
   input_data = B6.pathway.df,
   input_metadata = B6.meta.df,
@@ -279,22 +214,17 @@ maaslin.res.B6.pathway <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
-```
 
-# Human
+## Human
+# Model: y_mb ~ age + (1|study_name)
 
-Model: y_mb ~ age + (1|study_name)
+# Genus
 
-## Genus
-
-```{r}
 human.genus.df.feats.in.rows <- read.table(
   "../results/CMD_human_genus_log2relab_filt_w_comm_n95x4101.txt",
   sep="\t", check.names=F, header=T, row.names=1)
-dim(human.genus.df.feats.in.rows)
-```
+# dim(human.genus.df.feats.in.rows)
 
-```{r}
 human.genus.df <- human.genus.df.feats.in.rows %>% 
   
   # transpose because MaAsLin2 wants samples in the rows
@@ -311,21 +241,13 @@ human.genus.df <- human.genus.df.feats.in.rows %>%
   arrange(sample_id) %>% 
   column_to_rownames("sample_id")
 
-dim(human.genus.df)
-```
+# dim(human.genus.df)
 
-Confirming that features were properly scaled:
-
-```{r}
+# confirming that features were properly scaled
 # summary(colMeans(human.genus.df))
 # summary(apply(human.genus.df, MARGIN=2, FUN=sd))
-```
-
-```{r}
 # rownames(human.genus.df) == rownames(human.meta.df)
-```
 
-```{r}
 maaslin.res.human.genus <- Maaslin2(
   input_data = human.genus.df,
   input_metadata = human.meta.df,
@@ -337,18 +259,14 @@ maaslin.res.human.genus <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
-```
 
-## Pathways
+# Pathways
 
-```{r}
 human.pathway.df.feats.in.rows <- read.table(
   "../results/CMD_human_pathway_log2tpm_filt_w_comm_n359x4101.txt",
   sep="\t", check.names=F, quote="", header=T, row.names=1)
-dim(human.pathway.df.feats.in.rows)
-```
+# dim(human.pathway.df.feats.in.rows)
 
-```{r}
 human.pathway.df <- human.pathway.df.feats.in.rows %>% 
   
   # transpose because MaAsLin2 wants samples in the rows
@@ -365,14 +283,9 @@ human.pathway.df <- human.pathway.df.feats.in.rows %>%
   arrange(sample_id) %>% 
   column_to_rownames("sample_id")
 
-dim(human.pathway.df)
-```
-
-```{r}
+# dim(human.pathway.df)
 # rownames(human.pathway.df) == rownames(human.meta.df)
-```
 
-```{r}
 maaslin.res.human.pathway <- Maaslin2(
   input_data = human.pathway.df,
   input_metadata = human.meta.df,
@@ -384,4 +297,3 @@ maaslin.res.human.pathway <- Maaslin2(
   normalization = "NONE", transform="NONE",
   plot_heatmap = FALSE,
   plot_scatter = FALSE)
-```
