@@ -55,19 +55,24 @@ median.df <- data.frame(quantile(surv.fit, probs=0.5)$quantile) %>%
 # Perform pairwise log-rank tests
 
 ```{r}
-(pairwise.logrank.res <- pairwise_survdiff(Surv(SurvDays, Died) ~ Diet, data= filt.df))
+# no p-value correction because we'll do this in the next step
+# (we'll just correct the comparisons against AL, since we're not interested in
+# the other comparisons, e.g. 1D v. 2D)
+(pairwise.logrank.res <- pairwise_survdiff(Surv(SurvDays, Died) ~ Diet, data= filt.df,
+                                           p.adjust.method="none"))
 ```
 ```{r}
-(pairwise.logrank.pval.df <- pairwise.logrank.res$p.value["AL", ] %>% 
-  data.frame() %>% 
-  setNames("pval") %>% 
-  rownames_to_column("Diet") %>% 
-  mutate(pval.symbol = case_when(
-    pval < 0.0001 ~ "****",
-    pval < 0.001 ~ "***",
-    pval < 0.01 ~ "**",
-    pval < 0.05 ~ "*",
-    TRUE ~ "ns")))
+(pairwise.logrank.pval.df <- pairwise.logrank.res$p.value["AL", ] %>%
+   data.frame() %>% 
+   setNames("pval") %>% 
+   rownames_to_column("Diet") %>% 
+   mutate(padj = p.adjust(pval, method="BH")) %>% 
+   mutate(padj.symbol = case_when(
+     padj < 0.0001 ~ "****",
+     padj < 0.001 ~ "***",
+     padj < 0.01 ~ "**",
+     padj < 0.05 ~ "*",
+     TRUE ~ "ns")))
 ```
 
 # Plot
@@ -80,7 +85,7 @@ median.df <- data.frame(quantile(surv.fit, probs=0.5)$quantile) %>%
    geom_boxplot(aes(fill=Diet), outlier.shape=NA) +
    geom_jitter(aes(fill=Diet), shape=21, color="black", 
                width=0.1, stroke=0.1, size=1) +
-   geom_text(aes(y=1700, label=pval.symbol), data=pairwise.logrank.pval.df) +
+   geom_text(aes(y=1700, label=padj.symbol), data=pairwise.logrank.pval.df) +
    labs(x="", y="Lifespan (days)") +
    theme_classic(base_size=8) +
    scale_color_manual(values=diet.palette) +
@@ -94,3 +99,11 @@ lifespan.boxplots
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+filt.df %>% 
+  dplyr::filter(Died) %>%
+  dplyr::select(Diet, SurvDays) %>% 
+  write.csv("../source_data_for_fig_panels/1b.csv", quote=F, row.names=F)
+```

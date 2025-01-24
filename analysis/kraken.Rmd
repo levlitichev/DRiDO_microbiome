@@ -256,6 +256,23 @@ shannon.v.age.mean.SEM.p
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+rbind(
+  shannon.plot.df.across.diets %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  shannon.plot.df.per.diet %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED5b_shannon.csv", quote=F, row.names=F)
+```
+
 ## Simpson
 
 Versus age.
@@ -317,6 +334,23 @@ simpson.plot.df.across.diets <- alpha.div.long.df.genus %>%
 pdf("../plots/simpson_v_age_mean_SEM.pdf", height=2, width=2)
 simpson.v.age.mean.SEM.p
 dev.off()
+```
+
+Export source data.
+
+```{r}
+rbind(
+  simpson.plot.df.across.diets %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  simpson.plot.df.per.diet %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED5b_simpson.csv", quote=F, row.names=F)
 ```
 
 # PCoA
@@ -459,6 +493,49 @@ plot_grid(get_legend(full.pcoa.p))
 dev.off()
 ```
 
+Export source data.
+
+- Main PCoA
+
+```{r}
+agg.pcoa.genus.bc.df %>% 
+  arrange(desc(age.approx.months)) %>%
+  dplyr::select(PCoA1, PCoA2, Diet.5mo.as.AL, age.approx.months) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/1d_pcoa.csv", quote=F, row.names=F)
+```
+
+- PCoA1 age barplots
+
+```{r}
+agg.pcoa.genus.bc.df %>% 
+  mutate(PCoA1.discrete=cut(PCoA1, pcoa1.intervals, include.lowest=T)) %>%
+  group_by(PCoA1.discrete) %>%
+  summarise(mean.age.mo=mean(age.approx.months), .groups="drop") %>%
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/1d_pcoa1_age.csv", quote=F, row.names=F)
+```
+
+- PCoA2 age barplots
+
+```{r}
+agg.pcoa.genus.bc.df %>% 
+  mutate(PCoA2.discrete=cut(PCoA2, pcoa2.intervals, include.lowest=T)) %>%
+  group_by(PCoA2.discrete) %>%
+  summarise(mean.age.mo=mean(age.approx.months), .groups="drop") %>%
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/1d_pcoa2_age.csv", quote=F, row.names=F)
+```
+
 ## Just young and old, AL versus 40% CR
 
 Ordination with just these samples.
@@ -596,6 +673,23 @@ uniq.v.age.mean.SEM.p + theme(legend.position="none")
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+rbind(
+  uniq.plot.df.across.diets %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  uniq.plot.df.per.diet %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/2c.csv", quote=F, row.names=F)
+```
+
 ## Versus diet
 
 ```{r}
@@ -687,7 +781,7 @@ uniq.n.mice.per.cage.plot.df.across.diets <- uniq.annot.df.n.mice.per.cage %>%
   dplyr::filter(n >= 3)
 ```
 
-Wide plot.
+Tall plot.
 
 ```{r}
 (uniq.v.age.fixed.n.per.cage.mean.SEM.p <- uniq.n.mice.per.cage.plot.df.per.diet %>% 
@@ -716,6 +810,25 @@ Wide plot.
 pdf("../plots/tax_uniq_v_age_fixed_n_per_cage_mean_SEM.pdf", height=6, width=2)
 uniq.v.age.fixed.n.per.cage.mean.SEM.p
 dev.off()
+```
+
+Export source data.
+
+```{r}
+rbind(
+  uniq.n.mice.per.cage.plot.df.across.diets %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(n.per.cage, age.approx.months, mean, sem, Diet),
+  uniq.n.mice.per.cage.plot.df.per.diet %>% 
+    dplyr::select(n.per.cage, age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  arrange(n.per.cage, age.approx.months, Diet) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED5a.csv", quote=F, row.names=F)
 ```
 
 ## Species
@@ -791,6 +904,23 @@ species.uniq.v.age.mean.SEM.p + theme(legend.position="none")
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+rbind(
+  species.uniq.plot.df.across.diets %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  species.uniq.plot.df.per.diet %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED5d.csv", quote=F, row.names=F)
+```
+
 # Effect of age
 
 ```{r}
@@ -864,6 +994,25 @@ age.genera.to.label <- c(
 pdf("../plots/asreml_age_effect_genera_volcano.pdf", height=2.5, width=2.5)
 age.effect.genera.volcano + theme(legend.position="none")
 dev.off()
+```
+
+Export source data.
+
+```{r}
+age.df %>% 
+  mutate(neg.log10padj = case_when(padj == 0 ~ 16, TRUE ~ -log10(padj))) %>% 
+  mutate(label = case_when(
+    feature %in% age.genera.to.label ~ feature,
+    TRUE ~ ""
+  )) %>%
+  
+  dplyr::select(solution, neg.log10padj, is.sig, label) %>% 
+  arrange(desc(neg.log10padj)) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/2a.csv", quote=F, row.names=F)
 ```
 
 # Effect of DR
@@ -956,6 +1105,24 @@ DR.effect.p
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+DR.df %>% 
+  
+  # specify order based on 40% CR
+  merge(DR.effects.feature.order.df, by="feature") %>%
+  
+  # reorder diet
+  mutate(DR = factor(fixef.value, levels=c("1D", "2D", "20", "40"))) %>% 
+  
+  dplyr::select(feature, feature.order, solution, std.error, is.sig, DR) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5a.csv", quote=F, row.names=F)
+```
 
 ## Magnitude of effects
 
@@ -993,6 +1160,20 @@ pd <- position_dodge2(width=0.1)
 pdf("../plots/asreml_diet_overall_effect_genus_boxplots.pdf", height=2, width=2)
 diet.effect.size.p
 dev.off()
+```
+
+Export source data.
+
+```{r}
+DR.df %>% 
+  mutate(DR=factor(fixef.value, levels=c("1D", "2D", "20", "40"))) %>% 
+  mutate(abs.solution = abs(solution)) %>% 
+  dplyr::select(feature, DR, abs.solution) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5d.csv", quote=F, row.names=F)
 ```
 
 ## Similarity of diet coefficients
@@ -1039,6 +1220,16 @@ cor.DR.effects.p
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+DR.coef.df %>% 
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5e.csv", quote=F, row.names=F)
+```
+
 ## Affected by CR but not fasting, and vice versa
 
 ```{r}
@@ -1077,6 +1268,22 @@ genus.CR.or.fasting.mean.coef.order.df <- genus.CR.or.fasting.mean.coef.df %>%
 pdf("../plots/genus_CR_v_fasting_mean_coef.pdf", height=2, width=3)
 genus.CR.v.fasting.mean.coef.p
 dev.off()
+```
+
+Export source data.
+
+```{r}
+genus.CR.or.fasting.mean.coef.df %>% 
+  merge(genus.CR.or.fasting.mean.coef.order.df, by="feature") %>% 
+  mutate(label = ifelse(feature %in% c("Emergencia", "Roseburia"), feature, "")) %>% 
+  dplyr::rename(feature.order = ii) %>% 
+  arrange(feature.order) %>% 
+  dplyr::select(feature, feature.order, solution, CR.or.fasting, CR.and.fasting.in.diff.dir) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5f.csv", quote=F, row.names=F)
 ```
 
 # Heritability
@@ -1157,6 +1364,24 @@ herit.genera.to.label <- c(
 # dev.off()
 ```
 
+Export source data.
+
+```{r}
+herit.df %>% 
+   mutate(label = case_when(
+     feature %in% herit.genera.to.label ~ feature,
+     TRUE ~ ""
+   )) %>%
+  mutate(neg.log10.padj = -log10(padj)) %>% 
+  dplyr::select(herit, neg.log10.padj, is.sig, label) %>% 
+  arrange(desc(neg.log10.padj)) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/4a.csv", quote=F, row.names=F)
+```
+
 # All random effects
 
 ```{r}
@@ -1197,6 +1422,20 @@ ranef.df.all.ranef.model <- ranef.df.all.ranef.model %>%
 pdf("../plots/PVE_all_ranef_genera.pdf", height=2, width=2)
 genus.all.ranef.PVE.p
 dev.off()
+```
+
+Export source data.
+
+```{r}
+ranef.df.all.ranef.model %>% 
+  ungroup() %>% 
+  dplyr::filter(term.clean != "Residual") %>% 
+  dplyr::select(feature, term.clean, PVE, is.sig) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/4c.csv", quote=F, row.names=F)
 ```
 
 # Genus v. species LMM results
@@ -1302,6 +1541,44 @@ genetics.frac.sig.p
 dev.off()
 ```
 
+Export source data.
+
+```{r}
+frac.sig.df %>% 
+  dplyr::filter(effect == "Age") %>% 
+  dplyr::rename(genus.or.species = g.or.s) %>% 
+  dplyr::select(genus.or.species, frac.sig) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED5c.csv", quote=F, row.names=F)
+```
+
+```{r}
+frac.sig.df %>% 
+  dplyr::filter(effect == "DR") %>% 
+  dplyr::rename(genus.or.species = g.or.s) %>% 
+  dplyr::select(genus.or.species, frac.sig) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED8n.csv", quote=F, row.names=F)
+```
+
+```{r}
+frac.sig.df %>% 
+  dplyr::filter(effect == "Genetics") %>% 
+  dplyr::rename(genus.or.species = g.or.s) %>% 
+  dplyr::select(genus.or.species, frac.sig) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/ED7c.csv", quote=F, row.names=F)
+```
+
 # Example plots
 
 ## Versus age (mean ± SEM)
@@ -1358,48 +1635,111 @@ plot_one_genus_versus_age <- function(this.genus, type.of.error.bar="sem") {
       type.of.error.bar == "sd" ~ sd)) 
   
   # plot
-  plot.df.per.diet %>%
-    ggplot(aes(x=age.approx.months, y=mean, ymin=mean-error, ymax=mean+error,
-               color=Diet)) +
-    
-    # per diet
-    geom_path(alpha=0.3, linewidth=0.5) +
-    geom_pointrange(alpha=0.3, size=0.01, shape=16) +
-    
-    # across diets
-    geom_path(aes(color=NULL), linewidth=0.5, data=plot.df.across.diets) +
-    geom_pointrange(aes(color=NULL), shape=16, size=0.01, data=plot.df.across.diets) +
+  (this.plot <- plot.df.per.diet %>%
+      ggplot(aes(x=age.approx.months, y=mean, ymin=mean-error, ymax=mean+error,
+                 color=Diet)) +
+      
+      # per diet
+      geom_path(alpha=0.3, linewidth=0.5) +
+      geom_pointrange(alpha=0.3, size=0.01, shape=16) +
+      
+      # across diets
+      geom_path(aes(color=NULL), linewidth=0.5, data=plot.df.across.diets) +
+      geom_pointrange(aes(color=NULL), shape=16, size=0.01, data=plot.df.across.diets) +
+      
+      scale_color_manual(values=diet.palette) +
+      labs(x="Age (months)", y="Relative abundance (%)", color="Diet",
+           title=sprintf("%s", this.genus)) +
+      geom_vline(xintercept=6, lty=2) +
+      theme_classic(base_size=8))
   
-    scale_color_manual(values=diet.palette) +
-    labs(x="Age (months)", y="Relative abundance (%)", color="Diet",
-         title=sprintf("%s", this.genus)) +
-    geom_vline(xintercept=6, lty=2) +
-    theme_classic(base_size=8)
+  return(list(
+    this.plot,
+    plot.df.per.diet,
+    plot.df.across.diets
+  ))
 }
 ```
 
 ### Bifidobacterium
 
 ```{r}
+bifido.v.age.plot.res <- plot_one_genus_versus_age("Bifidobacterium", type.of.error.bar="sem")
+
 pdf("../plots/bifido_versus_age_mean_SEM.pdf", height=2, width=2)
-plot_one_genus_versus_age("Bifidobacterium", type.of.error.bar="sem") + theme(legend.position="none")
+bifido.v.age.plot.res[[1]] + theme(legend.position="none")
 dev.off()
+```
+
+Source data.
+
+```{r}
+rbind(
+  bifido.v.age.plot.res[[3]] %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  bifido.v.age.plot.res[[2]] %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/2b.csv", quote=F, row.names=F)
 ```
 
 ### Ligilactobacillus
 
 ```{r}
+ligilacto.v.age.plot.res <- plot_one_genus_versus_age("Ligilactobacillus", type.of.error.bar="sem")
+
 pdf("../plots/ligilacto_versus_age_mean_SEM.pdf", height=2, width=2)
-plot_one_genus_versus_age("Ligilactobacillus", type.of.error.bar="sem") + theme(legend.position="none")
+ligilacto.v.age.plot.res[[1]] + theme(legend.position="none")
 dev.off()
+```
+
+Source data.
+
+```{r}
+rbind(
+  ligilacto.v.age.plot.res[[3]] %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  ligilacto.v.age.plot.res[[2]] %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5n.csv", quote=F, row.names=F)
 ```
 
 ### UBA11957
 
 ```{r}
+UBA11957.v.age.plot.res <- plot_one_genus_versus_age("UBA11957", type.of.error.bar="sem")
+
 pdf("../plots/UBA11957_versus_age_mean_SEM.pdf", height=2, width=2)
-plot_one_genus_versus_age("UBA11957", type.of.error.bar="sem") + theme(legend.position="none")
+UBA11957.v.age.plot.res[[1]] + theme(legend.position="none")
 dev.off()
+```
+
+Source data.
+
+```{r}
+rbind(
+  UBA11957.v.age.plot.res[[3]] %>% 
+    mutate(Diet = "Combined") %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet),
+  UBA11957.v.age.plot.res[[2]] %>% 
+    dplyr::select(age.approx.months, mean, sem, Diet)
+) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5m.csv", quote=F, row.names=F)
 ```
 
 ## Versus diet
@@ -1428,6 +1768,24 @@ UMGS1815.v.diet.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+agg.physeq.genus %>% 
+  transform_sample_counts(function(x) x/sum(x)) %>% 
+  psmelt %>% 
+  dplyr::filter(age.approx.months <= 40) %>% 
+  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+  dplyr::filter(genus == "UMGS1815") %>% 
+  dplyr::rename(relab = Abundance) %>% 
+  dplyr::select(Diet.5mo.as.AL, relab) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5b.csv", quote=F, row.names=F)
+```
+
 ### Ligilactobacillus
 
 ```{r}
@@ -1450,6 +1808,24 @@ dev.off()
 pdf("../plots/ligilactobacillus_v_diet_boxplots.pdf", width=2, height=2)
 ligilacto.v.diet.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+agg.physeq.genus %>% 
+  transform_sample_counts(function(x) x/sum(x)) %>% 
+  psmelt %>% 
+  dplyr::filter(age.approx.months <= 40) %>% 
+  mutate(Diet.5mo.as.AL=factor(Diet.5mo.as.AL, levels=c("AL", "1D", "2D", "20", "40"))) %>% 
+  dplyr::filter(genus == "Ligilactobacillus") %>% 
+  dplyr::rename(relab = Abundance) %>% 
+  dplyr::select(Diet.5mo.as.AL, relab) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5c.csv", quote=F, row.names=F)
 ```
 
 ### Emergencia
@@ -1488,6 +1864,24 @@ emergencia.v.diet.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+agg.physeq.genus %>% 
+  transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+  psmelt %>% 
+  dplyr::filter(age.approx.months <= 40) %>% 
+  dplyr::filter(genus == "Emergencia") %>% 
+  mutate(log10relab=log10(Abundance)) %>%
+  
+  dplyr::select(Diet.5mo.as.AL, log10relab) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5g.csv", quote=F, row.names=F)
+```
+
 ### Roseburia
 
 ```{r}
@@ -1522,4 +1916,22 @@ median.roseburia.relab.in.AL <- agg.physeq.genus %>%
 pdf("../plots/roseburia_v_diet_boxplots.pdf", width=1.5, height=1.5)
 roseburia.v.diet.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+agg.physeq.genus %>% 
+  transform_sample_counts(function(x) 100*x/sum(x)) %>% 
+  psmelt %>% 
+  dplyr::filter(age.approx.months <= 40) %>% 
+  dplyr::filter(genus == "Roseburia") %>% 
+  mutate(log10relab=log10(Abundance)) %>%
+  
+  dplyr::select(Diet.5mo.as.AL, log10relab) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>% 
+  
+  write.csv("../source_data_for_fig_panels/5h.csv", quote=F, row.names=F)
 ```

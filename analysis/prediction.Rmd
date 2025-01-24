@@ -268,6 +268,20 @@ age.prediction.cv.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+pred.v.obs.df.age.genus.cv %>% 
+  mutate(actual.age.approx.months = obs*0.23,
+         pred.age.months = pred*0.23) %>% 
+  rownames_to_column("stool.ID") %>% 
+  dplyr::select(stool.ID, actual.age.approx.months, pred.age.months) %>% 
+  
+  # round age to 3 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED5l.csv", quote=F, row.names=F)
+```
 
 # Predict age of AL mice
 
@@ -378,6 +392,21 @@ age.prediction.AL.cv.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+pred.v.obs.df.age.AL.genus.cv %>% 
+  mutate(actual.age.approx.months = obs*0.23,
+         pred.age.months = pred*0.23) %>% 
+  rownames_to_column("stool.ID") %>% 
+  dplyr::select(stool.ID, actual.age.approx.months, pred.age.months) %>% 
+  
+  # round age to 3 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/2d.csv", quote=F, row.names=F)
+```
+
 ### Feature importance
 
 Ugly to repeat random forest training just to get feature importance, but here we are.
@@ -434,6 +463,21 @@ age.pred.top.10.most.imp.feats <- feat.imp.summarised.df.age.AL.genus.cv %>%
 pdf("../plots/age_pred_top_10_most_imp_feats.pdf", height=2, width=3)
 age.pred.feat.imp.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+feat.imp.df.age.AL.genus.cv %>% 
+  dplyr::filter(feature %in% age.pred.top.10.most.imp.feats) %>% 
+  dplyr::select(perc.increase.in.MSE = X.IncMSE,
+                feature) %>% 
+  arrange(feature, desc(perc.increase.in.MSE)) %>% 
+  
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/2e.csv", quote=F, row.names=F)
 ```
 
 ## Species
@@ -515,6 +559,21 @@ age.prediction.AL.species.cv.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+pred.v.obs.df.age.AL.species.cv %>% 
+  mutate(actual.age.approx.months = obs*0.23,
+         pred.age.months = pred*0.23) %>% 
+  rownames_to_column("stool.ID") %>% 
+  dplyr::select(stool.ID, actual.age.approx.months, pred.age.months) %>% 
+  
+  # round age to 3 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED5m.csv", quote=F, row.names=F)
+```
+
 ## Pathways
 
 ```{r}
@@ -594,6 +653,21 @@ age.prediction.AL.pathways.cv.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+pred.v.obs.df.age.AL.pathways.cv %>% 
+  mutate(actual.age.approx.months = obs*0.23,
+         pred.age.months = pred*0.23) %>% 
+  rownames_to_column("stool.ID") %>% 
+  dplyr::select(stool.ID, actual.age.approx.months, pred.age.months) %>% 
+  
+  # round age to 3 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED5n.csv", quote=F, row.names=F)
+```
+
 ### Feature importance
 
 ```{r}
@@ -652,6 +726,25 @@ age.pred.top.10.most.imp.pathways <- feat.imp.summarised.df.age.AL.pathways.cv %
 pdf("../plots/age_pred_top_10_most_imp_pathways.pdf", height=2, width=3)
 age.pred.pathways.feat.imp.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+feat.imp.df.age.AL.pathways.cv %>% 
+  dplyr::filter(feature %in% age.pred.top.10.most.imp.pathways) %>% 
+  
+  # use human-readable pathway name, but make the label small
+  merge(pathway.names.df, by.x="feature", by.y="short.clean") %>% 
+   
+  dplyr::select(perc.increase.in.MSE = X.IncMSE,
+                feature = after.colon.short.w.ID) %>% 
+  arrange(feature, desc(perc.increase.in.MSE)) %>% 
+  
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED5o.csv", quote=F, row.names=F)
 ```
 
 # Train on AL, predict age for DR
@@ -768,6 +861,21 @@ AL.v.DR.age.preds.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+pred.v.obs.df.DR.and.AL %>% 
+  dplyr::filter(age.approx.months %in% c(5, 10, 16, 22, 28)) %>% 
+  mutate(actual.age.approx.months = obs/4.34,
+         pred.age.months = pred/4.34) %>% 
+  dplyr::select(actual.age.approx.months, pred.age.months, is.AL) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/5l.csv", quote=F, row.names=F)
+```
+
 ## Pathways
 
 Train on AL samples now.
@@ -879,6 +987,22 @@ AL.v.DR.age.preds.pathway.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+pred.v.obs.df.DR.and.AL.pathway %>% 
+  dplyr::filter(age.approx.months %in% c(5, 10, 16, 22, 28)) %>% 
+  mutate(actual.age.approx.months = obs/4.34,
+         pred.age.months = pred/4.34) %>% 
+  dplyr::select(actual.age.approx.months, pred.age.months, is.AL) %>% 
+  
+  # round all numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED9a.csv", quote=F, row.names=F)
+```
+
+
 # Train on 40% CR, predict age for rest
 
 ## Genera
@@ -940,6 +1064,17 @@ train.40.test.rest.genus.p
 dev.off()
 ```
 
+```{r}
+genus.not40.annot.df.w.preds.trained.on.40 %>% 
+  dplyr::filter(age.approx.months %in% c(5, 10, 16, 22, 28)) %>% 
+  dplyr::select(stool.ID, Diet, pred.age.months = pred, age.approx.months) %>% 
+  
+  # round age prediction to 3 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED9b_genera.csv", quote=F, row.names=F)
+```
+
 ## Pathways
 
 ```{r}
@@ -997,6 +1132,17 @@ pathway.annot.df.w.preds.trained.on.40 <- pathway.not40.log2tpm.annot.df %>%
 pdf("../plots/age_prediction_pathways_trained_on_40_boxplots.pdf", height=1.5, width=4)
 train.40.test.rest.pathway.p
 dev.off()
+```
+
+```{r}
+pathway.annot.df.w.preds.trained.on.40 %>% 
+  dplyr::filter(age.approx.months %in% c(5, 10, 16, 22, 28)) %>% 
+  dplyr::select(stool.ID, Diet, pred.age.months = pred, age.approx.months) %>% 
+  
+  # round age prediction to 3 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED9b_pathways.csv", quote=F, row.names=F)
 ```
 
 # Define functions related to DR prediction
@@ -1263,6 +1409,33 @@ DR.pred.roc.curves.cv.strat.by.cage
 dev.off()
 ```
 
+Source data.
+
+```{r}
+rbind(
+  
+  # average sensitivity versus specificity across folds 
+  DR.pred.mean.roc.plot.df.cv.strat.by.cage %>% 
+    mutate(fold = "mean") %>% 
+    dplyr::select(one.minus.specificity = x,
+                  sensitivity = y,
+                  fold),
+  
+  # sensitivity versus specificity for each fold
+  DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+    
+    dplyr::select(one.minus.specificity = x,
+                  sensitivity = y,
+                  fold)
+  ) %>% 
+  
+  # round numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/5i.csv", quote=F, row.names=F)
+
+```
+
 ### Feature importance
 
 Extracting feature importance requires a different function.
@@ -1386,6 +1559,25 @@ DR.pred.feat.imp.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+DR.pred.feat.imp.df %>% 
+  
+  # ignore pre-randomization prediction accuracy
+  dplyr::filter(age >= 10) %>% 
+  
+  dplyr::filter(feature %in% DR.pred.top.10.most.imp.feats) %>% 
+  
+  dplyr::select(MeanDecreaseAccuracy, feature, fold,
+                age.approx.months = age) %>% 
+  
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED8j.csv", quote=F, row.names=F)
+```
+
 ## Pathways
 
 Convert Diet to DR column.
@@ -1491,6 +1683,33 @@ pathway.DR.pred.roc.curves.cv.strat.by.cage
 dev.off()
 ```
 
+Source data.
+
+```{r}
+rbind(
+  
+  # average sensitivity versus specificity across folds 
+  pathway.DR.pred.mean.roc.plot.df.cv.strat.by.cage %>% 
+    mutate(fold = "mean") %>% 
+    dplyr::select(one.minus.specificity = x,
+                  sensitivity = y,
+                  fold),
+  
+  # sensitivity versus specificity for each fold
+  pathway.DR.pred.roc.plot.df.cv.strat.by.cage %>% 
+    
+    dplyr::select(one.minus.specificity = x,
+                  sensitivity = y,
+                  fold)
+  ) %>% 
+  
+  # round numbers to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=8) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED8i.csv", quote=F, row.names=F)
+
+```
+
 ### Feature importance
 
 ```{r}
@@ -1528,12 +1747,19 @@ DR.pred.top.10.most.imp.paths <- DR.pred.path.imp.summarised.df %>%
 Plot collapsing across age. 
 
 ```{r}
+pathway.names.df %>% 
+  dplyr::filter(short.clean %in% DR.pred.top.10.most.imp.paths)
+```
+
+
+```{r}
 (DR.pred.path.imp.p <- DR.pred.path.imp.df %>% 
    dplyr::filter(age >= 10) %>% 
    dplyr::filter(feature %in% DR.pred.top.10.most.imp.paths) %>% 
    
    # use human-readable pathway name, but make the label small
-   merge(pathway.names.df, by.x="feature", by.y="short.clean") %>% 
+   # use distinct because mapping isn't one-to-one
+   merge(pathway.names.df %>% distinct(short.clean, .keep_all=T), by.x="feature", by.y="short.clean") %>% 
    
    ggplot(aes(x=MeanDecreaseAccuracy, y=reorder(after.colon.short.w.ID, MeanDecreaseAccuracy))) +
    stat_summary(fun="mean", geom="col", fill=diet.color) +
@@ -1548,6 +1774,30 @@ Plot collapsing across age.
 pdf("../plots/binary_DR_pred_top_10_most_imp_paths.pdf", height=2.5, width=3)
 DR.pred.path.imp.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+DR.pred.path.imp.df %>% 
+  
+  # ignore pre-randomization prediction accuracy
+  dplyr::filter(age >= 10) %>% 
+  
+  dplyr::filter(feature %in% DR.pred.top.10.most.imp.paths) %>% 
+  
+  # use human-readable pathway name, but make the label small
+  # use distinct because mapping isn't one-to-one
+  merge(pathway.names.df %>% distinct(short.clean, .keep_all=T), by.x="feature", by.y="short.clean") %>% 
+  
+  dplyr::select(MeanDecreaseAccuracy, fold,
+                age.approx.months = age,
+                feature = after.colon.short.w.ID) %>%
+  
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED8k.csv", quote=F, row.names=F)
 ```
 
 # Predict diet
@@ -1655,6 +1905,19 @@ diet.pred.v.age.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+all.rf.diet.accuracy.df %>% 
+  dplyr::filter(age.months %in% c(5, 10, 16, 22, 28)) %>% 
+  dplyr::rename(fold = Resample) %>% 
+  
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/5j.csv", quote=F, row.names=F)
+```
+
 ### Plot accuracy versus diet
 
 ```{r}
@@ -1681,6 +1944,20 @@ no.5mo.rf.diet.pred.df <- all.rf.diet.pred.df %>%
 pdf("../plots/diet_prediction_accuracy_v_diet_post_randomiz.pdf", width=2, height=2)
 diet.pred.v.diet.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+no.5mo.rf.diet.pred.df %>% 
+  group_by(obs) %>% 
+  summarise(accuracy = sum(is.correct) / n(), .groups="drop") %>% 
+  dplyr::rename(diet= obs) %>% 
+
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/5k.csv", quote=F, row.names=F)
 ```
 
 ## Pathways
@@ -1785,6 +2062,19 @@ diet.pred.v.age.pathway.p
 dev.off()
 ```
 
+Source data.
+
+```{r}
+all.rf.diet.pathway.accuracy.df %>% 
+  dplyr::filter(age.months %in% c(5, 10, 16, 22, 28)) %>% 
+  dplyr::rename(fold = Resample) %>% 
+  
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED8l.csv", quote=F, row.names=F)
+```
+
 ### Plot accuracy versus diet
 
 ```{r}
@@ -1810,6 +2100,20 @@ no.5mo.rf.diet.pathway.pred.df <- all.rf.diet.pathway.pred.df %>%
 pdf("../plots/diet_prediction_accuracy_v_diet_post_randomiz_pathways.pdf", width=2, height=2)
 diet.pathway.pred.v.diet.p
 dev.off()
+```
+
+Source data.
+
+```{r}
+no.5mo.rf.diet.pathway.pred.df %>% 
+  group_by(obs) %>% 
+  summarise(accuracy = sum(is.correct) / n(), .groups="drop") %>% 
+  dplyr::rename(diet = obs) %>% 
+
+  # round numeric to 8 decimal places
+  mutate_if(is.numeric, ~ round(., digits=3) %>% format()) %>%
+  
+  write.csv("../source_data_for_fig_panels/ED8m.csv", quote=F, row.names=F)
 ```
 
 ## Is accuracy better for genera than pathways?
