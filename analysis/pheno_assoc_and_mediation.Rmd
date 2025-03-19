@@ -366,7 +366,7 @@ tax.pheno.assoc.out.df <- tax.assoc.mediation.merged.df %>%
 
 ```{r}
 tax.pheno.assoc.out.df %>%
-  write.table("../supp_tables/table15.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table17.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Functional assocations
@@ -406,7 +406,7 @@ fxn.pheno.assoc.out.df <- fxn.assoc.mediation.merged.df %>%
 
 ```{r}
 fxn.pheno.assoc.out.df %>%
-  write.table("../supp_tables/table16.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table18.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Taxonomic mediation
@@ -430,7 +430,7 @@ tax.pheno.mediation.out.df <- tax.assoc.mediation.merged.df %>%
 
 ```{r}
 tax.pheno.mediation.out.df %>%
-  write.table("../supp_tables/table17.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table19.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Functional mediation
@@ -462,7 +462,7 @@ fxn.pheno.mediation.out.df <- fxn.assoc.mediation.merged.df %>%
 
 ```{r}
 fxn.pheno.mediation.out.df %>%
-  write.table("../supp_tables/table18.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table20.txt", sep="\t", quote=F, row.names=F)
 ```
 
 # Proportion mediated
@@ -917,7 +917,7 @@ tax.pheno.assoc.xs.out.df <- tax.pheno.res.xs.df %>%
 
 ```{r}
 tax.pheno.assoc.xs.out.df %>% 
-  write.table("../supp_tables/table19.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table21.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ### Functional
@@ -951,7 +951,7 @@ fxn.pheno.assoc.xs.out.df <- fxn.pheno.res.xs.df %>%
 
 ```{r}
 fxn.pheno.assoc.xs.out.df %>% 
-  write.table("../supp_tables/table20.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table22.txt", sep="\t", quote=F, row.names=F)
 ```
 
 ## Domains with the most associations

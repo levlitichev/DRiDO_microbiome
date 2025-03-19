@@ -1,25 +1,25 @@
 Create supplementary tables.
 
-Supplementary Table 3 = genera, Kraken, Model 1
-Supplementary Table 4 = species, Kraken, Model 1
-Supplementary Table 5 = genera, MetaPhlAn, Model 1
-Supplementary Table 6 = pathways, Model 1
-Supplementary Table 7 = DO AL, genera, MetaPhlAn, MaAsLin2, Model 5
-Supplementary Table 8 = B6, genera, MetaPhlAn, MaAsLin2, Model 6
-Supplementary Table 9 = human, genera, MetaPhlAn, MaAsLin2, Model 7
-Supplementary Table 10 = DO AL, pathways, MaAsLin2, Model 5
-Supplementary Table 11 = B6, pathways, MaAsLin2, Model 6
-Supplementary Table 12 = human, pathways, MaAsLin2, Model 7
-Supplementary Table 13 = genera, Kraken, Model 10 (all random effects)
-Supplementary Table 14 = pathways, Model 10 (all random effects)
-Supplementary Table 15 = associations between genera and phenotypes, Model 11 (longitudinal)
-Supplementary Table 16 = associations between pathways and phenotypes, Model 11 (longitudinal)
-Supplementary Table 17 = mediation results between genera and phenotypes, Models 13 and 14 (longitudinal)
-Supplementary Table 18 = mediation results between pathways and phenotypes, Models 13 and 14 (longitudinal)
-Supplementary Table 19 = associations between genera and phenotypes, Model 12 (cross-sectional)
-Supplementary Table 20 = associations between pathways and phenotypes, Model 12 (cross-sectional)
+Supplementary Table 5 = genera, Kraken, Model 1
+Supplementary Table 6 = species, Kraken, Model 1
+Supplementary Table 7 = genera, MetaPhlAn, Model 1
+Supplementary Table 8 = pathways, Model 1
+Supplementary Table 9 = DO AL, genera, MetaPhlAn, MaAsLin2, Model 5
+Supplementary Table 10 = B6, genera, MetaPhlAn, MaAsLin2, Model 6
+Supplementary Table 11 = human, genera, MetaPhlAn, MaAsLin2, Model 7
+Supplementary Table 12 = DO AL, pathways, MaAsLin2, Model 5
+Supplementary Table 13 = B6, pathways, MaAsLin2, Model 6
+Supplementary Table 14 = human, pathways, MaAsLin2, Model 7
+Supplementary Table 15 = genera, Kraken, Model 10 (all random effects)
+Supplementary Table 16 = pathways, Model 10 (all random effects)
+Supplementary Table 17 = associations between genera and phenotypes, Model 11 (longitudinal)
+Supplementary Table 18 = associations between pathways and phenotypes, Model 11 (longitudinal)
+Supplementary Table 19 = mediation results between genera and phenotypes, Models 13 and 14 (longitudinal)
+Supplementary Table 20 = mediation results between pathways and phenotypes, Models 13 and 14 (longitudinal)
+Supplementary Table 21 = associations between genera and phenotypes, Model 12 (cross-sectional)
+Supplementary Table 22 = associations between pathways and phenotypes, Model 12 (cross-sectional)
 
-**Tables 15-20 are exported in `pheno_assoc_and_mediation.Rmd`.**
+**Tables 17-22 are exported in `pheno_assoc_and_mediation.Rmd`.**
 
 For fixed effects, we report coefficients, p-values (Wald test), and adjusted p-values (BH). For random effects, we report proportion of variance explained, p-values (LRT), and adjusted p-values (BH).
 
@@ -149,7 +149,7 @@ process_ranef_df <- function(ranef.df, herit.df) {
 }
 ```
 
-# Table 3: Kraken, genera, Model 1
+# Table 5: Kraken, genera, Model 1
 
 ```{r}
 kraken.genus.model1.fixef.df <- read.table(
@@ -195,10 +195,10 @@ kraken.genus.model1.out.df <- tmp.kraken.genus.model1.out.df %>%
 
 ```{r}
 kraken.genus.model1.out.df %>%
-  write.table("../supp_tables/table3.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table5.txt", sep="\t", quote=F, row.names=F)
 ```
 
-# Table 4: Kraken, species, Model 1
+# Table 6: Kraken, species, Model 1
 
 ```{r}
 kraken.species.model1.fixef.df <- read.table(
@@ -244,10 +244,10 @@ kraken.species.model1.out.df <- tmp.kraken.species.model1.out.df %>%
 
 ```{r}
 kraken.species.model1.out.df %>%
-  write.table("../supp_tables/table4.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table6.txt", sep="\t", quote=F, row.names=F)
 ```
 
-# Table 5: Kraken, genera, Model 1
+# Table 7: Kraken, genera, Model 1
 
 ```{r}
 metaphlan.genus.model1.fixef.df <- read.table(
@@ -293,10 +293,10 @@ metaphlan.genus.model1.out.df <- tmp.metaphlan.genus.model1.out.df %>%
 
 ```{r}
 metaphlan.genus.model1.out.df %>%
-  write.table("../supp_tables/table5.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table7.txt", sep="\t", quote=F, row.names=F)
 ```
 
-# Table 6: pathways, Model 1
+# Table 8: pathways, Model 1
 
 Pathways.
 
@@ -352,12 +352,12 @@ pathways.model1.out.df <- tmp.pathways.model1.out.df %>%
 
 ```{r}
 pathways.model1.out.df %>%
-  write.table("../supp_tables/table6.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table8.txt", sep="\t", quote=F, row.names=F)
 ```
 
 # MaAsLin2
 
-## Table 7: DO AL, genera, MetaPhlAn, Model 5
+## Table 9: DO AL, genera, MetaPhlAn, Model 5
 
 ```{r}
 DO.AL.genus.maaslin.df <- read.table(
@@ -389,10 +389,10 @@ DO.AL.genus.maaslin.out.df <- DO.AL.genus.maaslin.df %>%
 
 ```{r}
 DO.AL.genus.maaslin.out.df %>%
-  write.table("../supp_tables/table7.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table9.txt", sep="\t", quote=F, row.names=F)
 ```
 
-## Table 8: B6, genera, MetaPhlAn, Model 6
+## Table 10: B6, genera, MetaPhlAn, Model 6
 
 ```{r}
 B6.genus.maaslin.df <- read.table(
@@ -424,10 +424,10 @@ B6.genus.maaslin.out.df <- B6.genus.maaslin.df %>%
 
 ```{r}
 B6.genus.maaslin.out.df %>%
-  write.table("../supp_tables/table8.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table10.txt", sep="\t", quote=F, row.names=F)
 ```
 
-## Table 9: Human, MetaPhlAn, Model 7
+## Table 11: Human, MetaPhlAn, Model 7
 
 ```{r}
 human.genus.maaslin.df <- read.table(
@@ -459,10 +459,10 @@ human.genus.maaslin.out.df <- human.genus.maaslin.df %>%
 
 ```{r}
 human.genus.maaslin.out.df %>%
-  write.table("../supp_tables/table9.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table11.txt", sep="\t", quote=F, row.names=F)
 ```
 
-## Table 10: DO AL, pathways, Model 5
+## Table 12: DO AL, pathways, Model 5
 
 ```{r}
 DO.AL.pathway.maaslin.df <- read.table(
@@ -499,10 +499,10 @@ DO.AL.pathway.maaslin.out.df <- DO.AL.pathway.maaslin.df %>%
 
 ```{r}
 DO.AL.pathway.maaslin.out.df %>%
-  write.table("../supp_tables/table10.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table12.txt", sep="\t", quote=F, row.names=F)
 ```
 
-## Table 11: DO AL, pathways, Model 5
+## Table 13: DO AL, pathways, Model 5
 
 ```{r}
 B6.pathway.maaslin.df <- read.table(
@@ -539,10 +539,10 @@ B6.pathway.maaslin.out.df <- B6.pathway.maaslin.df %>%
 
 ```{r}
 B6.pathway.maaslin.out.df %>%
-  write.table("../supp_tables/table11.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table13.txt", sep="\t", quote=F, row.names=F)
 ```
 
-## Table 12: Human, pathways, Model 5
+## Table 14: Human, pathways, Model 5
 
 ```{r}
 human.pathway.maaslin.df <- read.table(
@@ -579,10 +579,10 @@ human.pathway.maaslin.out.df <- human.pathway.maaslin.df %>%
 
 ```{r}
 human.pathway.maaslin.out.df %>%
-  write.table("../supp_tables/table12.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table14.txt", sep="\t", quote=F, row.names=F)
 ```
 
-# Table 13: Kraken, genera, Model 10 (all random effects)
+# Table 15: Kraken, genera, Model 10 (all random effects)
 
 ```{r}
 kraken.genus.model10.ranef.df <- read.table(
@@ -631,10 +631,10 @@ kraken.genus.model10.ranef.out.df <- kraken.genus.model10.ranef.df %>%
 
 ```{r}
 kraken.genus.model10.ranef.out.df %>%
-  write.table("../supp_tables/table13.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table15.txt", sep="\t", quote=F, row.names=F)
 ```
 
-# Table 14: pathways, Model 10 (all random effects)
+# Table 16: pathways, Model 10 (all random effects)
 
 ```{r}
 pathways.model10.ranef.df <- read.table(
@@ -688,5 +688,5 @@ pathways.model10.ranef.out.df <- pathways.model10.ranef.df %>%
 
 ```{r}
 pathways.model10.ranef.out.df %>%
-  write.table("../supp_tables/table14.txt", sep="\t", quote=F, row.names=F)
+  write.table("../supp_tables/table16.txt", sep="\t", quote=F, row.names=F)
 ```
