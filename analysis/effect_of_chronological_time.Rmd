@@ -4,6 +4,8 @@ title: "Effect of chronological time"
 
 What is the effect on our linear mixed models when we add chronological time (either as a fixed effect or random effect)? Is the model "improved"?
 
+N.B. In the manuscript, we primarily refer to chronological time as "sampling timepoint."
+
 We will address this question in two ways.
 
 First, we will just report how many features are associated with age when time is included as a fixed effect, as a random effect, or not at all.
